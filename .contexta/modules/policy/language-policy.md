@@ -2,13 +2,13 @@
 kind: policy
 ---
 
-# rfc2119-language
+# language-policy
 
 ## Intent
 
-定义 RFC2119 关键词在 contexta 中的使用方式，减少自然语言约束在 agent 执行时的偏移。
+定义 contexta 中面向 agent 的规则语言策略，减少自然语言约束在 agent 执行时的偏移。
 
-本 policy 只处理 `MUST`、`MUST NOT`、`SHOULD`、`SHOULD NOT`、`MAY` 这些规范词语的语义和使用边界。
+当前只采用 RFC2119 作为第一条语言策略。
 
 ## Scope
 
@@ -16,7 +16,7 @@ kind: policy
 
 本 policy 不定义 module 的文档模板、必填段落、组合方式、输出目标、提取流程或生命周期状态。
 
-本 policy 不要求解释性文字、设计讨论或示例文本使用 RFC2119 关键词。
+本 policy 不要求解释性文字、设计讨论或示例文本使用规则语言策略。
 
 ## Rules
 
@@ -42,6 +42,8 @@ kind: policy
 - `MAY`：可选行为。
 
 ## Rationale
+
+当前只采用 RFC2119 作为第一条语言策略。后续如果出现中文术语、双语表达、prompt 语言选择或其他规则语言策略，继续加入本 module，而不是新建过碎的 language policy。
 
 contexta 使用 RFC2119 关键词，是为了让规则的强度更稳定地传递给 agent。
 
