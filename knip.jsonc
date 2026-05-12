@@ -1,6 +1,35 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+  "tags": [
+    "-lintignore"
+  ],
   "ignoreBinaries": [
     "dist/index.js"
-  ]
+  ],
+  "workspaces": {
+    ".": {
+      "project": [
+        "*.{js,mjs,cjs,ts}",
+        "scripts/**/*.mjs"
+      ]
+    },
+    "apps/contexta": {
+      "project": [
+        "*.config.ts",
+        "src/**/*.ts"
+      ]
+    },
+    "apps/docwarden": {
+      "project": [
+        "*.config.ts",
+        "src/**/*.ts"
+      ]
+    },
+    "packages/cli-kit": {
+      "project": [
+        "*.config.ts",
+        "src/**/*.ts"
+      ]
+    }
+  }
 }

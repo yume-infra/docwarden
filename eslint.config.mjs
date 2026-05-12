@@ -1,5 +1,11 @@
 import antfu from '@antfu/eslint-config'
 
 export default antfu({
-  ignores: ['docs/**'],
+  ignores: [
+    '**/.turbo/**',
+    '**/dist/**',
+    '.contexta/**',
+    '.docwarden/**',
+    'docs/**',
+  ],
 })

@@ -6,5 +6,8 @@ export default defineConfig({
   format: 'esm',
   fixedExtension: false,
   dts: true,
+  deps: {
+    neverBundle: ['@docwarden/cli-kit'],
+  },
   tsconfig: 'tsconfig.json',
 })

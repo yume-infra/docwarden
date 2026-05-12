@@ -3,7 +3,6 @@
     "target": "ES2023",
     "lib": ["ES2023"],
     "moduleDetection": "force",
-    "rootDir": "src",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "types": ["node"],
@@ -13,10 +12,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "declaration": true,
-    "outDir": "dist",
     "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "noUncheckedSideEffectImports": true
-  },
-  "include": ["src"]
+  }
 }
