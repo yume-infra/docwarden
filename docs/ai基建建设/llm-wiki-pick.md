@@ -8,13 +8,13 @@
 
 结构化的 lint 可以用脚本指定，语义上的 lint 是当前难点中的难点。尝试的方案是 断言 和短动词，还需要更明确指定
 
-### index/roadmap
+### index
 
-index.md 是内容导航，log.md 是时间线。在这里定义的则是 roadmap.md。
+index.md 是内容导航和工作面入口，log.md 是时间线。
 
 本项目的 AI 文档基建是维护一个持续演化的文档工作面。在 docwarden 之前，先用拙劣的工作流把具体理念带起来，后续在迭代中优化。
 
-agent 进入项目后，必须先通过 roadmap 入口理解当前文档主线，再根据目录约束参与 working、候选提炼、review 辅助或 docs 更新。
+agent 进入项目后，必须先通过 index 入口理解当前文档主线，再根据目录约束参与 working、候选提炼、review 辅助或 docs 更新。
 
 ### schema
 

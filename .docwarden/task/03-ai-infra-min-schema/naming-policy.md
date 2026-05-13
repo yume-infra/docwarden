@@ -9,7 +9,7 @@ review: accepted
 
 # 工作面命名 policy
 
-本文件是 `03-ai-infra-min-schema` 的 working material，用于起草 `.docwarden/working/` 下工作面的命名规则。
+本文件是 `03-ai-infra-min-schema` 的 working material，用于起草 `.docwarden/task/` 下工作面的命名规则。
 
 这份 policy 只处理 `docwarden` workflow 的操作层问题：agent 如何创建、查找和引用 working 目录。它不定义文档内容 schema，也不处理 `contexta` 的语义建模。
 
@@ -20,11 +20,11 @@ review: accepted
 - 稳定引用：agent 和 sayori 能用短目录名反复指向同一个工作面。
 - 可查询：agent 在不知道准确目录名时，能通过关键词找到相关工作面。
 
-因此，目录名只承担最小识别责任；更完整的查询增强放在每个工作面的 `roadmap.md` 中。
+因此，目录名只承担最小识别责任；更完整的查询增强放在每个工作面的 `index.md` 中。
 
 ## 目录命名格式
 
-`.docwarden/working/` 下的工作面目录采用：
+`.docwarden/task/` 下的工作面目录采用：
 
 ```text
 NN-short-semantic-slug
@@ -61,13 +61,13 @@ slug 应该短、稳定、可读。
 - 多个概念堆叠在同一个 slug 里
 - 需要频繁改名才能保持准确的表述
 
-如果目录名和后续理解出现轻微偏差，优先在 `roadmap.md` 中补足，不要立刻重命名目录。
+如果目录名和后续理解出现轻微偏差，优先在 `index.md` 中补足，不要立刻重命名目录。
 
-## roadmap.md 的查询增强
+## index.md 的查询增强
 
-每个工作面的 `roadmap.md` 是该工作面的 lead file，也是唯一震源。目录名保持短，查询增强由 `roadmap.md` 承担。
+每个工作面的 `index.md` 是该工作面的 lead file，也是唯一震源。目录名保持短，查询增强由 `index.md` 承担。
 
-`roadmap.md` 可以放这些信息：
+`index.md` 可以放这些信息：
 
 - `aliases`：常见别名、旧称、中文名、相关英文名。
 - `source baseline`：本工作面依据的理论文件、历史工作面或对话来源。
@@ -75,7 +75,7 @@ slug 应该短、稳定、可读。
 - `scope`：这个工作面负责什么、不负责什么。
 - `entry`：agent 进入该工作面后应该先读哪些文件。
 
-这意味着目录名不需要覆盖所有搜索词。只要 `roadmap.md` 能让 `rg` 或 agent 检索命中，查询需求就可以被满足。
+这意味着目录名不需要覆盖所有搜索词。只要 `index.md` 能让 `rg` 或 agent 检索命中，查询需求就可以被满足。
 
 ## 编号规则
 
@@ -112,6 +112,6 @@ slug 应该短、稳定、可读。
 - 它符合“编号 + 短语义 slug”格式。
 - `ai-infra` 能保留当前工作面的主题锚点。
 - `min-schema` 能表达本轮产物方向。
-- 当前命名已经足够短，查询增强可以由 `roadmap.md` 补足。
+- 当前命名已经足够短，查询增强可以由 `index.md` 补足。
 
 如果未来需要更精确的命名，可以在新工作面中使用类似 `04-docwarden-operation-schema` 的目录名，而不是立即重命名当前目录。

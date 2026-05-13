@@ -45,7 +45,7 @@ pick 也不是自动进入 `docs/` 的流程。
 
 ## pick 产物位置
 
-pick 产物不应该放在 `.docwarden/working/` 中作为长期材料。
+pick 产物不应该放在 `.docwarden/task/` 中作为长期材料。
 
 原因是 working 的设计是短命的，主要用于任务推进、上下文捕获和 review 过程。
 

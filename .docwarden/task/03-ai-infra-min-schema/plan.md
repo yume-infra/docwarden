@@ -18,7 +18,7 @@ owner: sayori
 要问的问题：
 
 - 在本项目里，`schema` 的最小有用含义是什么？
-- 现在必须稳定的词有哪些：`working`、`review`、`promote`、`pick`、`stable`、`roadmap`、`log`？
+- 现在必须稳定的词有哪些：`working`、`review`、`promote`、`pick`、`stable`、`index`、`log`？
 
 草案产物：
 
@@ -36,7 +36,7 @@ review 门槛：
 
 要问的问题：
 
-- `.docwarden/working/` 下最小可用结构应该有哪些目录或文件？
+- `.docwarden/task/` 下最小可用结构应该有哪些目录或文件？
 - 允许哪些状态？哪些状态流转是合法的？
 
 草案产物：
@@ -51,7 +51,7 @@ review 门槛：
 
 状态：accepted。
 
-目标：定义 agent 能对 `docs/` 和 `.docwarden/working` 做什么。
+目标：定义 agent 能对 `docs/` 和 `.docwarden/task` 做什么。
 
 要问的问题：
 

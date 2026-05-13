@@ -13,7 +13,7 @@ review: accepted
 
 由于 promote / pick 的触发和编排当前不开展，本轮 dry run 不模拟完整 promote / pick。
 
-本轮只验证：当前 schema 是否能支撑 `.docwarden/working/` 内的 working 任务推进，并且能暴露明显结构问题。
+本轮只验证：当前 schema 是否能支撑 `.docwarden/task/` 内的 working 任务推进，并且能暴露明显结构问题。
 
 ## 验收分层
 
@@ -31,25 +31,25 @@ review: accepted
 脚本位置：
 
 ```text
-.docwarden/working/03-ai-infra-min-schema/scripts/check-working-schema.mjs
+.docwarden/task/03-ai-infra-min-schema/scripts/check-working-schema.mjs
 ```
 
 当前检查项：
 
-- 工作面存在 `roadmap.md`。
+- 工作面存在 `index.md`。
 - 工作面存在 `log.md`。
 - 顶层 `.md` 文件都有 frontmatter。
 - 顶层 `.md` 文件都有 `status`。
 - 文件状态只允许 `draft`、`reviewing`、`accepted`。
-- `roadmap.md` 有 `workspace_status`。
+- `index.md` 有 `workspace_status`。
 - `workspace_status` 只允许 `active`、`paused`、`closed`。
-- 只有 `roadmap.md` 可以有 `workspace_status`。
-- `roadmap.md` 文件索引提到所有顶层 `.md` 文件。
+- 只有 `index.md` 可以有 `workspace_status`。
+- `index.md` 文件索引提到所有顶层 `.md` 文件。
 
 运行方式：
 
 ```bash
-rtk node .docwarden/working/03-ai-infra-min-schema/scripts/check-working-schema.mjs .docwarden/working/03-ai-infra-min-schema
+rtk node .docwarden/task/03-ai-infra-min-schema/scripts/check-working-schema.mjs .docwarden/task/03-ai-infra-min-schema
 ```
 
 ## 语义检查
@@ -58,7 +58,7 @@ rtk node .docwarden/working/03-ai-infra-min-schema/scripts/check-working-schema.
 
 当前检查项：
 
-- agent 进入工作面时可以从 `roadmap.md` 理解边界、来源基线、文件散发关系和下一步。
+- agent 进入工作面时可以从 `index.md` 理解边界、来源基线、文件散发关系和下一步。
 - `log.md` 只记录时间线，不承担主线解释。
 - `.docwarden` 被视为 agent 工作区。
 - `docs/` 在当前项目里保持只读。
@@ -73,7 +73,7 @@ rtk node .docwarden/working/03-ai-infra-min-schema/scripts/check-working-schema.
 样本工作面：
 
 ```text
-.docwarden/working/03-ai-infra-min-schema
+.docwarden/task/03-ai-infra-min-schema
 ```
 
 脚本结构检查结果：
@@ -83,13 +83,13 @@ rtk node .docwarden/working/03-ai-infra-min-schema/scripts/check-working-schema.
 运行输出：
 
 ```text
-note: checked 9 markdown files in /Users/sayori/Desktop/docwarden/.docwarden/working/03-ai-infra-min-schema
+note: checked 9 markdown files in /Users/sayori/Desktop/docwarden/.docwarden/task/03-ai-infra-min-schema
 pass: working schema structure check passed
 ```
 
 语义检查结果：
 
-- `roadmap.md` 已能作为 lead file 指向边界、来源基线、文件索引和下一步。
+- `index.md` 已能作为 lead file 指向边界、来源基线、文件索引和下一步。
 - Loop 1 词表仍只是可容忍工作定义，不是稳定理论定义。
 - Loop 2 已定义命名、lead file、文件索引和两层状态。
 - Loop 3 已明确 `.docwarden` 是 agent 工作区，`docs/` 当前只读，不维护 docs 修改建议流。
@@ -109,8 +109,8 @@ pass: working schema structure check passed
 
 本轮 dry run 主要捕获这些失败模式：
 
-- agent 不读 `roadmap.md` 就创建文件。
-- `roadmap.md` 文件索引漏掉工作面文件。
+- agent 不读 `index.md` 就创建文件。
+- `index.md` 文件索引漏掉工作面文件。
 - 文件缺少 frontmatter 或 `status`。
 - 工作面状态和文件状态混用。
 - agent 把 `docs/` 当成默认可编辑区。

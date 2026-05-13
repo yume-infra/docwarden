@@ -24,7 +24,7 @@ owner: sayori
 - `docs/文档体系建设/理念-v1.md`
 - `docs/文档体系建设/v1与扩展.md`
 - `docs/文档体系建设/实践-v1/实践之前.md`
-- `.docwarden/working/01-contexta-positioning/`
+- `.docwarden/task/01-contexta-positioning/`
 
 ## 当前判断
 
@@ -58,7 +58,7 @@ agent 每轮最多问三个问题，能问一个问题时优先只问一个。
 
 ## 文件索引
 
-- `roadmap.md`：工作面 lead file，状态：accepted；同时通过 `workspace_status: closed` 表示本轮工作面已完成。
+- `index.md`：工作面 lead file，状态：accepted；同时通过 `workspace_status: closed` 表示本轮工作面已完成。
 - `plan.md`：本轮 loop 计划，状态：accepted。
 - `log.md`：时间线记录，状态：accepted；后续可继续追加。
 - `schema-scope.md`：Loop 1 范围与词表，状态：accepted；只是当前可容忍的工作定义，不是稳定理论定义。

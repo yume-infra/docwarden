@@ -11,11 +11,11 @@ review: accepted
 
 本文件记录 Loop 2 已通过 review 的 working 定义。
 
-这些定义只服务于 `.docwarden/working/` 下的 `docwarden` workflow，不扩展到其他区域。
+这些定义只服务于 `.docwarden/task/` 下的 `docwarden` workflow，不扩展到其他区域。
 
 ## 工作面单位
 
-`.docwarden/working/` 下以工作面目录作为基本单位。
+`.docwarden/task/` 下以工作面目录作为基本单位。
 
 每个工作面目录对应一个相对独立的任务、讨论线或实践线。
 
@@ -25,10 +25,10 @@ review: accepted
 
 每个工作面最小固定文件：
 
-- `roadmap.md`
+- `index.md`
 - `log.md`
 
-`roadmap.md` 是工作面的 lead file，也是该工作面的唯一震源。
+`index.md` 是工作面的 lead file，也是该工作面的唯一震源。
 
 它负责：
 
@@ -41,11 +41,11 @@ review: accepted
 
 `log.md` 只负责按时间记录事件。
 
-它不承担主线解释，不承担命名增强，也不替代 `roadmap.md`。
+它不承担主线解释，不承担命名增强，也不替代 `index.md`。
 
 ## 散发文件
 
-除 `roadmap.md` 和 `log.md` 外，其他文件按任务需要从 `roadmap.md` 散发。
+除 `index.md` 和 `log.md` 外，其他文件按任务需要从 `index.md` 散发。
 
 例如：
 
@@ -68,7 +68,7 @@ review: accepted
 
 ## 工作面状态
 
-工作面状态写在 `roadmap.md` frontmatter 中：
+工作面状态写在 `index.md` frontmatter 中：
 
 ```yaml
 workspace_status: active
@@ -82,7 +82,7 @@ workspace_status: active
 
 暂不引入 `superseded`。
 
-如果某个工作面未来被替代，先在 `roadmap.md` 和 `log.md` 中用自然语言说明。
+如果某个工作面未来被替代，先在 `index.md` 和 `log.md` 中用自然语言说明。
 
 ## 文件状态
 
@@ -102,14 +102,14 @@ status: draft
 
 暂不引入文件级 `superseded`。
 
-如果某个文件未来被替代，先在 `roadmap.md` 文件索引和 `log.md` 中用自然语言说明。
+如果某个文件未来被替代，先在 `index.md` 文件索引和 `log.md` 中用自然语言说明。
 
-## roadmap 文件索引
+## index 文件索引
 
 采用 C 方案：
 
 - 每个文件 frontmatter 自己带最小状态。
-- `roadmap.md` 维护文件索引，作为人类和 agent 进入工作面的统一入口。
+- `index.md` 维护文件索引，作为人类和 agent 进入工作面的统一入口。
 
 文件索引用自然语言补充状态含义。
 
@@ -127,7 +127,7 @@ status: draft
 本轮 review 已通过：
 
 - 工作面采用编号目录。
-- `roadmap.md` 是 lead file / 唯一震源。
+- `index.md` 是 lead file / 唯一震源。
 - `log.md` 只记时间线。
 - 状态采用 `workspace_status` + `status` 两层。
 - 工作面状态先保留 `active`、`paused`、`closed`。

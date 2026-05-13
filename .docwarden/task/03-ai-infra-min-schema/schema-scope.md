@@ -39,12 +39,12 @@ review: accepted
 
 现在需要稳定 working 含义的词：
 
-- `working`：agent 维护的材料，用于捕获上下文、计划、草案和 review notes；在进入 stable 前都属于 working。当前 `docwarden` workflow 的 working material 只放在 `.docwarden/working/` 下。
+- `working`：agent 维护的材料，用于捕获上下文、计划、草案和 review notes；在进入 stable 前都属于 working。当前 `docwarden` workflow 的 working material 只放在 `.docwarden/task/` 下。
 - `review`：working material 影响后续产物之前的人类显式审查。
 - `promote`：基于 working material 产生稳定的 stable 文档，用于服务 agent 编码。
 - `pick`：基于 working material 产生 promote 不关注的 side 内容，例如 ADR、纠错经验、可学习内容、用户理解材料等，用于服务其他内容建设。
 - `stable`：面向 agent 的稳定基线。它不完全等价于当前 `docs/`。当前 `docs/` 是 sayori 自己编写和 review 的可信理论源，因此可以作为判断依据；但它更偏向对 user 的理论描述，并没有经过面向 agent 的表达优化。
-- `roadmap`：本地导航文件，告诉 agent 某个 working 目录在做什么、应该从哪里开始。
+- `index`：本地导航文件，告诉 agent 某个 working 目录在做什么、应该从哪里开始。
 - `log`：按时间追加记录 workflow 事件的文件。
 
 一个有用的工作区分：
@@ -65,7 +65,7 @@ Loop 4 需要重新定义 `promote` 与 `pick` 的边界：
 
 working material 内部的语义字段仍属于未来 `contexta` 工作。
 
-Loop 2 讨论目录和状态语义时，应从 `.docwarden/working/` 作为当前唯一工作区开始，不扩展到其他区域。
+Loop 2 讨论目录和状态语义时，应从 `.docwarden/task/` 作为当前唯一工作区开始，不扩展到其他区域。
 
 ## Review 问题
 

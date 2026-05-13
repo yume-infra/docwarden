@@ -4,7 +4,7 @@ updated: 2026-05-09
 owner: sayori
 ---
 
-# Custom Skill Creator Roadmap
+# Custom Skill Creator Index
 
 This working folder drafts a Sayori/docwarden-tailored replacement for the upstream `skill-creator`.
 
@@ -23,4 +23,4 @@ This working folder drafts a Sayori/docwarden-tailored replacement for the upstr
 
 - Confirm whether `custom-skill-creator` is the final skill name.
 - Confirm whether the skill should be installed under `${CODEX_HOME:-$HOME/.codex}/skills` after review.
-- Review semantic choices in `custom-skill-creator/SKILL.md`, especially the working/stable boundary and source-trace requirements.
+- Review semantic choices in `custom-skill-creator/SKILL.md`, especially the task/stable boundary and source-trace requirements.

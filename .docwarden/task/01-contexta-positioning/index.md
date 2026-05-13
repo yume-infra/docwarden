@@ -4,7 +4,7 @@ updated: 2026-05-11
 owner: sayori
 ---
 
-# Contexta Positioning Roadmap
+# Contexta Positioning Index
 
 本工作面记录 `docwarden` 与 `contexta` 的早期定位讨论。
 

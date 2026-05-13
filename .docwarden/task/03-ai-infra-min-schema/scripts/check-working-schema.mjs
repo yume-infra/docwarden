@@ -58,8 +58,8 @@ async function listTopLevelMarkdownFiles(dir) {
     .sort()
 }
 
-if (!await fileExists(join(targetDir, 'roadmap.md'))) {
-  errors.push('missing roadmap.md')
+if (!await fileExists(join(targetDir, 'index.md'))) {
+  errors.push('missing index.md')
 }
 
 if (!await fileExists(join(targetDir, 'log.md'))) {
@@ -67,8 +67,8 @@ if (!await fileExists(join(targetDir, 'log.md'))) {
 }
 
 const markdownFiles = await listTopLevelMarkdownFiles(targetDir)
-const roadmapSource = await fileExists(join(targetDir, 'roadmap.md'))
-  ? await readFile(join(targetDir, 'roadmap.md'), 'utf8')
+const indexSource = await fileExists(join(targetDir, 'index.md'))
+  ? await readFile(join(targetDir, 'index.md'), 'utf8')
   : ''
 
 for (const file of markdownFiles) {
@@ -83,21 +83,21 @@ for (const file of markdownFiles) {
     errors.push(`${file}: invalid status "${status}"`)
   }
 
-  if (file === 'roadmap.md') {
+  if (file === 'index.md') {
     const workspaceStatus = frontmatter.workspace_status
     if (!workspaceStatus) {
-      errors.push('roadmap.md: missing workspace_status')
+      errors.push('index.md: missing workspace_status')
     }
     else if (!allowedWorkspaceStatuses.has(workspaceStatus)) {
-      errors.push(`roadmap.md: invalid workspace_status "${workspaceStatus}"`)
+      errors.push(`index.md: invalid workspace_status "${workspaceStatus}"`)
     }
   }
   else if ('workspace_status' in frontmatter) {
-    errors.push(`${file}: workspace_status is only allowed in roadmap.md`)
+    errors.push(`${file}: workspace_status is only allowed in index.md`)
   }
 
-  if (roadmapSource && !roadmapSource.includes(`\`${file}\``)) {
-    errors.push(`roadmap.md: file index does not mention ${file}`)
+  if (indexSource && !indexSource.includes(`\`${file}\``)) {
+    errors.push(`index.md: file index does not mention ${file}`)
   }
 }
 
