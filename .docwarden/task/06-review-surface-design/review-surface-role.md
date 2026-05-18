@@ -1,5 +1,5 @@
 ---
-status: draft
+status: accepted
 created: 2026-05-18
 updated: 2026-05-18
 owner: sayori
@@ -9,18 +9,27 @@ owner: sayori
 
 本文件记录从 05 讨论中迁移出的 surface 职责定义。
 
-## 核心链路
+## 核心关系
 
-当前链路应建模为：
+当前不应把所有名词都写成一条线性流程。
+
+更准确的关系是：
 
 ```text
-task material + current agent context
-  -> review surface
-  -> lead + backing
-  -> user review
-  -> decision trace
-  -> spec / guide / wiki
+review input = task material + current agent context
+
+review surface(input) => lead + backing
+
+renderer(config) presents lead + backing as md/html
+
+user reviews lead and inspects backing when needed
+
+accepted review result is distributed to spec / guide / wiki
+
+decision trace records review decisions / provenance
 ```
+
+其中 `review input` 是输入集合的命名，`lead + backing` 是 surface 的输出结构，`renderer` 是呈现实现，不是和 user review 平级的业务阶段。
 
 ## surface 的目的
 
@@ -117,3 +126,12 @@ lead + backing
 - lead 是最小 user 可审核单元。
 - backing 是 lead 的承载层。
 - HTML 可以作为 surface 的实现形态或候选形态。
+
+## Review 状态
+
+sayori 已确认：
+
+- surface 的目的，是把 material + current agent context 处理成 lead + backing。
+- lead 是最小 user 可审核单元。
+- backing 是被 lead 统摄、用于支撑 / 展开 / 校验 lead 的材料层。
+- HTML 应引入在 review surface 层。

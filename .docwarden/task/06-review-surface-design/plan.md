@@ -1,5 +1,5 @@
 ---
-status: draft
+status: accepted
 created: 2026-05-18
 updated: 2026-05-18
 owner: sayori
@@ -13,7 +13,7 @@ owner: sayori
 
 ## Loop 1：surface role 与 lead/backing 结构
 
-状态：active。
+状态：accepted。
 
 目标：确认 surface 的职责，以及 lead / backing 在 surface 中如何组织。
 
@@ -25,33 +25,47 @@ review 门槛：
 
 - sayori 确认 surface 的职责是把 material + current agent context 处理成 lead + backing。
 
-## Loop 2：surface 最小内容块
+## Loop 2：surface generation rules
 
-状态：pending。
+状态：accepted。
 
-目标：定义一个 review surface 至少应该展示哪些块，才能支撑 user 审核 lead。
-
-草案产物：
-
-- `surface-minimum-blocks.md`
-
-review 门槛：
-
-- sayori 确认最小内容块足以承载 lead、backing、agent context 和 user action。
-
-## Loop 3：HTML 引入方式
-
-状态：pending。
-
-目标：定义 HTML 在 surface 层的最小使用方式，不实现完整工具。
+目标：定义 surface 如何从 material + current agent context 生成 lead + backing。
 
 草案产物：
 
-- `html-surface-entry.md`
+- `surface-generation-rules.md`
 
 review 门槛：
 
-- sayori 确认 HTML 的引入位置和短命属性足够清楚。
+- sayori 确认 surface generation rules 足以支撑 surface 生成 `lead + backing`。
+
+## Loop 3：review frame
+
+状态：accepted。
+
+目标：定义 review frame 的最小结构。`md/html` 作为 renderer config 后续统一收拢，不在本 loop 展开。
+
+草案产物：
+
+- `review-frame.md`
+
+review 门槛：
+
+- sayori 确认 review frame 是 surface 输出结构，不是独立流程阶段。
+
+## 后续：renderer config
+
+状态：pending。
+
+目标：统一收拢 surface 相关配置决策点，例如输出 `md/html`。
+
+草案产物：
+
+- 待定。
+
+review 门槛：
+
+- sayori 确认 config 设计能统一表达 renderer、格式和其他决策点。
 
 ## 本轮不做
 
