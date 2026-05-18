@@ -17,6 +17,10 @@ HTML 是重要候选形态，因为它更适合承载复杂审查界面。
 
 ## 当前状态
 
-当前只建立入口文件。
+当前已有 review artifacts：
 
-review artifact 的最小形态将在后续 task 中继续定义。
+- `docwarden-review-workflow/`：`08-promote-pick-dry-run` 的 review artifact，用于审查 docwarden review workflow 的主线基线表达。
+- `review-lead-minimality/`：`08-promote-pick-dry-run` 的 pick review artifact，用于审查 review lead minimality 是否值得作为用户层资产候选。
+- `sayori-working-profile/`：`08-promote-pick-dry-run` 的 pick review artifact，用于审查 sayori working profile 是否值得作为用户层资产候选。
+
+review artifact 的最小形态仍在 dry run 中验证。

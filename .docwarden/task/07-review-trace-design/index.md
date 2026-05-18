@@ -1,6 +1,6 @@
 ---
-status: draft
-workspace_status: active
+status: accepted
+workspace_status: closed
 created: 2026-05-13
 updated: 2026-05-18
 owner: sayori
@@ -13,7 +13,7 @@ owner: sayori
 ## 边界
 
 - 本目录是对话产生的 task material。
-- 本任务当前 active。
+- 本任务已关闭。
 - 本任务只设计 user review 之后如何分流到 promote / pick，不设计独立 review result，不设计独立 decision ledger，不设计 review input，不设计 review surface，不设计 renderer config。
 
 ## 来源基线
@@ -50,8 +50,8 @@ owner: sayori
 
 ## 文件索引
 
-- `index.md`：工作面 lead file，状态：draft；同时通过 `workspace_status: active` 表示本工作面正在推进。
-- `plan.md`：本轮 loop 计划，状态：draft。
+- `index.md`：工作面 lead file，状态：accepted；同时通过 `workspace_status: closed` 表示本工作面已关闭。
+- `plan.md`：本轮 loop 计划，状态：accepted。
 - `log.md`：时间线记录，状态：draft；后续可继续追加。
 - `promote-pick-log-boundary.md`：Loop 1 promote / pick / log 边界定义，状态：accepted。
 - `promote-rules.md`：Loop 2 promote 规则，状态：accepted。
@@ -59,4 +59,4 @@ owner: sayori
 
 ## 下一步
 
-本轮 review 后分流设计已完成当前最小闭环。后续可进入 cleanup config 或真实 promote/pick dry run。
+本轮 review 后分流设计已完成当前最小闭环。后续进入 `08-promote-pick-dry-run/`。

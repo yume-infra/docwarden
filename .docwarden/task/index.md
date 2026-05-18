@@ -26,10 +26,9 @@ owner: sayori
 - `04-task-review-spec-pipeline/`：task / review system / spec / guide / wiki pipeline 工作面，已完成并关闭。
 - `05-review-input-design/`：review system 输入边界设计工作面，已完成并关闭。
 - `06-review-surface-design/`：review surface 最小形态设计工作面，已完成并关闭。
-- `07-review-trace-design/`：review decision / trace 设计工作面，当前推进中。
+- `07-review-trace-design/`：review 后 promote / pick 分流设计工作面，已完成并关闭。
+- `08-promote-pick-dry-run/`：promote / pick dry run 工作面，已完成并关闭。
 
 ## 当前入口
 
-当前 active task：
-
-- `07-review-trace-design/index.md`
+当前 active task：无。
