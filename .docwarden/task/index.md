@@ -24,11 +24,12 @@ owner: sayori
 - `01-contexta-positioning/`：contexta 定位工作面，基本完成。
 - `03-ai-infra-min-schema/`：AI infra 最小 schema 工作面，已完成并关闭。
 - `04-task-review-spec-pipeline/`：task / review system / spec / guide / wiki pipeline 工作面，已完成并关闭。
+- `05-review-input-design/`：review system 输入边界设计工作面，当前推进中。
+- `06-review-surface-design/`：review surface 最小形态设计工作面，当前暂停。
+- `07-review-trace-design/`：review decision / trace 设计工作面，当前暂停。
 
 ## 当前入口
 
-当前没有 active task。
+当前 active task：
 
-最近完成的入口：
-
-- `04-task-review-spec-pipeline/index.md`
+- `05-review-input-design/index.md`
