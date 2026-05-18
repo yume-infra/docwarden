@@ -50,7 +50,7 @@ review artifact/
 - guide candidate。
 - wiki candidate。
 
-但当前只能验证方向，不能稳定 apply。
+但当前只能验证方向，不能稳定写入。
 
 ### 4. pick 也需要 review surface
 
@@ -64,9 +64,9 @@ conversation correction + review artifact + task log
   -> lead.md + backing.md
 ```
 
-### 5. pick source 包括对话上下文
+### 5. pick 来源包括对话上下文
 
-pick source 不只包括 task material 或 promote residue。
+pick 来源不只包括 task material 或 promote residue。
 
 它还包括：
 
@@ -80,7 +80,7 @@ pick source 不只包括 task material 或 promote residue。
 
 当前长期层只有入口文件。
 
-因此 promote candidates 不能真实 apply。
+因此 promote candidates 不能真实写入。
 
 需要后续设计：
 
@@ -100,22 +100,30 @@ index.md / lead.md / backing.md
 
 这应该另走 promote review。
 
-### 3. 用户层资产承接层未定
+### 3. 用户层资产承接层已出现第一个实体
 
-pick 已确认目标是 user-level asset。
+pick 已确认目标是用户层资产。
 
-但最终承接层还未确定。
+本轮已将已通过的 pick `sayori-working-profile` 写入：
 
-当前不能假设一定进入 wiki。
+```text
+.docwarden/user/profile.md
+```
 
-这不表示 pick 到此为止。
+该模块是 docwarden 当前协作中的用户层实体资产。
 
-未来必须存在用户层资产承接内容，用于保存 accepted pick。
+它不是 contexta 本体，不是 policy 层，也不是 docwarden 工作流。
+
+contexta 后续只应定义 user context 的内容格式或 template，不应承接这份具体实体。
+
+但更完整的用户层资产结构仍未设计。
+
+当前不能假设所有 pick 都进入 wiki 或 profile。
 
 本次 dry run 已产生两个用户层资产候选：
 
 - `.docwarden/review/review-lead-minimality/`
-- `.docwarden/review/sayori-working-profile/`
+- `.docwarden/review/sayori-working-profile/`（已写入 `.docwarden/user/profile.md`）
 
 ### 4. cleanup config 还没有设计
 
@@ -128,7 +136,7 @@ default: delete
 
 还没有定义 config 文件位置、字段归属和执行时机。
 
-### 5. review/pick 的真实 apply 编排未设计
+### 5. review/pick 的真实写入编排未设计
 
 当前 dry run 只验证候选生成。
 
@@ -151,6 +159,6 @@ spec / guide / wiki 最小产物模板
 
 原因：
 
-- promote candidates 已经暴露它是当前 apply 的 blocker。
+- promote candidates 已经暴露它是当前写入阻塞点。
 - 没有长期层模板，就无法判断 promote 是否真的能写入。
 - review artifact schema 和 cleanup config 可以随后进入主线规则设计。

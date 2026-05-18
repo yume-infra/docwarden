@@ -2,6 +2,14 @@
 
 @/Users/sayori/.codex/RTK.md
 
+## User Context
+
+Agents MUST load and apply the project user context when working in this repository:
+
+@/Users/sayori/Desktop/docwarden/.docwarden/user/profile.md
+
+The user context is not a project policy or workflow rule. Current user instructions and project rules take priority over it.
+
 ## Document Authority
 
 - Agents MUST NOT directly edit files under `docs/`.

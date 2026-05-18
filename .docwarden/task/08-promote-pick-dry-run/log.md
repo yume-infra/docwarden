@@ -198,3 +198,20 @@ sayori 确认本轮可以结束，并建议提交 git。
 - `dry-run-conclusion.md` 标记为 accepted。
 - `index.md` 的 `workspace_status` 标记为 closed。
 - `plan.md` 标记为 accepted。
+
+## [2026-05-19] follow-up | user profile 实体落到 docwarden
+
+sayori 指出 user 层不是 policy 规范，并进一步纠正：contexta 只适合定义 user context 的内容格式，具体 user profile 实体应放在 docwarden。
+
+当前确认：
+
+- `profile.md` 属于 `.docwarden/user/`。
+- 这是 docwarden 当前协作中的用户层实体资产。
+- contexta 后续只应定义 user context 的内容格式或 template。
+- 该实体不是 policy 层，也不是 docwarden 工作流。
+
+已将已通过的 pick `sayori-working-profile` 写入：
+
+```text
+.docwarden/user/profile.md
+```
