@@ -1,6 +1,6 @@
 ---
 status: accepted
-workspace_status: active
+workspace_status: closed
 created: 2026-05-13
 updated: 2026-05-18
 owner: sayori
@@ -34,6 +34,7 @@ owner: sayori
 - Loop 1 已接受：review input = material + current agent context。
 - `lead + backing` 不是 input 本体，而是 review surface 对 input 的组织结果。
 - Loop 2 已接受：user 指定 input 是短路径；user 未指定 input 时，agent selection 是主路径。
+- Loop 3 已接受：input readiness 的关键是 surface 能否生成 lead；如果无法生成 lead，不能进入 user review，必须缩小、补充、回问或延后。
 
 ## 推进规则
 
@@ -53,15 +54,19 @@ agent 每轮最多问三个问题，能问一个问题时优先只问一个。
 - `log.md`：任务建立和后续循环进展的时间线记录。
 - `review-input-boundary.md`：Loop 1 review input 边界。
 - `review-input-selection.md`：Loop 2 review input selection。
+- `lead-rules.md`：Loop 3 lead rules。
 
 ## 文件索引
 
-- `index.md`：工作面 lead file，状态：accepted；同时通过 `workspace_status: active` 表示本工作面正在推进。
+- `index.md`：工作面 lead file，状态：accepted；同时通过 `workspace_status: closed` 表示本工作面已关闭。
 - `plan.md`：本轮 loop 计划，状态：accepted。
 - `log.md`：时间线记录，状态：draft；后续可继续追加。
 - `review-input-boundary.md`：Loop 1 review input 边界，状态：accepted。
 - `review-input-selection.md`：Loop 2 review input selection，状态：accepted。
+- `lead-rules.md`：Loop 3 lead rules，状态：accepted。
 
 ## 下一步
 
-进入 Loop 3：input readiness。
+本工作面已关闭。
+
+下一步进入 `.docwarden/task/06-review-surface-design/`。

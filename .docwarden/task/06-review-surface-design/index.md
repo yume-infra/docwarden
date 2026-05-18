@@ -1,6 +1,6 @@
 ---
-status: draft
-workspace_status: paused
+status: accepted
+workspace_status: active
 created: 2026-05-13
 updated: 2026-05-18
 owner: sayori
@@ -13,7 +13,7 @@ owner: sayori
 ## 边界
 
 - 本目录是对话产生的 task material。
-- 本任务当前暂停，等待 `05-review-input-design` 先完成。
+- 本任务当前 active。
 - 本任务只设计 review surface，不设计 review input，不设计 decision trace，不实现完整 HTML 工具。
 
 ## 来源基线
@@ -33,15 +33,17 @@ owner: sayori
 
 ## 内容
 
+- `plan.md`：本轮的小循环列表。
 - `log.md`：任务建立和后续循环进展的时间线记录。
 - `review-surface-role.md`：从 05 迁移出的 surface 职责定义。
 
 ## 文件索引
 
-- `index.md`：工作面 lead file，状态：draft；同时通过 `workspace_status: paused` 表示本工作面等待后续推进。
+- `index.md`：工作面 lead file，状态：accepted；同时通过 `workspace_status: active` 表示本工作面正在推进。
+- `plan.md`：本轮 loop 计划，状态：draft。
 - `log.md`：时间线记录，状态：draft；后续可继续追加。
 - `review-surface-role.md`：surface 职责定义，状态：draft。
 
 ## 下一步
 
-等待 `05-review-input-design` 完成后再启动。
+进入 Loop 1：surface role 与 lead/backing 结构。

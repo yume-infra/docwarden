@@ -108,3 +108,40 @@ sayori 确认前述纠偏信息需要持久化，并要求提交 git 后继续�
 标记为 accepted。
 
 当前进入 Loop 3：input readiness。
+
+## [2026-05-18] loop-3 | 修正为 lead rules
+
+sayori 指出，Loop 3 实际上应该讨论 lead 规则。
+
+纠偏：
+
+- 不应该问 material 是否必须先有明确 review 目标。
+- 因为 review input = material + current agent context。
+- surface 才负责提炼 lead + backing。
+- input readiness 的关键，是 surface 能否从 input 中提炼 lead。
+
+已创建 `lead-rules.md` 草案。
+
+## [2026-05-18] loop-3 | lead rules review 通过
+
+sayori 确认：
+
+- 如果 surface 无法生成 lead，说明当前这次 review 不能继续进入 user review。
+- 不能把 materials 原样交给 user，让 user 自己组织判断链。
+- 失败处理链应为：判断 input 过大、判断 input 不足、判断目标不清、仍不成立则延后 review。
+- 任何 fallback 都不能跳过 lead。
+- 如果不能回到 `material + context -> surface -> lead + backing`，就不进入 user review。
+
+已将 `lead-rules.md` 标记为 accepted。
+
+## [2026-05-18] close | 关闭 05
+
+05 已完成：
+
+- Loop 1：review input = material + current agent context。
+- Loop 2：user 指定 input 是短路径；user 未指定 input 时，agent selection 选择 material。
+- Loop 3：lead rules 已通过，surface 无法生成 lead 时不能进入 user review。
+
+已将 `index.md` 的 `workspace_status` 更新为 `closed`。
+
+下一步进入 `06-review-surface-design`。

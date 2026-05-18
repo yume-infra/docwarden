@@ -13,6 +13,14 @@ owner: sayori
 
 本任务等待 `05-review-input-design` 完成后再推进。
 
+## [2026-05-18] activate | 启动 06
+
+05 已关闭。
+
+当前启动 `06-review-surface-design`。
+
+本任务先围绕 surface role 与 lead / backing 结构推进。
+
 ## [2026-05-18] capture | 从 05 迁移 surface 职责
 
 05 讨论中明确：

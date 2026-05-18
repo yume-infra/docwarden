@@ -47,19 +47,27 @@ review 门槛：
 
 - sayori 确认 agent 选择 input 不会跳过 user 需要判断的关键点。
 
-## Loop 3：input readiness
+## Loop 3：lead rules
 
-状态：active。
+状态：accepted。
 
-目标：定义什么样的 task material 可以进入 review system。
+目标：定义 surface 判断 input 是否 ready 的实际规则：能否提炼 lead。
 
 草案产物：
 
-- `review-input-readiness.md`
+- `lead-rules.md`
 
 review 门槛：
 
-- sayori 确认 review input 的进入条件足够明确。
+- sayori 确认 lead rules 足够支撑 surface 判断 input 是否 ready。
+
+## 当前状态
+
+05 的 input 边界、input selection 和 lead rules 均已通过。
+
+05 已关闭。
+
+下一步进入 `06-review-surface-design`。
 
 ## 本轮不做
 
