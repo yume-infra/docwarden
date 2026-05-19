@@ -29,7 +29,9 @@ owner: sayori
 - `07-review-trace-design/`：review 后 promote / pick 分流设计工作面，已完成并关闭。
 - `08-promote-pick-dry-run/`：promote / pick dry run 工作面，已完成并关闭。
 - `09-promote-pick-entity-landing/`：promote / pick 实体落点设计工作面，已完成并关闭。
+- `10-promote-output-content-format/`：promote 后内容格式实例设计工作面，已完成并关闭。
+- `11-contexta-content-type-constraints/`：contexta 内容类型约束设计工作面，当前 active。
 
 ## 当前入口
 
-当前 active task：无。
+当前 active task：`11-contexta-content-type-constraints/`。
