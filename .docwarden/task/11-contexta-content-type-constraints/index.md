@@ -33,9 +33,10 @@ owner: sayori
 - workflow 不应套用 policy 结构。
 - template 是 artifact role，metadata 是字段层，semantic-lint 是工具机制，当前不作为 primitive 元概念。
 - workflow / pipeline / architecture / branch 先作为 structure 下的子概念或子模块处理，不先进入 `structure_type` metadata。
-- 当前已补 `.contexta/modules/concept/`，优先落地 concept / policy / module / assertion / template；其中 template 不是 primitive，而是补齐命名和边界所需的 artifact role。
+- 当前已补 `.contexta/modules/concept/`，优先落地 concept / policy / module / assertion / example / template；其中 template 不是 primitive，而是补齐命名和边界所需的 artifact role。
 - 当前已新增 naming 作为语义定位机制；naming 不是 primitive，但作为 contexta foundational concern 落地。
-- structure / example 仍未落地到 `.contexta` 长期层。
+- structure 仍未落地到 `.contexta` 长期层。
+- example 已落地为样本语言。
 - 当前关系已确定为 `policy applies to concept`。
 - 当前已按新架构直接修改 `.contexta/templates/` 与 `.contexta/modules/`。
 
@@ -58,6 +59,8 @@ owner: sayori
 - `.contexta/modules/concept/policy.md`：`policy` concept module 草案。
 - `.contexta/modules/concept/template.md`：`template` concept module 草案。
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案。
+- `.contexta/modules/concept/example.md`：`example` concept module 草案。
+- `.contexta/templates/example.md`：example template。
 - `.contexta/modules/policy/naming.md`：naming policy。
 - `.contexta/modules/policy/language.md`：language policy。
 - `.contexta/modules/policy/audience.md`：audience policy。
@@ -87,6 +90,8 @@ owner: sayori
 - `.contexta/modules/concept/policy.md`：`policy` concept module 草案，状态：draft。
 - `.contexta/modules/concept/template.md`：`template` concept module 草案，状态：draft。
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案，状态：draft。
+- `.contexta/modules/concept/example.md`：`example` concept module 草案，状态：draft。
+- `.contexta/templates/example.md`：example template，状态：draft。
 - `.contexta/modules/policy/naming.md`：naming policy，状态：draft。
 - `.contexta/modules/policy/language.md`：language policy，状态：draft。
 - `.contexta/modules/policy/audience.md`：audience policy，状态：draft。
@@ -101,4 +106,4 @@ owner: sayori
 
 ## 下一步
 
-等待 review 已落地的 `.contexta` 新架构。
+继续 review 已落地的 `.contexta` 新架构，下一步补齐 structure。

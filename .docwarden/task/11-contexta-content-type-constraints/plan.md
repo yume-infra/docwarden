@@ -240,18 +240,24 @@ review 门槛：
 
 ## Loop 9：example
 
-状态：pending。
+状态：accepted。
 
-目标：定义 `example` 作为正例、反例、边界例。
+目标：定义 `example` 作为样本语言。
 
-草案产物：
+落地产物：
 
-- `example-meta-concept.md`
+- `.contexta/modules/concept/example.md`
+- `.contexta/templates/example.md`
 
 review 门槛：
 
-- sayori 确认 example 用于校验和解释元概念边界。
+- sayori 确认 example 是用具体样本教 agent 理解、书写或判断的样本语言。
 - sayori 确认 example 不替代 policy / structure / concept 本体。
+
+当前结果：
+
+- sayori 已纠正：example 的本体不是边界校验语言，而是样本语言。
+- 边界识别、review 对照或 semantic lint 参考是样本产生的派生用途，不是 example 的本体定义。
 
 ## 本轮不做
 

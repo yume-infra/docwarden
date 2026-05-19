@@ -270,3 +270,23 @@ sayori 确认按 subagent 收口建议继续。
 - 收敛 `template` concept 中的 workflow / lifecycle 口吻，只表达 template 与 workflow 的边界。
 - 将 `audience` policy 的英文小标题改为中文表达，保留必要英文术语。
 - 在 task index 中补齐 `language`、`audience`、`semantic-granularity` policy 文件记录。
+
+## [2026-05-19] example | 落地 example 样本语言
+
+sayori 纠正并确认：
+
+- example 的本体不是边界校验语言。
+- example 是样本语言。
+- example 通过具体样本教 agent 理解、书写或判断。
+- 边界识别、review 对照或 semantic lint 参考是样本产生的派生用途，不是 example 的本体定义。
+
+已落地：
+
+- `.contexta/modules/concept/example.md`
+- `.contexta/templates/example.md`
+
+已同步：
+
+- `contexta-architecture-baseline.md`
+- `index.md`
+- `plan.md`

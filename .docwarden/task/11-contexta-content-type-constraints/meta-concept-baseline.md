@@ -22,7 +22,7 @@ contexta 维护的是更上级的内容元概念。
 - `module`：语义组合单元。
 - `assertion`：最小可审查语义单元。
 - `concept`：概念 / 术语定义。
-- `example`：正例、反例、边界例。
+- `example`：样本语言。
 
 ## 当前不升格为 primitive 的内容
 
@@ -82,3 +82,4 @@ workflow / pipeline / architecture / branch 的关系，应在 structure 概念�
 - `policy`：已直接通过。
 - `structure`：早期草案已回退，正式定义后续再开。
 - `module`：当前进入定义。
+- `example`：已确认为样本语言，并落地到 `.contexta` 长期层。

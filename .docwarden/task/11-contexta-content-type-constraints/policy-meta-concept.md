@@ -38,7 +38,7 @@ policy 不承接：
 - `module`：语义组合边界本身。
 - `assertion`：最小可审查语义单元本身。
 - `concept`：术语或概念定义本体。
-- `example`：正例、反例、边界例本体。
+- `example`：样本语言本体。
 
 ## Review
 

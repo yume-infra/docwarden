@@ -24,7 +24,8 @@ designation -> concept -> module -> assertion
 policy --applies to--> concept
 
 template -> copied skeleton
-semantic lint -> consumes concept / policy / template
+example -> teaching sample
+semantic lint -> consumes concept / policy / template / example
 ```
 
 ## concept
@@ -56,6 +57,7 @@ concept 不承接：
 - `.contexta/modules/concept/assertion.md`
 - `.contexta/modules/concept/template.md`
 - `.contexta/modules/concept/naming.md`
+- `.contexta/modules/concept/example.md`
 
 ## policy
 
@@ -109,6 +111,33 @@ template 的约束定义在：
 
 - `.contexta/modules/policy/template-boundary.md`
 
+## example
+
+example 是样本语言。
+
+它负责：
+
+- 用具体样本教 agent 理解某个语义对象。
+- 用具体样本教 agent 如何书写或判断某类内容。
+- 提供可模仿、可对照、可迁移的内容实例。
+
+example 不负责：
+
+- 定义 concept。
+- 规定 policy。
+- 提供 template 骨架。
+- 替代 review 或 semantic lint。
+
+边界识别、review 对照或 semantic lint 参考是样本产生的派生用途，不是 example 的本体定义。
+
+example 的概念定义在：
+
+- `.contexta/modules/concept/example.md`
+
+example 的复制骨架在：
+
+- `.contexta/templates/example.md`
+
 ## naming
 
 naming 是语义定位机制。
@@ -154,5 +183,6 @@ assertion 的概念定义在 concept 中；assertion 的拆分、组合和落地
 - 同一个 concept 只在 concept module 中定义一次。
 - policy 只通过 `Applies to` 指向 concept，并约束其使用。
 - template 只提供骨架和槽位，不承接内容本体。
+- example 只提供样本和示范，不承接 concept 定义本体或 policy 规则本体。
 - docwarden 仍负责 task / review / promote / pick / cleanup。
 - contexta 不承接 docwarden 操作流程生命周期。
