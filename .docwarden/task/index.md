@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-05-19
 owner: sayori
 ---
 
@@ -28,6 +28,7 @@ owner: sayori
 - `06-review-surface-design/`：review surface 最小形态设计工作面，已完成并关闭。
 - `07-review-trace-design/`：review 后 promote / pick 分流设计工作面，已完成并关闭。
 - `08-promote-pick-dry-run/`：promote / pick dry run 工作面，已完成并关闭。
+- `09-promote-pick-entity-landing/`：promote / pick 实体落点设计工作面，已完成并关闭。
 
 ## 当前入口
 
