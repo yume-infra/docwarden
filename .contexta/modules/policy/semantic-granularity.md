@@ -12,9 +12,21 @@ kind: policy
 
 ## Scope
 
-本 policy 适用于 contexta module 的拆分、命名、组合、review，以及断言在 md module 内部的组织方式。
+Applies to:
 
-本 policy 不定义具体 module 模板、profile 结构、adapter 输出格式或断言提取流程。
+- [[module]]
+- [[assertion]]
+
+适用条件：
+
+- contexta 需要拆分、命名、组合或 review module。
+- contexta 需要组织 assertion 在 module 内部的语义粒度。
+
+不适用条件：
+
+- 需要定义具体 module template。
+- 需要定义 profile 结构、adapter 输出格式或断言提取流程。
+- 需要处理 docwarden task / review / promote / pick / cleanup 生命周期。
 
 ## Rules
 
@@ -33,11 +45,9 @@ kind: policy
 
 ## Rationale
 
-断言和 md module 处在不同层级。
+本 policy 已通过 `Applies to` 指向 [[assertion]] 和 [[module]]。
 
-断言适合用于 review、diff、lint、trace 和 pick。它是被审查和迁移的最小语义单位。
-
-md module 适合用于组合和复用。它提供 intent、scope 和相关断言的上下文，避免组合时丢失语义边界。
+这里不重新定义这两个 concept，只解释为什么需要约束它们的粒度关系。
 
 如果每条断言都升级为 module，组合会变得过碎，review 和使用成本都会上升。如果一个 module 混入多个主题，规则边界会变得模糊，后续复用和修改也会困难。
 
@@ -48,8 +58,8 @@ md module 适合用于组合和复用。它提供 intent、scope 和相关断言
 合理的 module 名称：
 
 ```text
-language-policy
-audience-policy
+language
+audience
 semantic-granularity
 ```
 
@@ -59,9 +69,10 @@ semantic-granularity
 rfc2119-language
 docs-must-not-edit
 frontmatter-only-state
+language-policy
 ```
 
-这些名称更像单条断言或单组局部规则，而不是稳定主题边界。
+这些名称更像单条断言、单组局部规则，或重复表达了已由目录和 frontmatter 承载的 kind。
 
 断言组组织示例：
 

@@ -2,7 +2,7 @@
 kind: policy
 ---
 
-# language-policy
+# language
 
 ## Intent
 
@@ -12,12 +12,17 @@ kind: policy
 
 ## Scope
 
-适用范围：
+Applies to:
 
-- contexta 中面向 agent 的规范性规则表达。
-- contexta 中使用 `MUST`、`MUST NOT`、`SHOULD`、`SHOULD NOT`、`MAY` 的规则句。
+- [[policy]]
+- [[assertion]]
 
-不适用范围：
+适用条件：
+
+- contexta 需要表达面向 agent 的规范性规则。
+- contexta 需要使用 `MUST`、`MUST NOT`、`SHOULD`、`SHOULD NOT`、`MAY` 表达规则强度。
+
+不适用条件：
 
 - 不面向 agent 执行的解释性文字、设计讨论或示例文本。
 - agent-facing 与 user-facing 的受众选择和表达模式。
@@ -52,7 +57,7 @@ kind: policy
 
 ### RFC2119 Constraint Strength
 
-当前只采用 RFC2119 作为第一条语言策略。后续如果出现中文术语、双语表达、prompt 语言选择或其他规则语言策略，继续加入本 module，而不是新建过碎的 language policy。
+当前只采用 RFC2119 作为第一条语言策略。后续如果出现中文术语、双语表达、prompt 语言选择或其他规则语言策略，继续加入 `language` module，而不是新建过碎的局部 policy module。
 
 contexta 使用 RFC2119 关键词，是为了让规则的强度更稳定地传递给 agent。
 
