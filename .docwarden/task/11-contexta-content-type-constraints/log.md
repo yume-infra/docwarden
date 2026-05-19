@@ -152,3 +152,121 @@ sayori 要求先整理现状并提交 git，然后直接把草案落地到 conce
 
 - 提交当前 `.docwarden` task / review 工作材料。
 - 提交后进入 `.contexta/modules/concept/`，优先落地 `module` 和 `assertion` 的 concept 草案。
+
+## [2026-05-19] concept | 落地 module / assertion concept 草案
+
+已提交当前 `.docwarden` 工作材料。
+
+提交：
+
+- `3702a4b docs: record contexta content type design`
+
+提交后进入 `.contexta/modules/concept/` 草案落地。
+
+已新增：
+
+- `.contexta/modules/concept/module.md`
+- `.contexta/modules/concept/assertion.md`
+
+当前处理：
+
+- concept 草案只定义概念、边界、关系和识别方式。
+- concept 草案不承接 policy 规则强度。
+- concept 草案不修改 template。
+- concept 草案不改变 docwarden workflow。
+
+## [2026-05-19] correction | concept 草案表达方式错误
+
+sayori 指出：当前 concept 写得像 policy，方向错误。
+
+当前纠偏：
+
+- `policy 是约束语言`。
+- `concept 是命名语言`。
+- concept 不能与 policy 重复。
+- concept 需要和 policy 并排设计，各自负责各自的表意。
+
+已创建 `policy-concept-expression-boundary.md`。
+
+当前判断：
+
+- 现有 `.contexta/modules/concept/module.md` 与 `.contexta/modules/concept/assertion.md` 不合格。
+- 问题不是 module / assertion 概念完全错误，而是 concept 表达方式错误。
+- 下一步应先确认 policy / concept 表意分工，再重写 concept template 和 concept module。
+
+## [2026-05-19] architecture | 按新架构落地 contexta
+
+sayori 确认关系已理顺，并要求直接按新架构大改。
+
+当前架构：
+
+- concept 是命名语言。
+- policy 是约束语言。
+- policy 通过 `Applies to` 指向 concept。
+- template 是复制骨架，不承接规则本体、concept 定义本体或生命周期。
+
+已修改：
+
+- `.contexta/templates/concept.md`
+- `.contexta/templates/policy.md`
+- `.contexta/modules/concept/module.md`
+- `.contexta/modules/concept/assertion.md`
+- `.contexta/modules/concept/concept.md`
+- `.contexta/modules/concept/policy.md`
+- `.contexta/modules/concept/template.md`
+- `.contexta/modules/policy/language.md`
+- `.contexta/modules/policy/audience.md`
+- `.contexta/modules/policy/semantic-granularity.md`
+- `.contexta/modules/policy/template-boundary.md`
+- `.contexta/modules/concept/naming.md`
+- `.contexta/modules/policy/naming.md`
+
+已创建 `contexta-architecture-baseline.md` 记录当前架构基线。
+
+## [2026-05-19] review-fix | 修复 subagent 审核发现
+
+subagent 只读审核后未发现阻塞问题，但指出三处需要修复：
+
+- `semantic-granularity` 的 Rationale 中仍有 concept 定义回流。
+- `concept 不反向引用 policy` 的表述存在歧义。
+- task index 中 primitive 理论序列与当前长期层落地集合容易混淆。
+
+已修复：
+
+- `semantic-granularity` 的 Rationale 改为只解释粒度约束原因，不重新定义 [[assertion]] 或 [[module]]。
+- `plan.md` 明确：concept 不通过 `Applies to` 或规则内容反向挂载 policy，但 concept network 可以出现 `[[policy]]` 作为相邻 concept。
+- `index.md` 明确：六个 primitive 是理论建设序列，当前长期层只先落地 concept / policy / module / assertion / template；template 不是 primitive，structure / example 仍未落地。
+
+## [2026-05-19] naming | 设计 naming 语义定位机制
+
+sayori 指出命名也需要绝对规范和严格，并询问命名是否适合作为理论。
+
+当前判断：
+
+- naming 是语义定位机制。
+- naming 不是表面风格。
+- agent 通过目录名、文件名、标题名和 concept designation 定位内容。
+- naming 当前不升格为 primitive，但作为 contexta 的 foundational concern 落地。
+
+已新增：
+
+- `.contexta/modules/concept/naming.md`
+- `.contexta/modules/policy/naming.md`
+
+已按 naming policy 修正：
+
+- `.contexta/modules/policy/language-policy.md` -> `.contexta/modules/policy/language.md`
+- `.contexta/modules/policy/audience-policy.md` -> `.contexta/modules/policy/audience.md`
+- 对应标题同步改为 `# language` 与 `# audience`。
+
+## [2026-05-19] close-review-fix | 修复收口审核发现
+
+sayori 确认按 subagent 收口建议继续。
+
+已修复：
+
+- 清理 concept module 中把相邻概念写入 `Avoid` 的用法。
+- 将 `assertion` concept 的边界例改回命名语言，不再写成 policy 或 semantic lint 判断。
+- 收敛 `template` concept 中的 workflow / lifecycle 口吻，只表达 template 与 workflow 的边界。
+- 将 `audience` policy 的英文小标题改为中文表达，保留必要英文术语。
+- 在 task index 中补齐 `language`、`audience`、`semantic-granularity` policy 文件记录。

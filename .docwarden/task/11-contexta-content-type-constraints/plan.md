@@ -9,7 +9,9 @@ owner: sayori
 
 本轮目标是设计 contexta 的 primitive 内容元概念，并避免把字段层、工具机制、artifact role 或 docwarden 流程职责混入内容类型层。
 
-本任务只在 `.docwarden/task/11-contexta-content-type-constraints/` 中推进，不直接修改 `.contexta/templates/`，不真实写入长期层。
+本任务早期只在 `.docwarden/task/11-contexta-content-type-constraints/` 中推进。
+
+在 Loop 6.4 中，sayori 明确要求按新架构直接修改 `.contexta` 长期层，因此当前允许修改 `.contexta/templates/` 与 `.contexta/modules/`。
 
 ## Loop 1：内容类型约束边界
 
@@ -122,9 +124,83 @@ review 门槛：
 - sayori 确认 assertion 是否应先作为 module 内部列表项落地，而不是独立文件。
 - sayori 确认第一版是否不新增 `kind: module`、assertion 独立文件或 assertion 全局 ID。
 
+## Loop 6.2：concept 层草案落地
+
+状态：rejected。
+
+目标：将 module 和 assertion 的概念定义先落到 `.contexta/modules/concept/`，供 sayori 核对和修改。
+
+草案产物：
+
+- `.contexta/modules/concept/module.md`
+- `.contexta/modules/concept/assertion.md`
+
+review 门槛：
+
+- sayori 确认 `module` concept module 是否正确表达语义组合单元。
+- sayori 确认 `assertion` concept module 是否正确表达最小可审查语义单元。
+- sayori 确认 concept 草案没有混入 policy 规则或 docwarden workflow。
+
+当前结果：
+
+- 草案概念方向基本相关，但表达方式错误。
+- 现有 concept 草案把 concept 写成了准 policy。
+- 后续需要先并排设计 policy / concept 的表意职责，再重写 concept template 和 concept module。
+
+## Loop 6.3：policy / concept 表意分工
+
+状态：accepted。
+
+目标：并排设计 policy 和 concept，避免 concept 与 policy 重复。
+
+草案产物：
+
+- `policy-concept-expression-boundary.md`
+
+review 门槛：
+
+- sayori 确认 `policy 是约束语言，concept 是命名语言`。
+- sayori 确认 concept template 的核心骨架。
+- sayori 确认 policy template 与 concept template 的职责不重复。
+
+当前结果：
+
+- 关系定为 `policy applies to concept`。
+- concept 不通过 `Applies to` 或规则内容反向挂载 policy；concept network 可以出现 `[[policy]]` 作为相邻 concept。
+- policy 通过 `Applies to` 指向 concept。
+
+## Loop 6.4：contexta 架构落地
+
+状态：accepted。
+
+目标：按新架构直接修改 `.contexta`。
+
+落地产物：
+
+- `.contexta/templates/concept.md`
+- `.contexta/templates/policy.md`
+- `.contexta/modules/concept/concept.md`
+- `.contexta/modules/concept/policy.md`
+- `.contexta/modules/concept/module.md`
+- `.contexta/modules/concept/assertion.md`
+- `.contexta/modules/concept/template.md`
+- `.contexta/modules/policy/template-boundary.md`
+- `.contexta/modules/policy/language.md`
+- `.contexta/modules/policy/audience.md`
+- `.contexta/modules/concept/naming.md`
+- `.contexta/modules/policy/naming.md`
+- `.contexta/modules/policy/semantic-granularity.md`
+- `contexta-architecture-baseline.md`
+
+review 门槛：
+
+- sayori 确认 concept module 是否符合命名语言。
+- sayori 确认 policy module 是否通过 `Applies to` 指向 concept。
+- sayori 确认 template 定位是否清楚。
+
 ## Loop 7：assertion
 
-状态：pending。
+状态：absorbed by Loop 6.4。
 
 目标：定义 `assertion` 作为最小可审查语义单元。
 
@@ -137,9 +213,14 @@ review 门槛：
 - sayori 确认 assertion 是最小可审查语义单元。
 - sayori 确认 assertion 不默认独立成文件。
 
+当前处理：
+
+- `assertion` concept module 已先落地到 `.contexta/modules/concept/assertion.md`。
+- assertion 的拆分、组合和落地约束已由 `semantic-granularity` 与 `template-boundary` 承接。
+
 ## Loop 8：concept
 
-状态：pending。
+状态：absorbed by Loop 6.4。
 
 目标：定义 `concept` 作为概念 / 术语定义。
 
@@ -151,6 +232,11 @@ review 门槛：
 
 - sayori 确认 concept 解决术语和概念边界问题。
 - sayori 确认 concept 不承担 policy 约束或 structure 流转职责。
+
+当前处理：
+
+- `concept` concept module 已先落地到 `.contexta/modules/concept/concept.md`。
+- concept template 已落地到 `.contexta/templates/concept.md`。
 
 ## Loop 9：example
 
@@ -169,8 +255,6 @@ review 门槛：
 
 ## 本轮不做
 
-- 修改 `.contexta/templates/`。
-- 修改 `.contexta/modules/`。
 - 真实写入 `.docwarden/spec/`、`.docwarden/guide/`、`.docwarden/wiki/`。
 - 设计 docwarden review / promote / pick / cleanup 流程。
 - 处理 pick 后 user context。

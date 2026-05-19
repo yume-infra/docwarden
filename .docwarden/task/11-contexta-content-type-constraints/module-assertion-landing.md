@@ -121,7 +121,7 @@ module path + heading path + assertion list item
 例如：
 
 ```text
-.contexta/modules/policy/audience-policy.md
+.contexta/modules/policy/audience.md
 ## Rules / ### Audience Decision
 - contexta 文档作者 MUST 在写作前明确目标读者。
 ```
