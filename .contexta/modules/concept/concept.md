@@ -38,6 +38,7 @@ contexta 需要一个名字表示被稳定命名和界定的语义对象。
 - [[assertion]]：concept 中的定义和消歧内容可以由 assertion 表达。
 - [[template]]：concept template 提供 concept module 的复制骨架。
 - [[naming]]：concept 依赖 naming 建立稳定 designation。
+- [[example]]：concept 可以通过 example 提供样本，帮助 agent 理解 designation 的使用。
 
 ## Examples
 
@@ -49,6 +50,7 @@ assertion
 policy
 template
 naming
+example
 ```
 
 这些名称都指向 contexta 中需要稳定界定的语义对象。

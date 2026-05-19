@@ -43,6 +43,7 @@ template 的语义重点是生成初始形状，而不是承接内容本体或�
 ```text
 .contexta/templates/policy.md
 .contexta/templates/concept.md
+.contexta/templates/example.md
 ```
 
 这些文件提供复制骨架。
