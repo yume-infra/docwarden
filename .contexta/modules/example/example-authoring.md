@@ -86,6 +86,6 @@ Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
 
 ## Limits
 
-这个 example 只示范单样本 example authoring 的局部质量模式，不定义 `example` 的概念本体，也不把教学链升级为 structure primitive。
+这个 example 只示范单样本 example authoring 的局部质量模式，不定义 `example` 的概念本体，也不把教学链升级为独立 structure module。
 
 sample set / contrast set 当前只是占位，尚未正式落地为 concept、policy 或 structure。

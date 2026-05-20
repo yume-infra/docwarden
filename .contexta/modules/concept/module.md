@@ -30,6 +30,7 @@ contexta 需要一个名字表示 md 内容中的语义组合单位。
 | --- | --- |
 | [[assertion]] | assertion 是最小可审查语义单元；module 是 assertion 的组合上下文。 |
 | [[template]] | template 是复制骨架；module 是复制后承载实际语义的内容单元。 |
+| [[structure]] | structure 表达对象之间的组织关系；module 是承载这些语义材料的组合单位。 |
 | task | task 是 docwarden 的短命过程材料；module 是 contexta 的内容组合单位。 |
 | file | file 是存储载体；module 是文件中被组织出来的语义单位。 |
 
@@ -38,6 +39,7 @@ contexta 需要一个名字表示 md 内容中的语义组合单位。
 - [[assertion]]：module 由 assertion 等语义材料组成。
 - [[concept]]：concept module 用于稳定一个命名入口。
 - [[policy]]：policy module 用于表达约束语言。
+- [[structure]]：structure module 可以承载具体结构内容。
 - [[template]]：template 可以提供 module 的复制骨架。
 - [[naming]]：module 文件名应表达稳定主题边界。
 

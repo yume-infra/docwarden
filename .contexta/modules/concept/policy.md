@@ -24,6 +24,7 @@ contexta 需要一个名字表示约束语言。
 | --- | --- |
 | [[concept]] | concept 稳定名字和含义；policy 稳定使用和处理约束。 |
 | [[template]] | template 提供复制骨架；policy 提供规则本体。 |
+| [[structure]] | structure 表达组织关系；policy 表达约束强度。 |
 | workflow | workflow 表达阶段、流转和交接；policy 表达约束强度。 |
 | guide | guide 服务连续理解；policy 服务执行约束。 |
 
@@ -33,6 +34,7 @@ contexta 需要一个名字表示约束语言。
 - [[assertion]]：policy 的规则通常是规范性 assertion。
 - [[module]]：policy 文件是以约束为主题的 module。
 - [[template]]：policy template 提供 policy module 的复制骨架。
+- [[structure]]：policy 可以约束 structure 的使用，但不替代 structure 表达关系形态。
 - [[naming]]：policy module filename 应由 naming policy 约束。
 
 ## Examples

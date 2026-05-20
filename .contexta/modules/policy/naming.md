@@ -19,11 +19,13 @@ Applies to:
 - [[concept]]
 - [[policy]]
 - [[template]]
+- [[structure]]
 
 适用条件：
 
 - contexta 需要创建或重命名 module。
 - contexta 需要命名 concept、policy 或 template。
+- contexta 需要命名 structure 或 structure 的具体关系形态。
 - contexta 需要判断名称是否表达稳定语义对象或规则主题。
 
 不适用条件：
@@ -40,6 +42,7 @@ Applies to:
 - concept canonical designation MUST 与 concept module filename stem 一致。
 - policy module filename MUST 表达约束主题，而不是重复 `policy`。
 - template filename MUST 表达它提供骨架的 kind 或 content role。
+- structure module filename SHOULD 表达关系形态或被组织的语义对象。
 - aliases MUST 只包含可以合理指向同一 concept 的可替代名称。
 - aliases MUST NOT 包含解释性描述。
 - avoid entries MUST 记录容易误导的 designation，而不是已经由 delimitation 覆盖的相邻 concept。

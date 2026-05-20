@@ -31,6 +31,7 @@ example 的核心是示范和教学。边界识别、review 对照或 semantic l
 | [[concept]] | concept 稳定名字和含义；example 用样本帮助 agent 理解这个名字如何被使用。 |
 | [[policy]] | policy 表达约束；example 示范这些约束在具体内容中长什么样。 |
 | [[template]] | template 提供复制骨架；example 提供可模仿或可对照的具体样本。 |
+| [[structure]] | structure 表达多个对象之间的组织关系；example 使用 sample 教 agent 理解或生成。 |
 | [[module]] | module 是语义组合单位；example 是以样本为核心组织的 module。 |
 | [[assertion]] | assertion 是最小可审查语义单元；example 可以由多条 assertion 共同说明一个样本。 |
 | test case | test case 偏验证预期结果；example 偏教学、示范和迁移。 |
@@ -40,6 +41,7 @@ example 的核心是示范和教学。边界识别、review 对照或 semantic l
 - [[concept]]：example 可以帮助 agent 理解 concept 的命名和使用场景。
 - [[policy]]：example 可以示范 policy 在具体文本中的表现。
 - [[template]]：example 可以展示 template 被填充后的内容形态。
+- [[structure]]：example 可以用 structure 表达多个 sample 之间的教学关系。
 - [[module]]：example 文件本身也是一种 module。
 - [[assertion]]：example 的解释和迁移说明可以由 assertion 组成。
 - [[naming]]：example 的名称应表达它示范的对象或场景。

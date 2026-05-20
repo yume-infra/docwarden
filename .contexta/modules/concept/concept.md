@@ -29,6 +29,7 @@ contexta 需要一个名字表示被稳定命名和界定的语义对象。
 | [[policy]] | policy 表达约束；concept 表达命名和界定。 |
 | [[module]] | module 是语义组合单位；concept module 是承载某个 concept 的 module。 |
 | [[template]] | template 是复制骨架；concept 是被骨架承载的语义对象。 |
+| [[structure]] | structure 表达对象之间的组织关系；concept 稳定这些对象和关系形态的名称。 |
 | glossary entry | glossary entry 偏词表；concept 还需要表达命名需要、区分特征和概念关系。 |
 
 ## Concept Relations
@@ -39,6 +40,7 @@ contexta 需要一个名字表示被稳定命名和界定的语义对象。
 - [[template]]：concept template 提供 concept module 的复制骨架。
 - [[naming]]：concept 依赖 naming 建立稳定 designation。
 - [[example]]：concept 可以通过 example 提供样本，帮助 agent 理解 designation 的使用。
+- [[structure]]：concept 可以命名 structure，structure 表达多个 concept 或语义对象之间的组织关系。
 
 ## Examples
 
@@ -51,6 +53,7 @@ policy
 template
 naming
 example
+structure
 ```
 
 这些名称都指向 contexta 中需要稳定界定的语义对象。

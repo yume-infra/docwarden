@@ -27,7 +27,7 @@ Applies to:
 
 - 需要定义 example 的概念本体。
 - 需要规定某个非 example 内容类型的完整写作方法。
-- 需要把 example 的局部教学结构升级为 structure primitive。
+- 需要把 example 的局部教学结构升级为独立 structure module。
 - 需要正式定义 sample set 或 contrast set 的结构。
 - 需要处理 docwarden task / review / promote / pick / cleanup 生命周期。
 
@@ -53,7 +53,7 @@ Applies to:
 - positive、negative、borderline 是 sample set 中可能出现的 sample role。
 - positive、negative、borderline MUST NOT 被写成单个 sample 的内部小标题。
 - positive、negative、borderline MUST NOT 替代 example 的 teaching point。
-- example 的局部教学结构 MUST NOT 在 structure loop 通过前升级为独立 primitive。
+- example 的局部教学结构 MUST NOT 仅因为 structure concept 已落地就自动升级为独立 structure module。
 
 ## Rationale
 
@@ -61,7 +61,7 @@ example 的价值在于降低 agent 从抽象理解到实际生成之间的损�
 
 坏 example 往往没有真正提供样本：它只写结论、复述规则，或把一条 policy assertion 包装成例子。这样的内容不能教 agent 如何落笔，也很难迁移到相邻场景。
 
-`Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits` 是 example 内部的轻结构。它服务 example 编写，不等于 contexta 已经引入新的 structure primitive。
+`Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits` 是 example 内部的轻结构。它服务 example 编写，不等于这条教学链已经成为独立 structure module。
 
 positive、negative、borderline 不是单个 sample 的内部结构。它们更像多个 sample 之间的教学角色，应由未来的 sample set 或 contrast set 承接。当前只保留这个占位，不提前落地新的 structure。
 

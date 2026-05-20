@@ -27,6 +27,7 @@ template 的语义重点是生成初始形状，而不是承接内容本体或�
 | [[module]] | module 是实际语义组合单位；template 是创建 module 时可复制的骨架。 |
 | [[policy]] | policy 承载规则本体；template 只提供结构槽位。 |
 | [[assertion]] | assertion 是最小可审查语义单元；template 只能提供 assertion 的书写位置。 |
+| [[structure]] | structure 表达对象之间的组织关系；template 可以提供 structure 的书写槽位。 |
 | docwarden workflow | docwarden workflow 处理操作流程；template 不表达流程过程。 |
 
 ## Concept Relations
@@ -34,6 +35,7 @@ template 的语义重点是生成初始形状，而不是承接内容本体或�
 - [[module]]：template 通常用于创建 module。
 - [[policy]]：template 的使用边界由 policy 约束。
 - [[assertion]]：template 可以提供 assertion 槽位。
+- [[structure]]：template 可以提供 structure 的书写槽位。
 - [[naming]]：template 文件名应表达它提供骨架的 kind 或 content role。
 
 ## Examples
