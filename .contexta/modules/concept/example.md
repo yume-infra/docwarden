@@ -8,10 +8,6 @@ kind: concept
 
 Canonical: `example`
 
-Aliases:
-
-- sample
-
 ## Naming Need
 
 contexta 需要一个名字表示用于教 agent 理解、书写或判断的具体样本。
@@ -20,20 +16,20 @@ contexta 需要一个名字表示用于教 agent 理解、书写或判断的具�
 
 ## Definition
 
-样本语言，用具体实例示范某个语义对象、规则、结构或内容骨架应如何被理解、生成或判断。
+example 是样本语言：用一个具体样本让 agent 学会如何理解、书写或判断某个对象。
 
-example 的核心是示范和教学。边界识别、review 对照或 semantic lint 参考是样本产生的派生用途，不是 example 的本体定义。
+example 的核心不是证明正文正确，而是在一个具体判断场景里教 agent 下次如何看、如何写、如何避免误判。
 
 ## Delimitation
 
 | Neighbor | Difference |
 | --- | --- |
-| [[concept]] | concept 稳定名字和含义；example 用样本帮助 agent 理解这个名字如何被使用。 |
-| [[policy]] | policy 表达约束；example 示范这些约束在具体内容中长什么样。 |
-| [[template]] | template 提供复制骨架；example 提供可模仿或可对照的具体样本。 |
-| [[structure]] | structure 表达多个对象之间的组织关系；example 使用 sample 教 agent 理解或生成。 |
-| [[module]] | module 是语义组合单位；example 是以样本为核心组织的 module。 |
-| [[assertion]] | assertion 是最小可审查语义单元；example 可以由多条 assertion 共同说明一个样本。 |
+| [[concept]] | concept 稳定名字和含义；example 用具体样本帮助 agent 理解这个名字如何被使用。 |
+| [[policy]] | policy 表达约束；example 把约束放进具体判断场景中示范。 |
+| [[template]] | template 提供复制骨架；example 提供一个可读、可模仿或可对照的具体样本。 |
+| [[structure]] | structure 表达多个语义位置如何共同成立；example 用具体场景示范这些位置如何被理解或使用。 |
+| [[module]] | module 是语义组合单位；example 文件本身也是一种 module。 |
+| [[assertion]] | assertion 是最小可审查语义单元；example 可以用 assertion 解释样本里的判断点。 |
 | test case | test case 偏验证预期结果；example 偏教学、示范和迁移。 |
 
 ## Concept Relations
@@ -41,29 +37,44 @@ example 的核心是示范和教学。边界识别、review 对照或 semantic l
 - [[concept]]：example 可以帮助 agent 理解 concept 的命名和使用场景。
 - [[policy]]：example 可以示范 policy 在具体文本中的表现。
 - [[template]]：example 可以展示 template 被填充后的内容形态。
-- [[structure]]：example 与 structure 的关系后续重新讨论；当前不通过 structure 承接 sample set 或 contrast set。
+- [[structure]]：example 可以示范 structure 在具体文本中的表现。
 - [[module]]：example 文件本身也是一种 module。
 - [[assertion]]：example 的解释和迁移说明可以由 assertion 组成。
 - [[naming]]：example 的名称应表达它示范的对象或场景。
 
 ## Examples
 
-### Positive
+### Effective
 
-```text
-一个 example module 展示 `policy` module 如何通过 `Applies to` 指向 [[concept]]，并用 RFC2119 表达规则强度。
+```md
+用户要求 agent “把 template 规则写进 `.contexta/templates/user-context.md`”。
+
+错误写法：
+
+## Rules
+
+- template MUST NOT 承接来源、review、pick、更新、写入或生命周期。
+
+正确判断：
+
+这条内容是 policy，不是 template 骨架。template 只能提供复制后的初始结构；template 的边界规则应进入 `.contexta/modules/policy/template-boundary.md`。
 ```
 
-这个样本教 agent 如何书写 policy，而不是重新定义 policy。
+这个 example 有具体场景、具体错误写法和具体纠偏判断。agent 下次遇到类似请求时，能判断“这是规则落点问题，不是模板内容问题”。
 
-### Negative
+### Ineffective
 
 ```text
-agent MUST 使用中文表达面向用户的内容。
+template 不应该写规则。
 ```
 
-这是一条 policy assertion，不是 example。它规定行为，但没有提供样本。
+这只是抽象结论。它没有展示 agent 会在哪里误写，也没有给出可读、可迁移的判断场景。
 
 ### Borderline
 
-`positive`、`negative`、`borderline` 不是 example 的本体定义，也不是单个 sample 的内部结构。当前不引入 sample set 或 contrast set；example 的本体仍然是样本语言。
+```text
+合理：占位规则句。
+不合理：真实规则句。
+```
+
+这个 example 有对照意图，但缺少具体场景、具体文本和判断理由。它能提示差异，却还不能稳定教 agent 下次如何判断。

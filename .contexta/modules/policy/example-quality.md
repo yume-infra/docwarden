@@ -8,7 +8,7 @@ kind: policy
 
 定义 contexta example 的质量约束。
 
-本 policy 用于避免 example 变成抽象说明、伪 policy assertion、空泛教程或不可迁移的片段。
+本 policy 用于避免 example 变成抽象说明、伪 policy assertion、空泛教程或没有判断力的片段。
 
 ## Scope
 
@@ -20,97 +20,68 @@ Applies to:
 适用条件：
 
 - contexta 需要创建或修改 example module。
-- contexta 需要判断一个样本是否足以教 agent 理解、书写或判断。
-- contexta 需要维护 example template 的默认章节结构。
+- contexta 需要判断一个 example 是否足以教 agent 理解、书写或判断。
+- contexta 需要维护 example 章节中的例子质量。
 
 不适用条件：
 
 - 需要定义 example 的概念本体。
 - 需要规定某个非 example 内容类型的完整写作方法。
-- 需要把 example 的局部教学结构升级为独立 structure module。
-- 需要正式定义 sample set 或 contrast set 的结构。
+- 需要把 example 的写法升级为独立 structure module。
+- 需要设计新的 example template。
 - 需要处理 docwarden task / review / promote / pick / cleanup 生命周期。
 
 ## Rules
 
-- example MUST 有一个明确的 primary target。
-- example MUST 有一个明确的 teaching point。
-- teaching point MUST 说明该 example 要教 agent 理解、书写或判断什么。
-- teaching point SHOULD 比 primary target 更窄。
-- example MUST 包含具体 sample。
-- sample MUST 是 agent 可以模仿、对照或迁移的具体内容。
-- sample MUST NOT 被抽象说明、规则结论或概念定义替代。
-- example SHOULD 按 `Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits` 组织。
-- reading MUST 解释 sample 中哪些部分值得注意。
-- reading MUST NOT 只重复 teaching point。
-- transfer SHOULD 说明 sample 如何迁移到相邻场景。
-- limits SHOULD 说明 sample 不能被泛化到哪里。
-- 当 sample 容易被误用为 concept 定义、policy 规则或 template 骨架时，limits MUST 明确限制。
-- example SHOULD 一次只教一个主要模式。
-- example SHOULD 使用单个 sample。
-- 单样本 example SHOULD 使用 `Sample` 表达具体样本。
-- 当前不引入 sample set 或 contrast set。
-- 如果一个 example 需要多个样本互相对照，应回到 example 设计 loop，而不是在当前 template 中硬补。
-- positive、negative、borderline MUST NOT 被写成单个 sample 的内部小标题。
-- positive、negative、borderline MUST NOT 替代 example 的 teaching point。
-- example 的局部教学结构 MUST NOT 仅因为 structure concept 已落地就自动升级为独立 structure module。
+- example MUST 使用具体样本，不能只写抽象判断、规则结论或概念定义。
+- example MUST 服务一个明确的判断场景。
+- example MUST 让 agent 看出下一次遇到相邻场景时应如何判断或书写。
+- example SHOULD 展示 agent 容易犯错的相邻写法或相邻判断。
+- example SHOULD 说明为什么这个具体例子有效，说明重点应落在具体文本上，而不是只重复规则。
+- example SHOULD 保留足够上下文，让例子离开当前段落后仍能被理解。
+- example SHOULD 一次只教一个主要判断。
 
 ## Rationale
 
-example 的价值在于降低 agent 从抽象理解到实际生成之间的损耗。
+example 的价值在于降低 agent 从抽象理解到实际判断之间的损耗。
 
-坏 example 往往没有真正提供样本：它只写结论、复述规则，或把一条 policy assertion 包装成例子。这样的内容不能教 agent 如何落笔，也很难迁移到相邻场景。
+坏 example 往往没有真正提供判断场景：它只写结论、复述规则，或把一条 policy assertion 包装成例子。这样的内容不能教 agent 下次如何判断，也很难迁移到相邻场景。
 
-`Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits` 是 example 内部的轻结构。它服务 example 编写，不等于这条教学链已经成为独立 structure module。
-
-positive、negative、borderline 不是单个 sample 的内部结构。当前不为它们引入 sample set 或 contrast set；如果后续需要多样本对照，应重新讨论 example 的设计。
+好的 example 不只是贴“正例”或“反例”。它要展示一个具体文本在具体压力下为什么应该这样读、这样写或这样改。
 
 ## Examples
 
-合理的 teaching point：
-
-```text
-示范 policy 如何通过 `Applies to` 指向 concept，而不是在正文重新定义 concept。
-```
-
-不合理的 teaching point：
-
-```text
-说明 policy。
-```
-
-第二个说法太宽，不能指导 agent 生成具体样本。
-
-合理的 sample：
+有效 example：
 
 ```md
-## Scope
+用户要求 agent “把 template 规则写进 `.contexta/templates/user-context.md`”。
 
-Applies to:
+错误写法：
 
-- [[example]]
+## Rules
 
-适用条件：
+- template MUST NOT 承接来源、review、pick、更新、写入或生命周期。
 
-- contexta 需要创建或修改 example module。
+正确判断：
+
+这条内容是 policy，不是 template 骨架。template 只能提供复制后的初始结构；template 的边界规则应进入 `.contexta/modules/policy/template-boundary.md`。
 ```
 
-这个 sample 给出了可以模仿的具体写法。
+这个 example 有真实压力、具体错误文本和可迁移的纠偏判断。agent 下次遇到“把规则写进 template”的请求时，能判断落点问题。
 
-不合理的 sample：
+无效 example：
 
 ```text
-policy 应该写清楚适用范围。
+template 不应该写规则。
 ```
 
-这是一条抽象判断，不是足够具体的样本。
+这只是结论。它没有展示 agent 会怎么误写，也没有教 agent 在真实场景里如何判断。
 
-多样本对照不应写成：
+边界不清的 example：
 
 ```text
-positive sample
-negative sample
-borderline sample
+合理：占位规则句。
+不合理：真实规则句。
 ```
 
-这些名称不是当前 example template 的章节，也不是当前已落地的 structure subtype。
+这个写法有对照，但缺少具体上下文。它能说明一个结论，却不能充分训练 agent 在文件落点、内容类型和用户请求之间做判断。
