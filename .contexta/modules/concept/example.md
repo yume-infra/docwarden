@@ -64,4 +64,4 @@ agent MUST 使用中文表达面向用户的内容。
 
 ### Borderline
 
-`positive`、`negative`、`borderline` 可以作为组织样本的方式，但它们不是 example 的本体定义。example 的本体仍然是样本语言。
+`positive`、`negative`、`borderline` 可以作为 sample set 中的 sample role，但它们不是 example 的本体定义，也不是单个 sample 的内部结构。example 的本体仍然是样本语言。
