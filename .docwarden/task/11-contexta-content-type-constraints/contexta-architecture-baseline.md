@@ -172,13 +172,10 @@ Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
 
 structure 是组织语言。
 
-当前 structure module 是占位定义，用于保留元概念位置和同构方向，不视为最终定义。
-
 它负责：
 
-- 表达多个语义单元如何在同一目的下共同成立。
-- 表达语义单元之间如何形成转换、推进、组成边界或条件分流。
-- 为 workflow、pipeline、architecture、branch 等具体结构形态提供上位入口。
+- 表达多个语义位置如何在同一目的下共同成立。
+- 作为 pipeline、workflow、architecture、branch 的上位组织语言。
 
 structure 不负责：
 
@@ -191,11 +188,6 @@ structure 不负责：
 structure 的概念定义在：
 
 - `.contexta/modules/concept/structure.md`
-
-后续处理：
-
-- 先设计 structure subtype。
-- 再反推修正 structure definition、delimitation 和 examples。
 
 当前不做：
 
@@ -365,6 +357,6 @@ assertion 的概念定义在 concept 中；assertion 的拆分、组合和落地
 - example 只提供样本和示范，不承接 concept 定义本体或 policy 规则本体。
 - example 的局部教学结构先停留在 policy、template 和 example module 中，不升级为独立 structure module。
 - sample set / contrast set 当前不由 structure 承接；example 设计后续重新讨论。
-- structure 先作为组织语言的 concept 占位落地，不通过 `structure_type` 固化分类树。
+- structure 已由 pipeline / workflow / architecture / branch 反推为组织语言定义，不通过 `structure_type` 固化分类树。
 - docwarden 仍负责 task / review / promote / pick / cleanup。
 - contexta 不承接 docwarden 操作流程生命周期。

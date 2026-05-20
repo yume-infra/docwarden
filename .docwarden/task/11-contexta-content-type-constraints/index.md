@@ -35,9 +35,8 @@ owner: sayori
 - workflow / pipeline / architecture / branch 先作为 structure 下的子概念或子模块处理，不先进入 `structure_type` metadata。
 - 当前已补 `.contexta/modules/concept/`，优先落地 concept / policy / structure / module / assertion / example / template；其中 template 不是 primitive，而是补齐命名和边界所需的 artifact role。
 - 当前已新增 naming 作为语义定位机制；naming 不是 primitive，但作为 contexta foundational concern 落地。
-- structure 已作为组织语言占位落地到 `.contexta` 长期层。
-- 当前只落地 structure concept 占位定义，不新增 `structure_type` metadata、structure template 或 subtype 分类树。
-- 下一步先设计 structure subtype，再反推 structure definition。
+- structure 已由 pipeline / workflow / architecture / branch 四个 subtype 反推为组织语言定义。
+- 当前不新增 `structure_type` metadata、structure template 或 subtype 分类树。
 - pipeline 已作为第一个 subtype 直接落地；当前定义不依赖 structure，只由 input / transform / output 三个位置构成。
 - workflow 已作为第二个 subtype 直接落地；当前定义不依赖 structure，只由 state / move / transition 三个位置构成。
 - architecture 已作为第三个 subtype 直接落地；当前由 layer / relation / boundary 三个位置构成，已通过 review。
@@ -70,7 +69,7 @@ owner: sayori
 - `.contexta/modules/concept/template.md`：`template` concept module 草案。
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案。
 - `.contexta/modules/concept/example.md`：`example` concept module 草案。
-- `.contexta/modules/concept/structure.md`：`structure` concept module 占位草案。
+- `.contexta/modules/concept/structure.md`：`structure` concept module 草案。
 - `.contexta/modules/concept/pipeline.md`：`pipeline` concept module 草案。
 - `.contexta/modules/concept/workflow.md`：`workflow` concept module 草案。
 - `.contexta/modules/concept/architecture.md`：`architecture` concept module 草案。
@@ -112,9 +111,9 @@ owner: sayori
 - `.contexta/modules/concept/template.md`：`template` concept module 草案，状态：draft。
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案，状态：draft。
 - `.contexta/modules/concept/example.md`：`example` concept module 草案，状态：draft。
-- `.contexta/modules/concept/structure.md`：`structure` concept module 占位草案，状态：placeholder。
-- `.contexta/modules/concept/pipeline.md`：`pipeline` concept module 草案，状态：draft。
-- `.contexta/modules/concept/workflow.md`：`workflow` concept module 草案，状态：draft。
+- `.contexta/modules/concept/structure.md`：`structure` concept module 草案，状态：accepted。
+- `.contexta/modules/concept/pipeline.md`：`pipeline` concept module 草案，状态：accepted。
+- `.contexta/modules/concept/workflow.md`：`workflow` concept module 草案，状态：accepted。
 - `.contexta/modules/concept/architecture.md`：`architecture` concept module 草案，状态：accepted。
 - `.contexta/modules/concept/branch.md`：`branch` concept module 草案，状态：accepted。
 - `.contexta/templates/pipeline.md`：pipeline template，状态：draft。
@@ -138,4 +137,4 @@ owner: sayori
 
 ## 下一步
 
-当前 pipeline、workflow、architecture 和 branch subtype 已通过当前口径；后续可基于这些 subtype 反推 structure。
+当前 pipeline、workflow、architecture、branch 和 structure 均已通过当前口径；后续不要继续新增 subtype，先重新讨论 example 设计或处理下一类缺口。

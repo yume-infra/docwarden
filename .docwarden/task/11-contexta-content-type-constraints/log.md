@@ -489,3 +489,34 @@ sayori 确认：
 - architecture = layer + relation + boundary。
 - architecture boundary 是层级分界。
 - policy boundary 是行为适用边界。
+
+## [2026-05-20] structure | 由 subtype 反推 structure 定义
+
+sayori 确认：
+
+- 当前应回到 `structure` 本体。
+- 不继续新增 subtype。
+- 用已通过的 pipeline / workflow / architecture / branch 反推 structure。
+
+已更新：
+
+- `.contexta/modules/concept/structure.md`
+- `index.md`
+- `plan.md`
+- `contexta-architecture-baseline.md`
+
+当前定义：
+
+- structure 是组织语言。
+- structure 用于表达多个语义位置如何在同一目的下共同成立。
+- pipeline 是转换结构。
+- workflow 是推进结构。
+- architecture 是层级结构。
+- branch 是分流结构。
+
+当前不做：
+
+- 不新增 `structure_type` metadata。
+- 不新增 structure template。
+- 不继续新增 subtype。
+- 不用 structure 承接 sample set / contrast set；example 设计后续重新讨论。

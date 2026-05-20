@@ -75,7 +75,7 @@ review 门槛：
 
 ## Loop 5：structure
 
-状态：placeholder。
+状态：accepted。
 
 目标：定义 `structure` 作为组织语言。
 
@@ -85,15 +85,14 @@ review 门槛：
 
 review 门槛：
 
-- sayori 确认 structure 解决组成、关系、流转、边界和承接问题。
-- sayori 确认 workflow / pipeline / architecture / branch 先作为 structure 下的子概念或子模块处理。
+- sayori 确认 structure 是组织语言。
+- sayori 确认 structure 由 pipeline / workflow / architecture / branch 四个 subtype 反推稳定定义。
 
 当前处理：
 
 - structure 早期草案已被回退。
-- 当前只落地 structure concept 占位定义。
-- 当前保留 `structure = 组织语言` 的方向，但不视为最终定义。
-- 下一步先设计 structure subtype，再反推 structure 的 definition、delimitation 和 examples。
+- 当前 structure 已由四个已验证 subtype 反推为正式 concept 定义。
+- structure 定义为组织语言，用于表达多个语义位置如何在同一目的下共同成立。
 - 当前不新增 `structure_type` metadata。
 - 当前不新增 structure template。
 - 当前不把 subtype 固化为 `structure_type` metadata 分类树。
@@ -101,7 +100,7 @@ review 门槛：
 
 ## Loop 5.1：pipeline
 
-状态：revising。
+状态：accepted。
 
 目标：直接定义 `pipeline`，作为第一个 structure subtype 建模材料。
 
