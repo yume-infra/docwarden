@@ -357,3 +357,135 @@ sayori 确认：
 - 不正式落地 workflow / pipeline / architecture / branch 分类树。
 - 不直接把 sample set / contrast set 落为 structure module。
 - 不提前落地新的 example 结构。
+
+## [2026-05-20] pipeline | 落地 pipeline subtype 草案
+
+sayori 确认：
+
+- 不要按照 structure 来定义 pipeline。
+- 先只给 pipeline 下定义。
+- input、transform、output 三点就是完整的 pipeline 定义。
+- 直接出方案到 concept 和 template。
+
+已落地：
+
+- `.contexta/modules/concept/pipeline.md`
+- `.contexta/templates/pipeline.md`
+
+当前定义：
+
+- pipeline 是由 input、transform、output 三个位置共同成立的转换表达。
+- input 是被处理的内容。
+- transform 是对 input 执行的转换。
+- output 是 transform 产生的结果。
+
+当前不做：
+
+- 不添加 Boundary、Review Checks、failure、handoff 或 lifecycle。
+- 不按 structure 反向定义 pipeline。
+- 不通过 pipeline 立即重写 structure。
+
+## [2026-05-20] workflow | 落地 workflow subtype 草案
+
+sayori 要求：
+
+- 落地 workflow。
+- 保证当前建模最简。
+- 清楚区分 workflow 和 pipeline。
+
+已落地：
+
+- `.contexta/modules/concept/workflow.md`
+- `.contexta/templates/workflow.md`
+
+当前定义：
+
+- workflow 是由 state、move、transition 三个位置共同成立的推进表达。
+- state 是当前可行动处境。
+- move 是使协作、理解或材料状态继续推进的行动。
+- transition 是 move 如何使一个 state 进入下一个 state 的成立关系。
+
+与 pipeline 的边界：
+
+- workflow 表达推进。
+- pipeline 表达转换。
+- workflow 的最小问题是 state 如何通过 move 和 transition 进入 next state。
+- pipeline 的最小问题是 input 如何通过 transform 形成 output。
+
+当前不做：
+
+- 不添加 actor、artifact、gateway、lifecycle 或运行时执行语义。
+- 不按完整 structure 分类树定义 workflow。
+- 不通过 workflow 立即重写 structure。
+
+## [2026-05-20] architecture / branch | 落地 structure subtype 草案
+
+sayori 确认：
+
+- architecture：组成与边界。
+- branch / routing：条件分流。
+- set / contrast set 当前不做，example 设计后续重新讨论。
+
+已落地：
+
+- `.contexta/modules/concept/architecture.md`
+- `.contexta/templates/architecture.md`
+- `.contexta/modules/concept/branch.md`
+- `.contexta/templates/branch.md`
+
+当前定义：
+
+- architecture 是由 part、responsibility、boundary 三个位置共同成立的组成表达。
+- branch 是由 condition、route、target 三个位置共同成立的分流表达。
+
+当前四个 subtype 边界：
+
+- pipeline 表达转换。
+- workflow 表达推进。
+- architecture 表达组成与边界。
+- branch 表达条件分流。
+
+当前不做：
+
+- 不把 subtype 固化为 `structure_type` metadata 分类树。
+- 不添加 lifecycle、runtime dependency graph、routing table、priority、fallback 或运行时选择算法。
+- 不把 sample set / contrast set 落为 structure；example 设计后续重新讨论。
+
+## [2026-05-20] architecture-fix | 修正 architecture 建模
+
+sayori 确认：
+
+- branch 当前设计通过。
+- architecture 的 part / responsibility / boundary 设计不符合当前理念。
+
+修正判断：
+
+- part / responsibility / boundary 太像组件职责卡片，容易把 architecture 写成工程拆件或 policy 边界。
+- architecture 应表达层级关系和边界，而不是单个 part 的职责说明。
+
+已修正：
+
+- `.contexta/modules/concept/architecture.md`
+- `.contexta/templates/architecture.md`
+- `.contexta/modules/concept/branch.md` 中对 architecture 的相邻概念说明。
+- `index.md`
+- `plan.md`
+- `contexta-architecture-baseline.md`
+
+当前定义：
+
+- architecture 是由 layer、relation、boundary 三个位置共同成立的层级表达。
+- branch 是由 condition、route、target 三个位置共同成立的分流表达，当前通过。
+
+## [2026-05-20] architecture | architecture 通过
+
+sayori 确认：
+
+- architecture 当前修正版合理。
+- architecture 通过。
+
+当前定义保持：
+
+- architecture = layer + relation + boundary。
+- architecture boundary 是层级分界。
+- policy boundary 是行为适用边界。

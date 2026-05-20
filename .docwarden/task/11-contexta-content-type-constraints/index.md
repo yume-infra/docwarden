@@ -38,11 +38,15 @@ owner: sayori
 - structure 已作为组织语言占位落地到 `.contexta` 长期层。
 - 当前只落地 structure concept 占位定义，不新增 `structure_type` metadata、structure template 或 subtype 分类树。
 - 下一步先设计 structure subtype，再反推 structure definition。
+- pipeline 已作为第一个 subtype 直接落地；当前定义不依赖 structure，只由 input / transform / output 三个位置构成。
+- workflow 已作为第二个 subtype 直接落地；当前定义不依赖 structure，只由 state / move / transition 三个位置构成。
+- architecture 已作为第三个 subtype 直接落地；当前由 layer / relation / boundary 三个位置构成，已通过 review。
+- branch 已作为第四个 subtype 直接落地；当前定义不依赖 structure，只由 condition / route / target 三个位置构成，已通过 review。
 - example 已落地为样本语言。
 - example 编写质量已由 `example-quality` policy、example template 和 `example-authoring` 样本共同承接。
 - `Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits` 是 example authoring 的局部教学结构，不升级为独立 structure module。
-- sample set / contrast set 作为后续占位，用于承接 positive / negative / borderline 等多个 sample 之间的教学角色。
-- 当前不要把 positive / negative / borderline 写成单个 `Sample` 的内部小标题。
+- sample set / contrast set 不作为当前 structure subtype；example 设计后续重新讨论。
+- 当前不要把 positive / negative / borderline 写成单个 `Sample` 的内部小标题，也不要用 structure 提前承接它们。
 - 当前关系已确定为 `policy applies to concept`。
 - 当前已按新架构直接修改 `.contexta/templates/` 与 `.contexta/modules/`。
 
@@ -67,6 +71,14 @@ owner: sayori
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案。
 - `.contexta/modules/concept/example.md`：`example` concept module 草案。
 - `.contexta/modules/concept/structure.md`：`structure` concept module 占位草案。
+- `.contexta/modules/concept/pipeline.md`：`pipeline` concept module 草案。
+- `.contexta/modules/concept/workflow.md`：`workflow` concept module 草案。
+- `.contexta/modules/concept/architecture.md`：`architecture` concept module 草案。
+- `.contexta/modules/concept/branch.md`：`branch` concept module 草案。
+- `.contexta/templates/pipeline.md`：pipeline template。
+- `.contexta/templates/workflow.md`：workflow template。
+- `.contexta/templates/architecture.md`：architecture template。
+- `.contexta/templates/branch.md`：branch template。
 - `.contexta/templates/example.md`：example template。
 - `.contexta/modules/policy/example-quality.md`：example quality policy。
 - `.contexta/modules/example/example-authoring.md`：example authoring 样本。
@@ -101,6 +113,14 @@ owner: sayori
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案，状态：draft。
 - `.contexta/modules/concept/example.md`：`example` concept module 草案，状态：draft。
 - `.contexta/modules/concept/structure.md`：`structure` concept module 占位草案，状态：placeholder。
+- `.contexta/modules/concept/pipeline.md`：`pipeline` concept module 草案，状态：draft。
+- `.contexta/modules/concept/workflow.md`：`workflow` concept module 草案，状态：draft。
+- `.contexta/modules/concept/architecture.md`：`architecture` concept module 草案，状态：accepted。
+- `.contexta/modules/concept/branch.md`：`branch` concept module 草案，状态：accepted。
+- `.contexta/templates/pipeline.md`：pipeline template，状态：draft。
+- `.contexta/templates/workflow.md`：workflow template，状态：draft。
+- `.contexta/templates/architecture.md`：architecture template，状态：draft。
+- `.contexta/templates/branch.md`：branch template，状态：draft。
 - `.contexta/templates/example.md`：example template，状态：draft。
 - `.contexta/modules/policy/example-quality.md`：example quality policy，状态：draft。
 - `.contexta/modules/example/example-authoring.md`：example authoring 样本，状态：draft。
@@ -118,4 +138,4 @@ owner: sayori
 
 ## 下一步
 
-当前 structure concept 占位已落地；下一步先设计 structure subtype，再反推 structure。
+当前 pipeline、workflow、architecture 和 branch subtype 已通过当前口径；后续可基于这些 subtype 反推 structure。

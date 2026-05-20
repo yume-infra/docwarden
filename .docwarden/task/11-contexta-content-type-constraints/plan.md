@@ -96,8 +96,105 @@ review 门槛：
 - 下一步先设计 structure subtype，再反推 structure 的 definition、delimitation 和 examples。
 - 当前不新增 `structure_type` metadata。
 - 当前不新增 structure template。
-- 当前不正式落地 workflow / pipeline / architecture / branch 的完整分类树。
-- 当前不提前落地 sample set / contrast set 或新的 example 结构。
+- 当前不把 subtype 固化为 `structure_type` metadata 分类树。
+- 当前不提前落地 sample set / contrast set 或新的 example 结构；example 设计后续重新讨论。
+
+## Loop 5.1：pipeline
+
+状态：revising。
+
+目标：直接定义 `pipeline`，作为第一个 structure subtype 建模材料。
+
+落地产物：
+
+- `.contexta/modules/concept/pipeline.md`
+- `.contexta/templates/pipeline.md`
+
+review 门槛：
+
+- sayori 确认 pipeline 不按 structure 定义。
+- sayori 确认 pipeline 由 input / transform / output 三个位置完整定义。
+- sayori 确认 pipeline template 只保留 Input / Transform / Output。
+
+当前处理：
+
+- pipeline 定义为 input、transform、output 三个位置共同成立的转换表达。
+- 当前不添加 Boundary、Review Checks、failure、handoff 或 lifecycle。
+- 当前不通过 pipeline 反向修改 structure。
+
+## Loop 5.2：workflow
+
+状态：accepted。
+
+目标：直接定义 `workflow`，并与 `pipeline` 保持最小且清楚的边界。
+
+落地产物：
+
+- `.contexta/modules/concept/workflow.md`
+- `.contexta/templates/workflow.md`
+
+review 门槛：
+
+- sayori 确认 workflow 不按完整 structure 分类树定义。
+- sayori 确认 workflow 由 state / move / transition 三个位置完整定义。
+- sayori 确认 workflow template 只保留 State / Move / Transition。
+- sayori 确认 workflow 与 pipeline 的边界是推进表达 vs 转换表达。
+
+当前处理：
+
+- workflow 定义为 state、move、transition 三个位置共同成立的推进表达。
+- pipeline 定义为 input、transform、output 三个位置共同成立的转换表达。
+- 当前不添加 actor、artifact、gateway、lifecycle 或运行时执行语义。
+- 当前不通过 workflow 反向修改 structure。
+
+## Loop 5.3：architecture
+
+状态：draft。
+
+目标：直接定义 `architecture`，并与 workflow / pipeline / branch 保持最小且清楚的边界。
+
+落地产物：
+
+- `.contexta/modules/concept/architecture.md`
+- `.contexta/templates/architecture.md`
+
+review 门槛：
+
+- sayori 确认 architecture 由 layer / relation / boundary 三个位置完整定义。
+- sayori 确认 architecture 处理层级关系与边界，不处理推进、转换或分流。
+- sayori 确认 architecture template 只保留 Layer / Relation / Boundary。
+
+当前处理：
+
+- 原 part / responsibility / boundary 设计不符合 sayori 理念，已回退为 layer / relation / boundary。
+- architecture 定义为 layer、relation、boundary 三个位置共同成立的层级表达。
+- sayori 已确认 architecture 通过。
+- 当前不添加 lifecycle、runtime dependency graph 或完整系统设计模板。
+- 当前不通过 architecture 反向修改 structure。
+
+## Loop 5.4：branch
+
+状态：accepted。
+
+目标：直接定义 `branch`，并承接当前 promote / pick / log 与 pick entity landing 暴露出的条件分流问题。
+
+落地产物：
+
+- `.contexta/modules/concept/branch.md`
+- `.contexta/templates/branch.md`
+
+review 门槛：
+
+- sayori 确认 branch 由 condition / route / target 三个位置完整定义。
+- sayori 确认 branch 处理条件分流，不处理推进、转换或组成边界。
+- sayori 确认 branch template 只保留 Condition / Route / Target。
+
+当前处理：
+
+- branch 定义为 condition、route、target 三个位置共同成立的分流表达。
+- `routing` 作为 branch 的 alias，不单独建 concept。
+- 当前不添加 routing table、priority、fallback 或运行时选择算法。
+- 当前不通过 branch 反向修改 structure。
 
 ## Loop 6：module
 
@@ -289,13 +386,13 @@ review 门槛：
 - `example-quality` policy 约束好 example 必须有明确 teaching point、具体 sample、reading、transfer 和必要 limits。
 - `example-authoring` 用 example 教 agent 如何写 example。
 - 当前只收口单样本 example authoring。
-- sample set / contrast set 作为后续占位，用于承接多个 sample 之间的教学关系。
-- positive / negative / borderline 是 sample set 中可能出现的 sample role，不是单个 `Sample` 的内部小标题。
-- sample set / contrast set 后续应由 structure 承接，但当前仍不直接落为 `kind: structure` module。
+- sample set / contrast set 不作为当前后续占位。
+- positive / negative / borderline 不是单个 `Sample` 的内部小标题。
+- 多样本对照与 example 设计后续重新讨论，不交给当前 structure subtype 承接。
 
 ## 本轮不做
 
 - 真实写入 `.docwarden/spec/`、`.docwarden/guide/`、`.docwarden/wiki/`。
 - 设计 docwarden review / promote / pick / cleanup 流程。
 - 处理 pick 后 user context。
-- 正式落地 sample set / contrast set。
+- 落地 sample set / contrast set。

@@ -60,6 +60,10 @@ concept 不承接：
 - `.contexta/modules/concept/naming.md`
 - `.contexta/modules/concept/example.md`
 - `.contexta/modules/concept/structure.md`
+- `.contexta/modules/concept/pipeline.md`
+- `.contexta/modules/concept/workflow.md`
+- `.contexta/modules/concept/architecture.md`
+- `.contexta/modules/concept/branch.md`
 
 ## policy
 
@@ -157,12 +161,12 @@ Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
 
 这个结构服务 example authoring，不表示这条教学链已经成为独立 structure module。
 
-当前占位：
+当前不做：
 
-- sample set / contrast set：用于承接多个 sample 之间的教学关系。
-- positive / negative / borderline：作为 sample set 中可能出现的 sample role。
+- 不把 sample set / contrast set 作为当前 structure subtype。
+- 不把 positive / negative / borderline 写成单个 `Sample` 的内部小标题。
 
-这些占位尚未作为 concept、policy 或 structure 落地。当前不要把 positive / negative / borderline 写成单个 `Sample` 的内部小标题。
+多样本对照和 example 设计后续重新讨论。
 
 ## structure
 
@@ -173,8 +177,7 @@ structure 是组织语言。
 它负责：
 
 - 表达多个语义单元如何在同一目的下共同成立。
-- 表达语义单元之间如何成组、分位、对照、承接或分叉。
-- 承接 sample set / contrast set 这类多对象关系问题。
+- 表达语义单元之间如何形成转换、推进、组成边界或条件分流。
 - 为 workflow、pipeline、architecture、branch 等具体结构形态提供上位入口。
 
 structure 不负责：
@@ -198,8 +201,121 @@ structure 的概念定义在：
 
 - 不新增 `structure_type` metadata。
 - 不新增 structure template。
-- 不正式落地 workflow / pipeline / architecture / branch 的完整分类树。
-- 不直接把 sample set / contrast set 落为 structure module。
+- 不把 subtype 固化为 `structure_type` metadata 分类树。
+- 不直接把 sample set / contrast set 落为 structure module；example 设计后续重新讨论。
+
+## pipeline
+
+pipeline 是第一个直接落地的 structure subtype 草案。
+
+当前 pipeline 不按 structure 定义，而是直接由三个位置完整定义：
+
+- input：被处理的内容。
+- transform：对 input 执行的转换。
+- output：transform 产生的结果。
+
+pipeline 的概念定义在：
+
+- `.contexta/modules/concept/pipeline.md`
+
+pipeline 的复制骨架在：
+
+- `.contexta/templates/pipeline.md`
+
+当前不做：
+
+- 不添加 Boundary、Review Checks、failure、handoff 或 lifecycle。
+- 不通过 pipeline 立即重写 structure。
+
+## workflow
+
+workflow 是第二个直接落地的 structure subtype 草案。
+
+当前 workflow 不按 structure 定义，而是直接由三个位置完整定义：
+
+- state：当前可行动处境。
+- move：使协作、理解或材料状态继续推进的行动。
+- transition：move 如何使一个 state 进入下一个 state 的成立关系。
+
+workflow 的概念定义在：
+
+- `.contexta/modules/concept/workflow.md`
+
+workflow 的复制骨架在：
+
+- `.contexta/templates/workflow.md`
+
+workflow 与 pipeline 的边界：
+
+- workflow 表达推进。
+- pipeline 表达转换。
+- workflow 的最小问题是 state 如何通过 move 和 transition 进入 next state。
+- pipeline 的最小问题是 input 如何通过 transform 形成 output。
+
+当前不做：
+
+- 不添加 actor、artifact、gateway、lifecycle 或运行时执行语义。
+- 不通过 workflow 立即重写 structure。
+
+## architecture
+
+architecture 是第三个直接落地且已通过 review 的 structure subtype 草案。
+
+当前 architecture 不按 structure 定义，而是直接由三个位置完整定义：
+
+- layer：整体中的稳定层位。
+- relation：layer 之间的相邻、依赖、承接或包含关系。
+- boundary：layer 之间不可混淆或不可跨越的边界。
+
+architecture 的概念定义在：
+
+- `.contexta/modules/concept/architecture.md`
+
+architecture 的复制骨架在：
+
+- `.contexta/templates/architecture.md`
+
+architecture 与 workflow / pipeline / branch 的边界：
+
+- architecture 表达层级关系与边界。
+- workflow 表达推进。
+- pipeline 表达转换。
+- branch 表达条件分流。
+
+当前不做：
+
+- 不添加 lifecycle、runtime dependency graph 或完整系统设计模板。
+- 不通过 architecture 立即重写 structure。
+
+## branch
+
+branch 是第四个直接落地且已通过 review 的 structure subtype 草案。
+
+当前 branch 不按 structure 定义，而是直接由三个位置完整定义：
+
+- condition：触发分流判断的条件。
+- route：条件成立后选择的路径。
+- target：该路径承接的落点或后续对象。
+
+branch 的概念定义在：
+
+- `.contexta/modules/concept/branch.md`
+
+branch 的复制骨架在：
+
+- `.contexta/templates/branch.md`
+
+branch 与 workflow / pipeline / architecture 的边界：
+
+- branch 表达条件分流。
+- workflow 表达推进。
+- pipeline 表达转换。
+- architecture 表达层级关系与边界。
+
+当前不做：
+
+- 不添加 routing table、priority、fallback 或运行时选择算法。
+- 不通过 branch 立即重写 structure。
 
 ## naming
 
@@ -248,7 +364,7 @@ assertion 的概念定义在 concept 中；assertion 的拆分、组合和落地
 - template 只提供骨架和槽位，不承接内容本体。
 - example 只提供样本和示范，不承接 concept 定义本体或 policy 规则本体。
 - example 的局部教学结构先停留在 policy、template 和 example module 中，不升级为独立 structure module。
-- sample set / contrast set 应由 structure 承接，但当前仍只是后续设计占位。
+- sample set / contrast set 当前不由 structure 承接；example 设计后续重新讨论。
 - structure 先作为组织语言的 concept 占位落地，不通过 `structure_type` 固化分类树。
 - docwarden 仍负责 task / review / promote / pick / cleanup。
 - contexta 不承接 docwarden 操作流程生命周期。
