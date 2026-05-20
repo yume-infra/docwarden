@@ -1,0 +1,84 @@
+---
+kind: concept
+---
+
+# branch
+
+## Designation
+
+Canonical: `branch`
+
+Aliases:
+
+- routing
+
+## Naming Need
+
+contexta 需要一个名字表示内容、判断或行动在条件成立时进入不同承接路径。
+
+这个名字用于避免把条件分流误写成 workflow 推进、pipeline 转换、architecture 组成、policy 约束或 template 骨架。
+
+## Definition
+
+branch 是由 condition、route、target 三个位置共同成立的分流表达。
+
+condition 是触发分流判断的条件。
+
+route 是条件成立后选择的路径。
+
+target 是该路径承接的落点或后续对象。
+
+缺少 condition、route 或 target 中任一位置，都不构成完整 branch。
+
+## Delimitation
+
+| Neighbor | Difference |
+| --- | --- |
+| workflow | workflow 关注 state 如何经 move 和 transition 推进；branch 关注 condition 如何选择 route 和 target。 |
+| pipeline | pipeline 关注 input 如何经 transform 形成 output；branch 关注条件分流，不表达转换动作。 |
+| architecture | architecture 关注 layer 的 relation 和 boundary；branch 关注内容或判断如何被路由到 target。 |
+| mapping | mapping 表达对应关系；branch 必须表达分流条件。 |
+| [[policy]] | policy 表达约束强度；branch 表达分流结构。 |
+| [[template]] | template 提供复制骨架；branch 是被骨架承载的分流表达。 |
+
+## Concept Relations
+
+- [[structure]]：branch 是 structure subtype 的建模材料，但当前不反向重写 structure。
+- [[workflow]]：branch 可以出现在 workflow 的某个 transition 处，但 branch 的核心是分流，不是完整推进链。
+- [[pipeline]]：pipeline 的 output 可以进入 branch，但 branch 不负责 transform。
+- [[architecture]]：branch 的 target 往往落到 architecture 中的某个 layer 或实体层。
+- [[template]]：branch template 提供 branch 的复制骨架。
+- [[module]]：branch 可以作为 module 承载具体分流内容。
+- [[assertion]]：branch 的 condition、route 和 target 说明可以由 assertion 表达。
+- [[naming]]：branch 名称应表达它处理的分流主题。
+- [[example]]：example 可以示范 branch 如何书写。
+
+## Examples
+
+### Positive
+
+```text
+condition: pick candidate is user context
+route: user context route
+target: .docwarden/user/profile.md
+```
+
+这个表达说明了分流条件、路径和承接落点，因此是 branch。
+
+### Negative
+
+```text
+input: reviewed material
+transform: rewrite for guide
+output: guide page candidate
+```
+
+这个表达关注转换，不是条件分流。
+
+### Borderline
+
+```text
+review after output goes to promote or pick
+```
+
+这个表达只有补足进入 promote 或 pick 的 condition，以及各自 route 的 target 后，才构成完整 branch。

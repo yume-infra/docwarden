@@ -54,6 +54,10 @@ template
 naming
 example
 structure
+pipeline
+workflow
+architecture
+branch
 ```
 
 这些名称都指向 contexta 中需要稳定界定的语义对象。

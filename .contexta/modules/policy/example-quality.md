@@ -47,10 +47,10 @@ Applies to:
 - limits SHOULD 说明 sample 不能被泛化到哪里。
 - 当 sample 容易被误用为 concept 定义、policy 规则或 template 骨架时，limits MUST 明确限制。
 - example SHOULD 一次只教一个主要模式。
-- example MAY 使用单个 sample，也 MAY 在后续引入 sample set。
+- example SHOULD 使用单个 sample。
 - 单样本 example SHOULD 使用 `Sample` 表达具体样本。
-- sample set 当前是占位名称，尚未作为 concept 或 structure 落地。
-- positive、negative、borderline 是 sample set 中可能出现的 sample role。
+- 当前不引入 sample set 或 contrast set。
+- 如果一个 example 需要多个样本互相对照，应回到 example 设计 loop，而不是在当前 template 中硬补。
 - positive、negative、borderline MUST NOT 被写成单个 sample 的内部小标题。
 - positive、negative、borderline MUST NOT 替代 example 的 teaching point。
 - example 的局部教学结构 MUST NOT 仅因为 structure concept 已落地就自动升级为独立 structure module。
@@ -63,7 +63,7 @@ example 的价值在于降低 agent 从抽象理解到实际生成之间的损�
 
 `Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits` 是 example 内部的轻结构。它服务 example 编写，不等于这条教学链已经成为独立 structure module。
 
-positive、negative、borderline 不是单个 sample 的内部结构。它们更像多个 sample 之间的教学角色，应由未来的 sample set 或 contrast set 承接。当前只保留这个占位，不提前落地新的 structure。
+positive、negative、borderline 不是单个 sample 的内部结构。当前不为它们引入 sample set 或 contrast set；如果后续需要多样本对照，应重新讨论 example 的设计。
 
 ## Examples
 
@@ -105,7 +105,7 @@ policy 应该写清楚适用范围。
 
 这是一条抽象判断，不是足够具体的样本。
 
-sample set 占位：
+多样本对照不应写成：
 
 ```text
 positive sample
@@ -113,4 +113,4 @@ negative sample
 borderline sample
 ```
 
-这些名称表示一组 sample 之间的教学角色，不表示单个 sample 的内部章节。
+这些名称不是当前 example template 的章节，也不是当前已落地的 structure subtype。

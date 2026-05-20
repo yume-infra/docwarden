@@ -46,6 +46,10 @@ template 的语义重点是生成初始形状，而不是承接内容本体或�
 .contexta/templates/policy.md
 .contexta/templates/concept.md
 .contexta/templates/example.md
+.contexta/templates/pipeline.md
+.contexta/templates/workflow.md
+.contexta/templates/architecture.md
+.contexta/templates/branch.md
 ```
 
 这些文件提供复制骨架。

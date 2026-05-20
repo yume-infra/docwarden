@@ -80,12 +80,12 @@ Applies to:
 Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
 ```
 
-如果需要教学多个模式，应拆成多个 example，或在同一个 example 中明确分组。
+如果需要教学多个模式，应优先拆成多个 example。
 
-如果需要使用 positive、negative、borderline，它们应作为未来 sample set 或 contrast set 中的 sample role 处理。当前不要把它们写成单个 `Sample` 的内部小标题。
+当前不要把 positive、negative、borderline 写成单个 `Sample` 的内部小标题。需要多样本对照时，应回到 example 设计 loop。
 
 ## Limits
 
 这个 example 只示范单样本 example authoring 的局部质量模式，不定义 `example` 的概念本体，也不把教学链升级为独立 structure module。
 
-sample set / contrast set 当前只是占位，尚未正式落地为 concept、policy 或 structure。
+sample set / contrast set 当前不落地；example 的多样本设计后续重新讨论。

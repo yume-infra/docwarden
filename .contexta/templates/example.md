@@ -22,7 +22,7 @@ kind: example
 
 <sample 不能被抽象说明、规则结论或概念定义替代。>
 
-<占位：如果需要多个 sample 互相对照，后续应由 sample set 或 contrast set 承接。当前不要把 Positive / Negative / Borderline 写成单个 sample 的内部小标题。>
+<当前不要把 Positive / Negative / Borderline 写成单个 sample 的内部小标题。需要多个 sample 互相对照时，应回到 example 设计 loop。>
 
 ## Reading
 
@@ -42,4 +42,4 @@ kind: example
 
 <当 sample 容易被误用为 concept 定义、policy 规则或 template 骨架时，本段必须保留。>
 
-<如果本 example 实际需要 sample set，请在这里明确当前只是占位，等待后续 structure loop 或 sample set 设计。>
+<如果本 example 实际需要多个 sample 互相对照，请在这里明确当前 template 不承接该结构，等待后续 example 设计。>

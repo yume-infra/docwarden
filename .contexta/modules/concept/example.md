@@ -41,7 +41,7 @@ example 的核心是示范和教学。边界识别、review 对照或 semantic l
 - [[concept]]：example 可以帮助 agent 理解 concept 的命名和使用场景。
 - [[policy]]：example 可以示范 policy 在具体文本中的表现。
 - [[template]]：example 可以展示 template 被填充后的内容形态。
-- [[structure]]：example 可以用 structure 表达多个 sample 之间的教学关系。
+- [[structure]]：example 与 structure 的关系后续重新讨论；当前不通过 structure 承接 sample set 或 contrast set。
 - [[module]]：example 文件本身也是一种 module。
 - [[assertion]]：example 的解释和迁移说明可以由 assertion 组成。
 - [[naming]]：example 的名称应表达它示范的对象或场景。
@@ -66,4 +66,4 @@ agent MUST 使用中文表达面向用户的内容。
 
 ### Borderline
 
-`positive`、`negative`、`borderline` 可以作为 sample set 中的 sample role，但它们不是 example 的本体定义，也不是单个 sample 的内部结构。example 的本体仍然是样本语言。
+`positive`、`negative`、`borderline` 不是 example 的本体定义，也不是单个 sample 的内部结构。当前不引入 sample set 或 contrast set；example 的本体仍然是样本语言。
