@@ -25,7 +25,8 @@ policy --applies to--> concept
 
 template -> copied skeleton
 example -> teaching sample
-semantic lint -> consumes concept / policy / template / example
+structure -> organization language
+semantic lint -> consumes concept / policy / template / example / structure
 ```
 
 ## concept
@@ -58,6 +59,7 @@ concept 不承接：
 - `.contexta/modules/concept/template.md`
 - `.contexta/modules/concept/naming.md`
 - `.contexta/modules/concept/example.md`
+- `.contexta/modules/concept/structure.md`
 
 ## policy
 
@@ -153,7 +155,7 @@ example 的第一版编写样本在：
 Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
 ```
 
-这个结构服务 example authoring，不表示 structure primitive 已经落地。
+这个结构服务 example authoring，不表示这条教学链已经成为独立 structure module。
 
 当前占位：
 
@@ -161,6 +163,43 @@ Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
 - positive / negative / borderline：作为 sample set 中可能出现的 sample role。
 
 这些占位尚未作为 concept、policy 或 structure 落地。当前不要把 positive / negative / borderline 写成单个 `Sample` 的内部小标题。
+
+## structure
+
+structure 是组织语言。
+
+当前 structure module 是占位定义，用于保留元概念位置和同构方向，不视为最终定义。
+
+它负责：
+
+- 表达多个语义单元如何在同一目的下共同成立。
+- 表达语义单元之间如何成组、分位、对照、承接或分叉。
+- 承接 sample set / contrast set 这类多对象关系问题。
+- 为 workflow、pipeline、architecture、branch 等具体结构形态提供上位入口。
+
+structure 不负责：
+
+- 定义 concept。
+- 规定 policy。
+- 提供 template 骨架。
+- 提供 example 样本。
+- 承接 docwarden 操作流程生命周期。
+
+structure 的概念定义在：
+
+- `.contexta/modules/concept/structure.md`
+
+后续处理：
+
+- 先设计 structure subtype。
+- 再反推修正 structure definition、delimitation 和 examples。
+
+当前不做：
+
+- 不新增 `structure_type` metadata。
+- 不新增 structure template。
+- 不正式落地 workflow / pipeline / architecture / branch 的完整分类树。
+- 不直接把 sample set / contrast set 落为 structure module。
 
 ## naming
 
@@ -208,7 +247,8 @@ assertion 的概念定义在 concept 中；assertion 的拆分、组合和落地
 - policy 只通过 `Applies to` 指向 concept，并约束其使用。
 - template 只提供骨架和槽位，不承接内容本体。
 - example 只提供样本和示范，不承接 concept 定义本体或 policy 规则本体。
-- example 的局部教学结构先停留在 policy、template 和 example module 中，不升级为独立 primitive。
-- sample set / contrast set 只作为后续设计占位，不提前升级为 structure primitive。
+- example 的局部教学结构先停留在 policy、template 和 example module 中，不升级为独立 structure module。
+- sample set / contrast set 应由 structure 承接，但当前仍只是后续设计占位。
+- structure 先作为组织语言的 concept 占位落地，不通过 `structure_type` 固化分类树。
 - docwarden 仍负责 task / review / promote / pick / cleanup。
 - contexta 不承接 docwarden 操作流程生命周期。

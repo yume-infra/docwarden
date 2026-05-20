@@ -33,12 +33,14 @@ owner: sayori
 - workflow 不应套用 policy 结构。
 - template 是 artifact role，metadata 是字段层，semantic-lint 是工具机制，当前不作为 primitive 元概念。
 - workflow / pipeline / architecture / branch 先作为 structure 下的子概念或子模块处理，不先进入 `structure_type` metadata。
-- 当前已补 `.contexta/modules/concept/`，优先落地 concept / policy / module / assertion / example / template；其中 template 不是 primitive，而是补齐命名和边界所需的 artifact role。
+- 当前已补 `.contexta/modules/concept/`，优先落地 concept / policy / structure / module / assertion / example / template；其中 template 不是 primitive，而是补齐命名和边界所需的 artifact role。
 - 当前已新增 naming 作为语义定位机制；naming 不是 primitive，但作为 contexta foundational concern 落地。
-- structure 仍未落地到 `.contexta` 长期层。
+- structure 已作为组织语言占位落地到 `.contexta` 长期层。
+- 当前只落地 structure concept 占位定义，不新增 `structure_type` metadata、structure template 或 subtype 分类树。
+- 下一步先设计 structure subtype，再反推 structure definition。
 - example 已落地为样本语言。
 - example 编写质量已由 `example-quality` policy、example template 和 `example-authoring` 样本共同承接。
-- `Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits` 是 example authoring 的局部教学结构，不升级为 structure primitive。
+- `Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits` 是 example authoring 的局部教学结构，不升级为独立 structure module。
 - sample set / contrast set 作为后续占位，用于承接 positive / negative / borderline 等多个 sample 之间的教学角色。
 - 当前不要把 positive / negative / borderline 写成单个 `Sample` 的内部小标题。
 - 当前关系已确定为 `policy applies to concept`。
@@ -64,6 +66,7 @@ owner: sayori
 - `.contexta/modules/concept/template.md`：`template` concept module 草案。
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案。
 - `.contexta/modules/concept/example.md`：`example` concept module 草案。
+- `.contexta/modules/concept/structure.md`：`structure` concept module 占位草案。
 - `.contexta/templates/example.md`：example template。
 - `.contexta/modules/policy/example-quality.md`：example quality policy。
 - `.contexta/modules/example/example-authoring.md`：example authoring 样本。
@@ -97,6 +100,7 @@ owner: sayori
 - `.contexta/modules/concept/template.md`：`template` concept module 草案，状态：draft。
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案，状态：draft。
 - `.contexta/modules/concept/example.md`：`example` concept module 草案，状态：draft。
+- `.contexta/modules/concept/structure.md`：`structure` concept module 占位草案，状态：placeholder。
 - `.contexta/templates/example.md`：example template，状态：draft。
 - `.contexta/modules/policy/example-quality.md`：example quality policy，状态：draft。
 - `.contexta/modules/example/example-authoring.md`：example authoring 样本，状态：draft。
@@ -114,4 +118,4 @@ owner: sayori
 
 ## 下一步
 
-当前 example 编写模式已收口；后续进入 structure 前，应先决定 sample set / contrast set 是否需要正式落地。
+当前 structure concept 占位已落地；下一步先设计 structure subtype，再反推 structure。

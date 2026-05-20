@@ -80,6 +80,6 @@ workflow / pipeline / architecture / branch 的关系，应在 structure 概念�
 ## 当前推进状态
 
 - `policy`：已直接通过。
-- `structure`：早期草案已回退，正式定义后续再开。
+- `structure`：早期草案已回退；当前已作为组织语言占位落地到 `.contexta/modules/concept/structure.md`，但未新增 `structure_type` metadata。下一步从 subtype 反推 structure。
 - `module`：当前进入定义。
 - `example`：已确认为样本语言，并落地到 `.contexta` 长期层。

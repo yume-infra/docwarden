@@ -75,13 +75,13 @@ review 门槛：
 
 ## Loop 5：structure
 
-状态：deferred。
+状态：placeholder。
 
-目标：定义 `structure` 作为结构类元概念。
+目标：定义 `structure` 作为组织语言。
 
-草案产物：
+落地产物：
 
-- `structure-meta-concept.md`
+- `.contexta/modules/concept/structure.md`
 
 review 门槛：
 
@@ -91,7 +91,13 @@ review 门槛：
 当前处理：
 
 - structure 早期草案已被回退。
-- 正式 structure loop 暂不阻塞当前 module 定义。
+- 当前只落地 structure concept 占位定义。
+- 当前保留 `structure = 组织语言` 的方向，但不视为最终定义。
+- 下一步先设计 structure subtype，再反推 structure 的 definition、delimitation 和 examples。
+- 当前不新增 `structure_type` metadata。
+- 当前不新增 structure template。
+- 当前不正式落地 workflow / pipeline / architecture / branch 的完整分类树。
+- 当前不提前落地 sample set / contrast set 或新的 example 结构。
 
 ## Loop 6：module
 
@@ -263,7 +269,7 @@ review 门槛：
 
 状态：accepted。
 
-目标：建立高质量 example 的编写模式，同时避免提前引入新的 structure primitive。
+目标：建立高质量 example 的编写模式，同时避免把局部教学结构提前升级为独立 structure module。
 
 落地产物：
 
@@ -275,7 +281,7 @@ review 门槛：
 
 - sayori 确认 example 编写需要局部教学结构。
 - sayori 确认该结构先停留在 policy、template 和 example module 中。
-- sayori 确认当前不把该结构升级为 `kind: structure` 或新的 primitive。
+- sayori 确认当前不把该结构升级为独立 structure module。
 
 当前结果：
 
@@ -285,7 +291,7 @@ review 门槛：
 - 当前只收口单样本 example authoring。
 - sample set / contrast set 作为后续占位，用于承接多个 sample 之间的教学关系。
 - positive / negative / borderline 是 sample set 中可能出现的 sample role，不是单个 `Sample` 的内部小标题。
-- 当前不把 sample set / contrast set 升级为 `kind: structure` 或新的 primitive。
+- sample set / contrast set 后续应由 structure 承接，但当前仍不直接落为 `kind: structure` module。
 
 ## 本轮不做
 

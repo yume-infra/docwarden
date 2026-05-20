@@ -322,3 +322,38 @@ Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
 - `contexta-architecture-baseline.md`
 - `index.md`
 - `plan.md`
+
+## [2026-05-20] structure | 占位 structure 组织语言
+
+sayori 确认：
+
+- 应先做 structure。
+- sample set / contrast set 这类关系问题后续应由 structure 表达。
+- 当前不应继续在 example 局部占位里硬补。
+- structure 应与 concept / policy / example 保持同构，作为 contexta 的组织语言。
+
+已落地：
+
+- `.contexta/modules/concept/structure.md`
+
+当前状态：
+
+- `structure` concept 是占位定义。
+- 当前只保留 `structure = 组织语言` 的同构方向。
+- 下一步先设计 structure subtype，再反推 structure 的稳定定义。
+
+已同步：
+
+- 现有 concept module 的最小 structure 关系。
+- `contexta-architecture-baseline.md`
+- `index.md`
+- `meta-concept-baseline.md`
+- `plan.md`
+
+当前不做：
+
+- 不新增 `structure_type` metadata。
+- 不新增 structure template。
+- 不正式落地 workflow / pipeline / architecture / branch 分类树。
+- 不直接把 sample set / contrast set 落为 structure module。
+- 不提前落地新的 example 结构。
