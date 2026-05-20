@@ -58,33 +58,30 @@ agent 会把名称当作查询入口。若名称混入 kind、规则文本、生
 
 ## Examples
 
-policy filename 推荐：
+### Scenario
 
-```text
-language
-audience
-semantic-granularity
-template-boundary
-```
+agent 新建一个约束 template 职责边界的 policy module。
 
-避免：
+### Judgment Material
 
-```text
-language-policy
-audience-policy
-docs-must-not-edit
-misc
-```
+- `.contexta/modules/policy/template-boundary-policy.md`
+- `.contexta/modules/policy/template-must-not-own-lifecycle.md`
 
-concept aliases 推荐：
+### Positive
 
 ```md
-Aliases:
+正确命名：
 
-- semantic naming
+- `.contexta/modules/policy/template-boundary.md`
+
+正确判断：
+
+目录和 frontmatter 已经表达 kind，文件名不应重复 `policy`。文件名也不应直接写成单条规则；它要表达稳定约束主题。
 ```
 
-避免：
+这个 example 把命名失败点放进真实创建文件场景里，agent 能判断何时保留复合词、何时删除 kind 后缀。
+
+### Negative
 
 ```md
 Aliases:
@@ -92,4 +89,12 @@ Aliases:
 - semantic location mechanism
 ```
 
-第二个短语是在解释 concept，不是实际可替代的 designation。
+这不是 alias，而是在解释 concept。alias 应是可以合理替代 canonical designation 的名称。
+
+### Borderline
+
+```md
+Canonical: `language`
+```
+
+`language` 可能指自然语言、规则语言或编程语言。当前可通过 policy 的 intent 和 scope 消歧；只有当多个 language 主题并存且无法消歧时，才需要更具体名称。

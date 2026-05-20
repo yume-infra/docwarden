@@ -67,21 +67,43 @@ contexta 先采用精简关键词集合，避免同义词过多导致规则强�
 
 ## Examples
 
-### RFC2119 Constraint Strength
+### Scenario
 
-RFC2119 规则句推荐形态：
+agent 正在把一条面向 agent 的读取规则写进 policy。
 
-```text
-- <主体> <关键词> <动作> <对象/范围/条件>。
-```
+### Judgment Material
 
-RFC2119 规则句示例：
+- agent 最好先读取当前目录的 `roadmap.md`。
+
+### Positive
 
 ```md
-- agent MUST 先读取当前目录的 `roadmap.md`。
-- agent SHOULD 根据 `roadmap.md` 中的 Read Order 继续读取相关 module。
-- agent MUST NOT 在确认写入范围前修改目标文件。
+正确写法：
+
+- agent SHOULD 先读取当前目录的 `roadmap.md`。
+
+正确判断：
+
+原句的“最好”强度不稳定。改成 `SHOULD` 后，规则表达了默认应执行但允许明确例外。
 ```
+
+这个 example 让 agent 看到 language policy 处理的是规则强度，不是句子润色。
+
+### Negative
+
+```md
+- agent 应该写得更清楚。
+```
+
+这句话没有明确主体、动作、对象或条件，也没有稳定的 RFC2119 强度。
+
+### Borderline
+
+```md
+- agent MUST 先读取当前目录的 `roadmap.md`，并根据 Read Order 继续读取相关 module。
+```
+
+这句话使用了 `MUST`，但同时承载两个动作。若两个动作需要分别审查，应拆成两条规则。
 
 ## Reference
 

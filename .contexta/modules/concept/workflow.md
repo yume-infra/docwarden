@@ -49,25 +49,33 @@ transition 是 move 如何使一个 state 进入下一个 state 的成立关系�
 
 ## Examples
 
+### Scenario
+
+pick 后的候选内容需要进入 review surface，让用户确认资产性质和实体落点。
+
+### Judgment Material
+
+state: pick candidate is ready
+move: organize minimal review surface
+transition: candidate enters user review
+
 ### Positive
 
-```text
-state: task material is ready
-move: generate review surface
-transition: enter user review
+```md
+这是 workflow。它关注当前可行动处境如何通过一个行动进入下一个可行动处境。
 ```
 
-这个表达说明了当前可行动处境、推进行动和下一状态，因此是 workflow。
+这个 example 给出真实推进场景，agent 能区分“进入 review”与“生成 review 文本”。
 
 ### Negative
 
 ```text
-input: material + current agent context
-transform: review surface generation
-output: lead + backing
+input: pick 后内容
+transform: 生成 lead + backing
+output: review surface 文本
 ```
 
-这个表达关注 input 经 transform 形成 output，因此是 pipeline。
+这表达 input 经 transform 形成 output，因此是 pipeline，不是 workflow。
 
 ### Borderline
 
@@ -75,4 +83,4 @@ output: lead + backing
 review surface generation
 ```
 
-这个短语本身不能判断为 workflow。只有当它被表达为从某个 state 经某个 move 进入 next state 时，才构成 workflow；如果它表达的是 material 到 lead + backing 的转换，则是 pipeline。
+这个短语本身不能判断为 workflow。若它表达从 state 进入 next state，是 workflow；若它表达材料到文本的转换，是 pipeline。

@@ -4,88 +4,49 @@ kind: example
 
 # example-authoring
 
-## Target
+## 语境
 
-- [[example]]
-- [[policy]]
-- [[template]]
+agent 正在修订 contexta module 的 `## Examples`。旧写法把 example 写成抽象对照列表，用户指出这不能训练 agent 判断。
 
-## Teaching Point
+## Scenario
 
-示范一个好 example 如何用具体 sample 教 agent 书写，而不是只写抽象说明。
+agent 新建一个约束 template 职责边界的 policy module。
 
-## Sample
+## Judgment Material
 
-````md
----
-kind: example
----
+- `.contexta/modules/policy/template-boundary-policy.md`
+- `.contexta/modules/policy/template-must-not-own-lifecycle.md`
 
-# policy-applies-to
-
-## Target
-
-- [[policy]]
-
-## Teaching Point
-
-示范 policy 如何通过 `Applies to` 指向 concept，而不是在正文重新定义 concept。
-
-## Sample
+## Positive
 
 ```md
-## Scope
+正确命名：
 
-Applies to:
+- `.contexta/modules/policy/template-boundary.md`
 
-- [[example]]
+正确判断：
 
-适用条件：
-
-- contexta 需要创建或修改 example module。
-
-不适用条件：
-
-- 需要定义 example 的概念本体。
+目录和 frontmatter 已经表达 kind，文件名不应重复 `policy`。文件名也不应直接写成单条规则；它要表达稳定约束主题。
 ```
 
-## Reading
+这个 example 有真实写作压力、具体错误文本、正确文本和判断理由。
 
-这个 sample 把被约束对象放在 `Applies to` 中，并把具体生效条件写在适用条件里。
+## Negative
 
-它没有在正文重新定义 `example` 是什么，因此符合 `policy applies to concept` 的关系。
+```md
+### Positive
 
-## Transfer
+template-boundary
+semantic-granularity
 
-写其他 policy 时，保留 `Applies to` 指向 concept 的做法，并替换适用条件中的具体场景。
+### Negative
 
-## Limits
-
-这个 sample 只示范 policy scope 的写法，不示范 policy 的完整规则设计。
-````
-
-## Reading
-
-这个 sample 有明确的 target 和 teaching point，因此 agent 能知道它服务哪个对象、具体要学什么。
-
-它提供了可模仿的 md 片段，而不是只说“policy 要写清楚适用范围”。
-
-`Reading` 解释 sample 中的关键点，`Transfer` 说明如何迁移，`Limits` 阻止 agent 把局部片段当成完整 policy 模板。
-
-## Transfer
-
-写新的 example 时，保留这条教学链：
-
-```text
-Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
+good-rules
+misc
 ```
 
-如果需要教学多个模式，应优先拆成多个 example。
+这个写法只列名字。agent 看不出用户请求是什么、错误会发生在哪里、为什么某个名称有效，也就很难迁移到下一个文件。
 
-当前不要把 positive、negative、borderline 写成单个 `Sample` 的内部小标题。需要多样本对照时，应回到 example 设计 loop。
+## Borderline
 
-## Limits
-
-这个 example 只示范单样本 example authoring 的局部质量模式，不定义 `example` 的概念本体，也不把教学链升级为独立 structure module。
-
-sample set / contrast set 当前不落地；example 的多样本设计后续重新讨论。
+占位：需要补一个边界 example，用来说明“有具体文本但缺少判断场景”的写法如何修正。

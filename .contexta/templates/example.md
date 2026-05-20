@@ -4,42 +4,36 @@ kind: example
 
 # <example-id>
 
-## Target
+## Scenario
 
-- [[<primary-target>]]
+<具体判断场景。>
 
-<可选：列出该 example 直接服务的相邻 target。没有必要时删除。>
+## Judgment Material
 
-## Teaching Point
+<需要被理解、书写或判断的具体文本、名称、请求或片段。>
 
-<用一句话说明这个 example 要教 agent 理解、书写或判断什么。>
+## Positive
 
-<teaching point 应比 target 更窄，避免写成“说明某概念”。>
+```md
+正确写法或正确判断：
 
-## Sample
+<具体修正或判断。>
+```
 
-<放入具体样本。样本应足够具体，让 agent 可以模仿、对照或迁移。>
+<说明这个 positive example 教会 agent 什么判断。>
 
-<sample 不能被抽象说明、规则结论或概念定义替代。>
+## Negative
 
-<当前不要把 Positive / Negative / Borderline 写成单个 sample 的内部小标题。需要多个 sample 互相对照时，应回到 example 设计 loop。>
+```md
+错误写法或错误判断：
 
-## Reading
+<具体错误文本。>
+```
 
-<解释 sample 中哪些部分值得注意。>
+<说明这个 negative example 为什么不能训练 agent，或会把 agent 带向什么误判。>
 
-<说明这些部分如何体现 teaching point。>
+## Borderline
 
-## Transfer
+<可选：放入一个容易混淆的相邻场景，并说明还缺什么判断条件。没有必要时删除。>
 
-<说明 agent 在相邻场景中如何迁移这个 sample。>
-
-<说明迁移时需要替换什么、保持什么。>
-
-## Limits
-
-<说明这个 sample 不能被泛化到哪里。>
-
-<当 sample 容易被误用为 concept 定义、policy 规则或 template 骨架时，本段必须保留。>
-
-<如果本 example 实际需要多个 sample 互相对照，请在这里明确当前 template 不承接该结构，等待后续 example 设计。>
+<如果暂时没有真实场景，写明确占位，说明后续需要补哪类用例。>

@@ -40,28 +40,40 @@ template 的语义重点是生成初始形状，而不是承接内容本体或�
 
 ## Examples
 
+### Scenario
+
+agent 要新建一个 policy module，并准备从 `.contexta/templates/policy.md` 复制初始结构。
+
+### Judgment Material
+
+## Intent
+
+<用 1-3 句话说明这个 policy 要解决什么问题，或保护什么边界。>
+
+## Rules
+
+- <主体> <MUST|MUST NOT|SHOULD|SHOULD NOT|MAY> <动作> <对象/范围/条件>。
+
 ### Positive
 
-```text
-.contexta/templates/policy.md
-.contexta/templates/concept.md
-.contexta/templates/example.md
-.contexta/templates/pipeline.md
-.contexta/templates/workflow.md
-.contexta/templates/architecture.md
-.contexta/templates/branch.md
+```md
+这是 template。它只提供复制后的骨架和占位提示，不承接真实规则本体。
 ```
 
-这些文件提供复制骨架。
+这个 example 让 agent 看到 template 的价值是生成初始形状，而不是保存已确认内容。
 
 ### Negative
 
 ```text
-.contexta/modules/policy/semantic-granularity.md
+- template MUST NOT 承接来源、review、pick、更新、写入或生命周期。
 ```
 
-这个文件是 policy module，不是 template。
+这是真实规则，不是占位骨架。它应进入 policy module。
 
 ### Borderline
 
-template 中可以出现占位规则句或占位定义句，但这些占位内容不是规则本体，也不是 concept 定义本体。
+```text
+- <主体> MUST <动作> <对象/范围/条件>。
+```
+
+这可以出现在 template 中，因为它是占位规则句。只有当占位被替换为具体规则后，才成为 policy 内容。

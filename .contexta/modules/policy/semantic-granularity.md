@@ -55,15 +55,25 @@ Applies to:
 
 ## Examples
 
-合理的 module 名称：
+### Scenario
 
-```text
-language
-audience
-semantic-granularity
+agent 想把三条规则分别创建为三个文件。
+
+### Judgment Material
+
+- contexta MUST 将断言视为最小语义审查单位。
+- contexta MUST 将 md module 视为默认组合单位。
+- 单条断言 SHOULD NOT 仅因为重要就升级为独立 module。
+
+### Positive
+
+```md
+这三条规则共享“语义粒度”主题，应放入 `semantic-granularity` module。它们可以作为独立 assertion 被审查，但不应各自升级成独立 module。
 ```
 
-不合理的 module 名称：
+这个 example 展示了 assertion 与 module 的粒度差异，也给出 agent 常犯的过度拆分错误。
+
+### Negative
 
 ```text
 rfc2119-language
@@ -72,9 +82,9 @@ frontmatter-only-state
 language-policy
 ```
 
-这些名称更像单条断言、单组局部规则，或重复表达了已由目录和 frontmatter 承载的 kind。
+这些名称更像单条断言、局部规则或重复 kind，不能稳定表达 module 的主题边界。
 
-断言组组织示例：
+### Borderline
 
 ```md
 ## Rules
@@ -90,4 +100,4 @@ language-policy
 - 描述性文字 MUST NOT 替代 agent-facing 的规范性规则。
 ```
 
-同一个 module 可以在 `## Rationale` 或 `## Examples` 中复用这些三级标题，分别解释对应断言组的原因或例子。
+同一个 module 内可以用三级标题组织断言组。它增加局部结构，但不意味着每个断言组都要拆成独立 module。

@@ -44,25 +44,27 @@ example 的核心不是证明正文正确，而是在一个具体判断场景里
 
 ## Examples
 
-### Effective
+### Scenario
 
-```md
 用户要求 agent “把 template 规则写进 `.contexta/templates/user-context.md`”。
 
-错误写法：
+### Judgment Material
 
+```md
 ## Rules
 
 - template MUST NOT 承接来源、review、pick、更新、写入或生命周期。
+```
 
-正确判断：
+### Positive
 
+```md
 这条内容是 policy，不是 template 骨架。template 只能提供复制后的初始结构；template 的边界规则应进入 `.contexta/modules/policy/template-boundary.md`。
 ```
 
 这个 example 有具体场景、具体错误写法和具体纠偏判断。agent 下次遇到类似请求时，能判断“这是规则落点问题，不是模板内容问题”。
 
-### Ineffective
+### Negative
 
 ```text
 template 不应该写规则。

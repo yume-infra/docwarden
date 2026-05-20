@@ -34,7 +34,7 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 | [[concept]] | concept 稳定名字和含义；structure 表达多个已命名或可识别语义单元如何共同成立。 |
 | [[policy]] | policy 表达约束强度；structure 表达组织方式。 |
 | [[template]] | template 提供复制骨架；structure 是骨架中可能承载的组织语义。 |
-| [[example]] | example 提供样本；structure 不在当前版本承接 sample set 或 contrast set。 |
+| [[example]] | example 提供具体判断场景；structure 表达多个语义位置如何共同成立。 |
 | [[module]] | module 是语义组合单位；structure 表达 module 内部或多个 module 之间的组织方式。 |
 | list | list 是语言形式；structure 是语义单元共同成立的组织方式。 |
 | [[pipeline]] | pipeline 是转换结构；structure 是 pipeline、workflow、architecture、branch 的上位组织语言。 |
@@ -47,7 +47,7 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 - [[concept]]：structure 本身由 concept module 定义和命名。
 - [[policy]]：policy 可以约束 structure 的使用方式，但不定义 structure 本体。
 - [[template]]：template 可以提供 structure module 的复制骨架。
-- [[example]]：example 与 structure 的关系后续重新讨论，当前不把 sample set 或 contrast set 纳入 structure。
+- [[example]]：example 可以示范 structure 在具体文本中的表现。
 - [[module]]：structure module 可以承载具体结构内容。
 - [[assertion]]：structure 的位置、作用和边界说明可以由 assertion 表达。
 - [[naming]]：structure 的名称应表达它组织的语义整体或组织方式。
@@ -58,23 +58,32 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 
 ## Examples
 
+### Scenario
+
+用户要求 agent 区分 workflow、pipeline、architecture、branch，并判断它们是否都属于 structure。
+
+### Judgment Material
+
+- pipeline: input、transform、output 共同成立。
+- workflow: state、move、transition 共同成立。
+- architecture: layer、relation、boundary 共同成立。
+- branch: condition、route、target 共同成立。
+
 ### Positive
 
-```text
-input: material + current agent context
-transform: review surface generation
-output: lead + backing
+```md
+这些都是 structure subtype。它们不是同一种结构，但都在表达多个语义位置如何在同一目的下共同成立。
 ```
 
-这个表达说明了 input、transform、output 三个位置如何共同成立，因此是 structure，具体 subtype 是 pipeline。
+这个 example 让 agent 看到 structure 的上位职责，而不是把 structure 缩成某一个 subtype。
 
 ### Negative
 
 ```text
-example MUST 包含具体 sample。
+example MUST 使用具体样本。
 ```
 
-这是一条 policy assertion。它规定 example 的质量约束，不是 structure 本体。
+这是一条 policy assertion。它规定 example 的质量约束，不表达多个语义位置共同成立。
 
 ### Borderline
 
@@ -82,4 +91,4 @@ example MUST 包含具体 sample。
 docwarden / contexta
 ```
 
-这个表达只列出两个名字，还不是完整 structure。只有补足它们之间的 relation 和 boundary，才构成 architecture；architecture 是 structure 的一种 subtype。
+这只列出两个名字，还不是完整 structure。只有补足 relation 和 boundary，才构成 architecture；architecture 是 structure 的一种 subtype。

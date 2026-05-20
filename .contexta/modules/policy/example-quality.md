@@ -47,29 +47,31 @@ example 的价值在于降低 agent 从抽象理解到实际判断之间的损�
 
 坏 example 往往没有真正提供判断场景：它只写结论、复述规则，或把一条 policy assertion 包装成例子。这样的内容不能教 agent 下次如何判断，也很难迁移到相邻场景。
 
-好的 example 不只是贴“正例”或“反例”。它要展示一个具体文本在具体压力下为什么应该这样读、这样写或这样改。
+好的 example 不只是贴一个正确片段或错误片段。它要展示一个具体文本在具体压力下为什么应该这样读、这样写或这样改。
 
 ## Examples
 
-有效 example：
+### Scenario
 
-```md
 用户要求 agent “把 template 规则写进 `.contexta/templates/user-context.md`”。
 
-错误写法：
+### Judgment Material
 
+```md
 ## Rules
 
 - template MUST NOT 承接来源、review、pick、更新、写入或生命周期。
+```
 
-正确判断：
+### Positive
 
+```md
 这条内容是 policy，不是 template 骨架。template 只能提供复制后的初始结构；template 的边界规则应进入 `.contexta/modules/policy/template-boundary.md`。
 ```
 
 这个 example 有真实压力、具体错误文本和可迁移的纠偏判断。agent 下次遇到“把规则写进 template”的请求时，能判断落点问题。
 
-无效 example：
+### Negative
 
 ```text
 template 不应该写规则。
@@ -77,7 +79,7 @@ template 不应该写规则。
 
 这只是结论。它没有展示 agent 会怎么误写，也没有教 agent 在真实场景里如何判断。
 
-边界不清的 example：
+### Borderline
 
 ```text
 合理：占位规则句。

@@ -39,28 +39,35 @@ contexta 需要一个名字表示约束语言。
 
 ## Examples
 
+### Scenario
+
+用户要求 agent 记录“template 只负责复制后的内容骨架，不负责来源、review、pick、更新、写入、生命周期”。
+
+### Judgment Material
+
+- template MUST 只负责复制后的内容骨架。
+- template MUST NOT 承接来源、review、pick、更新、写入或生命周期。
+
 ### Positive
 
-```text
-naming
-language
-audience
-semantic-granularity
-template-boundary
+```md
+这是 policy。它不是在命名 template，而是在规定 template 的使用边界和禁止行为。
 ```
 
-这些 module 以约束为核心。
+这个 example 让 agent 看到 policy 的核心是约束强度、适用范围和执行边界。
 
 ### Negative
 
 ```text
-module
-assertion
-template
+template 是内容复制骨架。
 ```
 
-这些名称指向 concept，而不是 policy。
+这是 concept definition，不是 policy。它说明 template 是什么，没有规定 agent 或作者应该如何处理 template。
 
 ### Borderline
 
-`semantic-granularity` 会提到 module 和 assertion，但它不重新定义 module 或 assertion。它只约束 contexta 如何拆分、组合和审查这些 concept 的使用。
+```text
+semantic-granularity 会提到 module 和 assertion。
+```
+
+如果它重新定义 module 或 assertion，就是 concept 越界；如果它只约束这些语义单元如何拆分、组合和审查，就是 policy。

@@ -49,30 +49,36 @@ boundary 是 layer 之间不可混淆或不可跨越的边界。
 
 ## Examples
 
+### Scenario
+
+用户要求 agent 判断 docwarden 和 contexta 的关系应写成 workflow、policy 还是 architecture。
+
+### Judgment Material
+
+- docwarden 负责 task / review / promote / pick / cleanup 和具体实体落点。
+- contexta 负责 template / metadata / module / assertion / semantic lint。
+- template 只提供复制后的内容骨架，不负责来源、review、pick、更新、写入或生命周期。
+
 ### Positive
 
-```text
-layer: docwarden / contexta
-relation: docwarden operates task/review/promote/pick lifecycle; contexta supplies content format protocols
-boundary: docwarden does not own content format definitions; contexta does not own operation lifecycle
+```md
+这是 architecture。它同时说明了 layer、relation 和 boundary：docwarden 与 contexta 是稳定层位；二者通过实体落点和内容格式协议相邻；template 的职责边界说明两层不能混写。
 ```
 
-这个表达说明了层级、关系和边界，因此是 architecture。
+这个 example 给出了真实混淆压力：同一组内容可能被误写成 workflow 或 policy。正确判断必须同时看到层位、关系和边界。
 
 ### Negative
 
 ```text
-state: task material is ready
-move: generate review surface
-transition: enter user review
+docwarden / contexta
 ```
 
-这个表达关注推进，不是组成和边界。
+这只列出两个名字。agent 不能从中判断层位之间如何相邻、依赖或保持边界。
 
 ### Borderline
 
 ```text
-docwarden = task / review / promote / pick / cleanup
+占位：需要补一个非 docwarden / contexta 的 architecture 判断材料。
 ```
 
-这个表达列出了层位，但只有补足 layer 之间的 relation 和 boundary 后，才构成完整 architecture。
+当前真实用例集中在 docwarden 和 contexta。后续应补一个外部或跨模块 architecture 场景，避免定义只适配当前项目。

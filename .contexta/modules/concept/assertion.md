@@ -44,25 +44,37 @@ assertion 的核心不是句子长度，而是语义是否能被单独审查。
 
 ## Examples
 
+### Scenario
+
+agent 准备把用户对 review surface 的口径整理成可审核内容。
+
+### Judgment Material
+
+- review surface 是 pick 后进入用户审核的对接口径。
+- review surface SHOULD 组织最小 review 单元。
+- review surface MUST NOT 在用户确认后改变已确认口径。
+
 ### Positive
 
-```text
-module 是 contexta 的语义组合单元。
-assertion 是 contexta 的最小可审查语义单元。
-contexta MUST 将 md module 视为默认组合单位。
+```md
+这三条都是 assertion。每一条都能被用户单独接受、拒绝、修改或迁移，不需要整篇文档一起审核。
 ```
 
-这些内容都表达了可以被单独审查的语义判断。
+这个 example 让 agent 看到 assertion 的判断点不是句子长短，而是语义是否可以独立审查。
 
 ### Negative
 
 ```text
-module
+review surface
 semantic-granularity
 ```
 
-这些只是名称，不是语义判断。
+这些只是名称或主题入口，没有表达可以被审查的语义判断。
 
 ### Borderline
 
-一个列表项可能承载多个语义判断。此时它不是单一 assertion，而是多个 assertion 被写在同一个语言形式里。
+```text
+review surface 是 pick 后进入用户审核的对接口径，并且不能在用户确认后改变。
+```
+
+这句话包含两个判断：review surface 的定义位置，以及确认后不可变更的约束。写作时可以是一句话，但 review 时应拆成两个 assertion。

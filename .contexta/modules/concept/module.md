@@ -45,14 +45,23 @@ contexta 需要一个名字表示 md 内容中的语义组合单位。
 
 ## Examples
 
+### Scenario
+
+agent 需要保存“不要把单条 assertion 过早拆成独立文件”的规则。
+
+### Judgment Material
+
+- contexta MUST 将断言视为最小语义审查单位。
+- contexta MUST 将 md module 视为默认组合单位。
+- 单条断言 SHOULD NOT 仅因为重要就升级为独立 module。
+
 ### Positive
 
-```text
-.contexta/modules/policy/semantic-granularity.md
-.contexta/modules/concept/module.md
+```md
+这些规则共享同一个稳定主题边界，应放入 `.contexta/modules/policy/semantic-granularity.md` 这个 module，而不是为每条规则创建一个文件。
 ```
 
-这些文件都是 module，因为它们围绕稳定主题组织语义材料。
+这个 example 让 agent 看到 module 是语义组合单位，不是“重要内容就单独成文件”。
 
 ### Negative
 
@@ -60,8 +69,12 @@ contexta 需要一个名字表示 md 内容中的语义组合单位。
 docs-must-not-edit
 ```
 
-这个名字更像单条 assertion，而不是稳定主题边界。
+这个名称像一条局部禁止规则，不能稳定承载一组同主题语义材料。
 
 ### Borderline
 
-一份 md 文件可以承载 module，但空 template 不是 module 的稳定内容实例。
+```text
+.contexta/templates/policy.md
+```
+
+这是 md 文件，但它是复制骨架。只有复制后承载实际语义内容的文件，才是稳定 module 实例。

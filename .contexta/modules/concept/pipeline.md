@@ -35,7 +35,7 @@ output 是 transform 产生的结果。
 | mapping | mapping 表达对应关系；pipeline 必须表达转换动作。 |
 | [[policy]] | policy 表达约束强度；pipeline 表达转换。 |
 | [[template]] | template 提供复制骨架；pipeline 是被骨架承载的转换表达。 |
-| [[example]] | example 提供样本；pipeline 表达样本或内容如何被转换。 |
+| [[example]] | example 提供具体判断场景；pipeline 表达内容如何被转换。 |
 
 ## Concept Relations
 
@@ -47,15 +47,23 @@ output 是 transform 产生的结果。
 
 ## Examples
 
+### Scenario
+
+用户纠正 agent：进入 review surface 时，不是直接写 promote 后内容，而是先组织最小 review 单元。
+
+### Judgment Material
+
+input: pick 后内容 + 当前上下文
+transform: 组织 review surface 的 lead 与 backing
+output: 可供用户审核的最小 review 单元
+
 ### Positive
 
-```text
-input: material + current agent context
-transform: review surface generation
-output: lead + backing
+```md
+这是 pipeline。它关注材料如何被转换成 review surface，不关注用户审核后进入哪个状态。
 ```
 
-这个表达包含 input、transform 和 output，因此是 pipeline。
+这个 example 给出具体转换压力，agent 能区分“生成审核材料”和“审核状态推进”。
 
 ### Negative
 
@@ -63,7 +71,7 @@ output: lead + backing
 user reviews lead and decides whether to promote
 ```
 
-这个表达关注用户确认和推进，不是 input 经 transform 形成 output。
+这句话关注用户确认和后续推进，不表达 input 经 transform 形成 output。
 
 ### Borderline
 
@@ -71,4 +79,4 @@ user reviews lead and decides whether to promote
 reviewed delta -> spec / guide / wiki candidates
 ```
 
-这个箭头表达只有在 transform 可被明确说明时才构成 pipeline。否则它只是一个省略了转换动作的映射。
+这个箭头有 output，但没有说明 transform。只有补出“如何从 reviewed delta 改写成候选内容”，才构成 pipeline。

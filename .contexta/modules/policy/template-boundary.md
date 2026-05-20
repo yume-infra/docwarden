@@ -50,7 +50,35 @@ template 的价值是降低新建内容时的结构偏移。
 
 ## Examples
 
-合理的 template 内容：
+### Scenario
+
+agent 准备把 template 边界规则写进 `.contexta/templates/policy.md`。
+
+### Judgment Material
+
+```md
+## Rules
+
+- template MUST NOT 承接来源、review、pick、更新、写入或生命周期。
+```
+
+### Positive
+
+```md
+这是真实规则，应进入 `.contexta/modules/policy/template-boundary.md`。template 只能保留占位骨架。
+```
+
+这个 example 给出 template 最容易越界的场景：把规则本体写进复制骨架。
+
+### Negative
+
+```md
+template 不应该写规则。
+```
+
+这只是抽象结论。它没有展示真实误写位置，也没有说明规则应该改落到哪个 module。
+
+### Borderline
 
 ```md
 ## Rules
@@ -58,12 +86,4 @@ template 的价值是降低新建内容时的结构偏移。
 - <主体> <MUST|MUST NOT|SHOULD|SHOULD NOT|MAY> <动作> <对象/范围/条件>。
 ```
 
-这是规则书写槽位，不是规则本体。
-
-不合理的 template 内容：
-
-```md
-- template MUST NOT 承接来源、review、pick、更新、写入或生命周期。
-```
-
-这是真实规则，应进入 policy module。
+这是占位规则句，可以留在 template 中。占位一旦被替换成具体规则，就应进入 policy module。

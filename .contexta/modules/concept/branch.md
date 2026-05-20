@@ -55,15 +55,23 @@ target 是该路径承接的落点或后续对象。
 
 ## Examples
 
-### Positive
+### Scenario
 
-```text
+pick 后的候选内容需要决定长期落点。
+
+### Judgment Material
+
 condition: pick candidate is user context
 route: user context route
 target: .docwarden/user/profile.md
+
+### Positive
+
+```md
+这是 branch。它不是把内容改写成另一种内容，而是在条件成立时选择一条承接路径和具体落点。
 ```
 
-这个表达说明了分流条件、路径和承接落点，因此是 branch。
+这个 example 把 condition、route 和 target 放在同一个判断现场里，agent 能看出 branch 解决的是“去哪里”的问题。
 
 ### Negative
 
@@ -73,12 +81,12 @@ transform: rewrite for guide
 output: guide page candidate
 ```
 
-这个表达关注转换，不是条件分流。
+这组内容表达转换，不表达条件分流。它更接近 pipeline。
 
 ### Borderline
 
 ```text
-review after output goes to promote or pick
+review 后进入 promote 或 pick。
 ```
 
-这个表达只有补足进入 promote 或 pick 的 condition，以及各自 route 的 target 后，才构成完整 branch。
+这句话有分流意图，但缺少进入 promote 或 pick 的 condition，也没有说明各自 route 的 target。补足后才构成 branch。
