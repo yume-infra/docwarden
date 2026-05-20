@@ -31,6 +31,7 @@ assertion 的核心不是句子长度，而是语义是否能被单独审查。
 | --- | --- |
 | [[module]] | module 是语义组合单位；assertion 是 module 内部的最小可审查语义单位。 |
 | [[structure]] | structure 表达多个对象之间的组织关系；assertion 表达可单独审查的语义判断。 |
+| [[composition]] | composition 表达 part 如何组成 whole；assertion 可以作为 module composition 中的 part。 |
 | sentence | sentence 是语言形式；assertion 是可审查语义判断。 |
 | rule | rule 是规范性 assertion 的一种；assertion 也可以是定义性判断或边界判断。 |
 | [[template]] | template 可以提供 assertion 的书写槽位；template slot 不是 assertion 本身。 |
@@ -38,6 +39,7 @@ assertion 的核心不是句子长度，而是语义是否能被单独审查。
 ## Concept Relations
 
 - [[module]]：assertion 通常在 module 内获得上下文。
+- [[composition]]：assertion 可以作为 module composition 中的 semantic part。
 - [[policy]]：policy 中的规则是规范性 assertion。
 - [[concept]]：concept 中的定义和消歧内容可以包含定义性 assertion。
 - [[structure]]：structure 中的节点、关系和边界说明可以由 assertion 表达。

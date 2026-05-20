@@ -33,9 +33,9 @@ Applies to:
 - contexta MUST 将断言视为最小语义审查单位。
 - contexta MUST 将 md module 视为默认组合单位。
 - 单条断言 SHOULD NOT 仅因为重要就升级为独立 module。
-- 一个 module MUST 围绕一个稳定的 intent 和 scope 组织断言。
+- 一个 module MUST 围绕一个 stable semantic boundary 组织断言。
 - 当多条断言共享同一主题边界时，它们 SHOULD 放在同一个 module 中。
-- 一个 module SHOULD NOT 混合 intent 或 scope 不同的断言。
+- 一个 module SHOULD NOT 混合 stable semantic boundary 不同的断言。
 - module 名称 SHOULD 表达稳定主题边界，而不是表达单条断言。
 - 当一个 module 包含多个断言组时，`## Rules` SHOULD 使用三级标题组织断言组。
 - `## Rules` 下的每条列表项 SHOULD 表达一条可审查断言。
@@ -49,7 +49,7 @@ Applies to:
 
 这里不重新定义这两个 concept，只解释为什么需要约束它们的粒度关系。
 
-如果每条断言都升级为 module，组合会变得过碎，review 和使用成本都会上升。如果一个 module 混入多个主题，规则边界会变得模糊，后续复用和修改也会困难。
+如果每条断言都升级为 module，组合会变得过碎，review 和使用成本都会上升。如果一个 module 混入多个 stable semantic boundary，规则边界会变得模糊，后续复用和修改也会困难。
 
 当一个 module 内部存在多个断言组时，需要稳定的局部结构。`## Rules` 下的三级标题可以表达断言组，列表项可以表达具体断言。这样既不需要把断言拆成独立文件，也能让 review、diff 和后续提取有稳定锚点。
 

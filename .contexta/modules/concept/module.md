@@ -20,7 +20,7 @@ contexta 需要一个名字表示 md 内容中的语义组合单位。
 
 ## Definition
 
-语义组合单元，由同一稳定主题边界内的多条语义材料组成。
+语义组合单元，由同一 stable semantic boundary 内的多条语义材料组成。
 
 在 contexta 中，module 通常由一个 md 文件承载，但 module 的语义不等同于文件本身。
 
@@ -31,12 +31,14 @@ contexta 需要一个名字表示 md 内容中的语义组合单位。
 | [[assertion]] | assertion 是最小可审查语义单元；module 是 assertion 的组合上下文。 |
 | [[template]] | template 是复制骨架；module 是复制后承载实际语义的内容单元。 |
 | [[structure]] | structure 表达对象之间的组织关系；module 是承载这些语义材料的组合单位。 |
+| [[composition]] | composition 表达 whole、part 和 stable semantic boundary 如何共同成立；module 可以作为 composition 的 whole。 |
 | task | task 是 docwarden 的短命过程材料；module 是 contexta 的内容组合单位。 |
 | file | file 是存储载体；module 是文件中被组织出来的语义单位。 |
 
 ## Concept Relations
 
 - [[assertion]]：module 由 assertion 等语义材料组成。
+- [[composition]]：module 是 contexta 中最常见的 composition whole。
 - [[concept]]：concept module 用于稳定一个命名入口。
 - [[policy]]：policy module 用于表达约束语言。
 - [[structure]]：structure module 可以承载具体结构内容。

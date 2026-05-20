@@ -26,6 +26,7 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 - [[workflow]]：state、move、transition 共同成立的推进结构。
 - [[architecture]]：layer、relation、boundary 共同成立的层级结构。
 - [[branch]]：condition、route、target 共同成立的分流结构。
+- [[composition]]：whole、part、stable semantic boundary 共同成立的组合结构。
 
 ## Delimitation
 
@@ -37,10 +38,11 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 | [[example]] | example 提供具体判断场景；structure 表达多个语义位置如何共同成立。 |
 | [[module]] | module 是语义组合单位；structure 表达 module 内部或多个 module 之间的组织方式。 |
 | list | list 是语言形式；structure 是语义单元共同成立的组织方式。 |
-| [[pipeline]] | pipeline 是转换结构；structure 是 pipeline、workflow、architecture、branch 的上位组织语言。 |
+| [[pipeline]] | pipeline 是转换结构；structure 是 pipeline、workflow、architecture、branch、composition 的上位组织语言。 |
 | [[workflow]] | workflow 是推进结构；structure 不承接 docwarden 操作生命周期。 |
 | [[architecture]] | architecture 是层级结构；structure 不等于 architecture。 |
 | [[branch]] | branch 是分流结构；structure 不等于分支表或 routing table。 |
+| [[composition]] | composition 是组合结构；structure 不等于普通列表或容器。 |
 
 ## Concept Relations
 
@@ -55,12 +57,13 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 - [[workflow]]：workflow 是当前已验证的 structure subtype。
 - [[architecture]]：architecture 是当前已验证的 structure subtype。
 - [[branch]]：branch 是当前已验证的 structure subtype。
+- [[composition]]：composition 是当前已验证的 structure subtype。
 
 ## Examples
 
 ### Scenario
 
-用户要求 agent 区分 workflow、pipeline、architecture、branch，并判断它们是否都属于 structure。
+用户要求 agent 区分 workflow、pipeline、architecture、branch、composition，并判断它们是否都属于 structure。
 
 ### Judgment Material
 
@@ -68,6 +71,7 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 - workflow: state、move、transition 共同成立。
 - architecture: layer、relation、boundary 共同成立。
 - branch: condition、route、target 共同成立。
+- composition: whole、part、stable semantic boundary 共同成立。
 
 ### Positive
 

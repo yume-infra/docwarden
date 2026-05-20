@@ -6,9 +6,11 @@ kind: policy
 
 ## Intent
 
-定义 contexta example 的质量约束。
+记录 contexta example 的当前临时质量提示。
 
-本 policy 用于避免 example 变成抽象说明、伪 policy assertion、空泛教程或没有判断力的片段。
+本模块用于避免 example 变成抽象说明、伪 policy assertion、空泛教程或没有判断力的片段。
+
+当前内容不是成熟的 quality policy。example 的质量模型需要等待更多真实使用场景、误判纠偏和调优反馈后再重新抽象。
 
 ## Scope
 
@@ -19,7 +21,7 @@ Applies to:
 
 适用条件：
 
-- contexta 需要创建或修改 example module。
+- contexta 需要创建或修改 example 内容、章节或教学材料。
 - contexta 需要判断一个 example 是否足以教 agent 理解、书写或判断。
 - contexta 需要维护 example 章节中的例子质量。
 
@@ -28,7 +30,7 @@ Applies to:
 - 需要定义 example 的概念本体。
 - 需要规定某个非 example 内容类型的完整写作方法。
 - 需要把 example 的写法升级为独立 structure module。
-- 需要设计新的 example template。
+- 需要把 example 设计为独立 module kind、template kind 或目录 kind。
 - 需要处理 docwarden task / review / promote / pick / cleanup 生命周期。
 
 ## Rules
@@ -48,6 +50,16 @@ example 的价值在于降低 agent 从抽象理解到实际判断之间的损�
 坏 example 往往没有真正提供判断场景：它只写结论、复述规则，或把一条 policy assertion 包装成例子。这样的内容不能教 agent 下次如何判断，也很难迁移到相邻场景。
 
 好的 example 不只是贴一个正确片段或错误片段。它要展示一个具体文本在具体压力下为什么应该这样读、这样写或这样改。
+
+## Accepted Limitation
+
+当前 example 结构已经先行落地，但具体 example 的质量仍依赖真实使用场景继续补充。
+
+本轮接受的局限是：现有 examples 主要用于验证结构形状，未必都是高质量教学样本。后续在实际使用、误判纠偏和内容调优中，应持续把真实判断场景补回 `Scenario` 和 `Judgment Material`，再据此重写 `Positive`、`Negative` 和 `Borderline`。
+
+缺少真实场景时，example SHOULD 明确占位，说明后续需要补哪类用例，而不是编造一个看似完整但没有判断压力的片段。
+
+后续应重新判断本模块是否仍属于 policy，或应被抽象为更合适的模型。
 
 ## Examples
 
