@@ -1,7 +1,7 @@
 ---
 status: draft
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-05-20
 owner: sayori
 ---
 
@@ -284,6 +284,38 @@ sayori 纠正并确认：
 
 - `.contexta/modules/concept/example.md`
 - `.contexta/templates/example.md`
+
+已同步：
+
+- `contexta-architecture-baseline.md`
+- `index.md`
+- `plan.md`
+
+收口纠偏：
+
+- positive / negative / borderline 不应写成单个 `Sample` 的内部小标题。
+- 它们是未来 sample set / contrast set 中可能出现的 sample role。
+- sample set / contrast set 当前只作为占位，不作为 concept、policy 或 structure 正式落地。
+
+## [2026-05-20] example-quality | 落地 example 编写模式
+
+sayori 确认：
+
+- 好 example 需要一个稳定的样例组织模式。
+- 这个模式属于 structure 问题，但当前只作为 example authoring 的局部轻结构。
+- 当前不提前引入 `kind: structure` 或新的 primitive。
+
+已落地：
+
+- `.contexta/modules/policy/example-quality.md`
+- `.contexta/templates/example.md`
+- `.contexta/modules/example/example-authoring.md`
+
+当前局部教学结构：
+
+```text
+Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
+```
 
 已同步：
 

@@ -1,7 +1,7 @@
 ---
 status: draft
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-05-20
 owner: sayori
 ---
 
@@ -37,6 +37,10 @@ owner: sayori
 - 当前已新增 naming 作为语义定位机制；naming 不是 primitive，但作为 contexta foundational concern 落地。
 - structure 仍未落地到 `.contexta` 长期层。
 - example 已落地为样本语言。
+- example 编写质量已由 `example-quality` policy、example template 和 `example-authoring` 样本共同承接。
+- `Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits` 是 example authoring 的局部教学结构，不升级为 structure primitive。
+- sample set / contrast set 作为后续占位，用于承接 positive / negative / borderline 等多个 sample 之间的教学角色。
+- 当前不要把 positive / negative / borderline 写成单个 `Sample` 的内部小标题。
 - 当前关系已确定为 `policy applies to concept`。
 - 当前已按新架构直接修改 `.contexta/templates/` 与 `.contexta/modules/`。
 
@@ -61,6 +65,8 @@ owner: sayori
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案。
 - `.contexta/modules/concept/example.md`：`example` concept module 草案。
 - `.contexta/templates/example.md`：example template。
+- `.contexta/modules/policy/example-quality.md`：example quality policy。
+- `.contexta/modules/example/example-authoring.md`：example authoring 样本。
 - `.contexta/modules/policy/naming.md`：naming policy。
 - `.contexta/modules/policy/language.md`：language policy。
 - `.contexta/modules/policy/audience.md`：audience policy。
@@ -92,6 +98,8 @@ owner: sayori
 - `.contexta/modules/concept/naming.md`：`naming` concept module 草案，状态：draft。
 - `.contexta/modules/concept/example.md`：`example` concept module 草案，状态：draft。
 - `.contexta/templates/example.md`：example template，状态：draft。
+- `.contexta/modules/policy/example-quality.md`：example quality policy，状态：draft。
+- `.contexta/modules/example/example-authoring.md`：example authoring 样本，状态：draft。
 - `.contexta/modules/policy/naming.md`：naming policy，状态：draft。
 - `.contexta/modules/policy/language.md`：language policy，状态：draft。
 - `.contexta/modules/policy/audience.md`：audience policy，状态：draft。
@@ -106,4 +114,4 @@ owner: sayori
 
 ## 下一步
 
-继续 review 已落地的 `.contexta` 新架构，下一步补齐 structure。
+当前 example 编写模式已收口；后续进入 structure 前，应先决定 sample set / contrast set 是否需要正式落地。

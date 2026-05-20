@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-05-20
 owner: sayori
 loop: 6.4
 ---
@@ -82,6 +82,7 @@ policy 不重新定义 concept。
 - `.contexta/modules/policy/semantic-granularity.md`
 - `.contexta/modules/policy/template-boundary.md`
 - `.contexta/modules/policy/naming.md`
+- `.contexta/modules/policy/example-quality.md`
 
 ## template
 
@@ -138,6 +139,29 @@ example 的复制骨架在：
 
 - `.contexta/templates/example.md`
 
+example 的质量约束在：
+
+- `.contexta/modules/policy/example-quality.md`
+
+example 的第一版编写样本在：
+
+- `.contexta/modules/example/example-authoring.md`
+
+当前 example 编写使用局部教学结构：
+
+```text
+Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
+```
+
+这个结构服务 example authoring，不表示 structure primitive 已经落地。
+
+当前占位：
+
+- sample set / contrast set：用于承接多个 sample 之间的教学关系。
+- positive / negative / borderline：作为 sample set 中可能出现的 sample role。
+
+这些占位尚未作为 concept、policy 或 structure 落地。当前不要把 positive / negative / borderline 写成单个 `Sample` 的内部小标题。
+
 ## naming
 
 naming 是语义定位机制。
@@ -184,5 +208,7 @@ assertion 的概念定义在 concept 中；assertion 的拆分、组合和落地
 - policy 只通过 `Applies to` 指向 concept，并约束其使用。
 - template 只提供骨架和槽位，不承接内容本体。
 - example 只提供样本和示范，不承接 concept 定义本体或 policy 规则本体。
+- example 的局部教学结构先停留在 policy、template 和 example module 中，不升级为独立 primitive。
+- sample set / contrast set 只作为后续设计占位，不提前升级为 structure primitive。
 - docwarden 仍负责 task / review / promote / pick / cleanup。
 - contexta 不承接 docwarden 操作流程生命周期。

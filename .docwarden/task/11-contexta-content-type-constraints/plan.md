@@ -1,7 +1,7 @@
 ---
 status: draft
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-05-20
 owner: sayori
 ---
 
@@ -259,8 +259,37 @@ review 门槛：
 - sayori 已纠正：example 的本体不是边界校验语言，而是样本语言。
 - 边界识别、review 对照或 semantic lint 参考是样本产生的派生用途，不是 example 的本体定义。
 
+## Loop 9.1：example 编写质量
+
+状态：accepted。
+
+目标：建立高质量 example 的编写模式，同时避免提前引入新的 structure primitive。
+
+落地产物：
+
+- `.contexta/modules/policy/example-quality.md`
+- `.contexta/templates/example.md`
+- `.contexta/modules/example/example-authoring.md`
+
+review 门槛：
+
+- sayori 确认 example 编写需要局部教学结构。
+- sayori 确认该结构先停留在 policy、template 和 example module 中。
+- sayori 确认当前不把该结构升级为 `kind: structure` 或新的 primitive。
+
+当前结果：
+
+- example authoring 使用 `Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits`。
+- `example-quality` policy 约束好 example 必须有明确 teaching point、具体 sample、reading、transfer 和必要 limits。
+- `example-authoring` 用 example 教 agent 如何写 example。
+- 当前只收口单样本 example authoring。
+- sample set / contrast set 作为后续占位，用于承接多个 sample 之间的教学关系。
+- positive / negative / borderline 是 sample set 中可能出现的 sample role，不是单个 `Sample` 的内部小标题。
+- 当前不把 sample set / contrast set 升级为 `kind: structure` 或新的 primitive。
+
 ## 本轮不做
 
 - 真实写入 `.docwarden/spec/`、`.docwarden/guide/`、`.docwarden/wiki/`。
 - 设计 docwarden review / promote / pick / cleanup 流程。
 - 处理 pick 后 user context。
+- 正式落地 sample set / contrast set。
