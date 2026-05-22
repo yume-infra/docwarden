@@ -14,49 +14,55 @@ Aliases:
 
 ## Naming Need
 
-contexta 需要一个名字表示稳定指向 module、heading 或 assertion 的地址机制。
+contexta 需要一个名字表示让 assertion 可以被稳定定位的机制。
 
-这个名字用于让 semantic-lint、review、trace 和未来 CLI 能把判断指回可审查位置。
+这个名字用于让 semantic-lint、review、trace 和未来 CLI 能把判断指回具体可审查的 assertion，而不是只指向整篇 module 或某个 heading。
 
 ## Definition
 
-locator 是稳定指向 contexta 内容位置的地址机制。
+locator 是服务 assertion 审核的定位机制。 ^a-def
 
-当前阶段 locator 至少需要支持 module 和 heading。
+locator 通过 assertion marker 让需要被审核、引用、迁移或 lint 命中的 assertion 可以被稳定找到。
 
-未来 assertion locator 会支持指向 module 内部的具体 assertion。
+module path、heading 和 relation block heading 可以提供定位上下文，但不是 locator 的核心定义。
 
-locator 只负责定位，不判断内容是否正确。
+locator 只负责让 assertion 可定位，不判断 assertion 是否正确。
 
 ## Delimitation
 
-| Neighbor | Difference |
-| --- | --- |
-| [[mapping/bootstrap/modules/policy/link-resolution|link-resolution]] | link-resolution 约束 OFM link 写法；locator 是定位机制。 |
-| [[mapping/bootstrap/modules/concept/assertion|assertion]] | assertion 是被审查的语义判断；locator 指向 assertion 或其所在位置。 |
-| [[mapping/bootstrap/modules/concept/signal|signal]] | signal 命名语义偏移 warning；locator 指向 warning 命中的位置。 |
-| docwarden asset landing | docwarden asset landing 处理资产落点；locator 只处理内容位置。 |
+- [[mapping/bootstrap/modules/concept/assertion|assertion]]：assertion 是被审查的语义判断；locator 让 assertion 可以被稳定定位。
+- [[mapping/bootstrap/modules/concept/format|format]]：format 提供可读表面；locator 依附这些表面定位 assertion。
+- [[mapping/bootstrap/modules/policy/link-resolution|link-resolution]]：link-resolution 约束 OFM link 写法；locator 定义 assertion marker 的定位用途。
+- [[mapping/bootstrap/modules/concept/signal|signal]]：signal 命名语义偏移 warning；locator 指向 warning 命中的 assertion。
+- docwarden asset landing：docwarden asset landing 处理资产落点；locator 只处理 assertion 在内容内部的定位。
 
 ## Examples
 
 ### Scenario
 
-CLI lint step 命中 concept Definition 中的可疑内容。
+CLI lint step 命中 concept Definition 中的一条可疑 assertion。
 
 ### Judgment Material
 
 ```text
 mapping/bootstrap/modules/concept/example.md
 heading: Definition
+marker: ^a-def
 ```
 
 ### Positive
 
 ```md
-[[mapping/bootstrap/modules/concept/example#Definition|example#Definition]]
+example 是样本语言。 ^a-def
+
+[[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
 ```
 
-这个 locator 可以稳定指向 module heading。
+这个 locator 同时包含 assertion marker 和 OFM path alias link。
+
+marker 让 assertion 可以被定位；link 让其他 module 可以稳定引用它。
+
+marker 使用短格式，因为 path 和 alias 已经提供了跨 module 语义；block id 只需要在当前文件内稳定。
 
 ### Negative
 
@@ -64,12 +70,18 @@ heading: Definition
 example
 ```
 
-这只是显示名，不是稳定 locator。
+这只是显示名，不是 locator。
+
+```md
+[[mapping/bootstrap/modules/concept/example#Definition|example#Definition]]
+```
+
+这只是 section context，不能精确定位具体 assertion。
 
 ### Borderline
 
 ```md
-[[mapping/bootstrap/modules/concept/example#^block-id|example assertion]]
+example 是样本语言。 ^definition
 ```
 
-这是未来 assertion locator 可能使用的 block reference。本轮不引入该机制。
+这能形成 block reference，但没有使用 `a-` magic prefix，后续不利于脚本区分普通 block 与 assertion marker。

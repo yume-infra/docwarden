@@ -498,3 +498,88 @@ sayori 确认先修复 example 表格，再进入整体阶段与理论实践边�
 已生成：
 
 - `theory-practice-implementation-boundary.md`
+
+## [2026-05-22] loop-10-accepted | 收口理论实践实现边界
+
+sayori 确认下一步方向正确：先收口 Loop 10，再进入 format / locator 基础层。
+
+当前确认：
+
+- contexta 当前阶段是 `theory stabilization -> practice reference -> future implementation`。
+- `.contexta` 承接已 review、需要长期稳定读取的 theory 与 practice reference。
+- `.docwarden/task` 承接 loop、纠偏、candidate 和 review outcome。
+- CLI lint engine 留到 implementation 层。
+- `docs/文档体系建设/理念-v3.md` 已在用户明确要求下记录 v3 breaking changes。
+
+## [2026-05-22] loop-12-started | 进入 format / locator 基础层
+
+当前进入 Loop 12。
+
+本轮最小 review 单元：
+
+- format 是否可以定义为 contexta module 的稳定可读形状。
+- locator 是否可以定义为指向 contexta 可读表面的地址表达。
+- locator 第一版是否只支持 module / section / relation block。
+- assertion locator 是否继续保留为后续 loop，不提前引入 block reference 或 assertion ID。
+
+已生成：
+
+- `format-locator-foundation-review.md`
+
+## [2026-05-22] loop-12-correction | 修正 locator 定义
+
+sayori 审核反馈：
+
+- 接受 `format = 可读表面`。
+- 接受 format 作为 contexta 基础 concept。
+- locator 第一版应尽可能从简。
+- 原先把 locator 定义为“指向可读表面的地址表达”不准确。
+- locator 应服务 assertion，即用特殊符号或 magic word 让需要被审核的 assertion 被定位到。
+
+已修正：
+
+- 将 locator 从泛化地址机制改为 assertion 审核定位机制。
+- 将 module / section / relation block 降级为定位上下文或宿主表面。
+- 将本轮重点改为 assertion marker 的最小形态。
+- 增加特殊符号、magic word、二者组合三种候选方向。
+
+## [2026-05-22] loop-12-land-third-candidate | 落地第三种 locator 候选
+
+sayori 要求落地第三种候选查看效果。
+
+已落地：
+
+- 新增 `.contexta/mapping/bootstrap/modules/concept/format.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/locator.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/policy/link-resolution.md`。
+
+初始落地效果：
+
+- assertion marker 使用 `^assertion-*`。
+- OFM path alias link 使用 `[[path#^assertion-id|display]]` 引用 marker。
+- module path / heading 只提供上下文，不替代 assertion locator。
+- block reference 只允许作为 assertion marker target，不泛化为普通 link。
+
+## [2026-05-22] loop-12-marker-shortening | 缩短 assertion marker
+
+sayori 在 Obsidian 中查看效果后指出 locator marker 太长。
+
+已修正：
+
+- 将 visible marker 从 `^assertion-*` 收短为 `^a-*`。
+- `a-` 作为 assertion marker 的 magic prefix。
+- marker 只需要在当前 module 内稳定；跨 module 语义由 OFM path alias 和 display alias 承担。
+- 当前示例使用 `^a-def`。
+
+## [2026-05-22] loop-12-accepted | 收口 format / locator 基础层
+
+sayori 确认短 marker 版本阅读效果更清爽，并要求收口本轮 loop。
+
+当前结论：
+
+- format 是 contexta module 的稳定可读形状。
+- locator 服务 assertion 审核定位，不是泛化 link 地址。
+- module path、heading 和 relation block heading 只提供定位上下文或宿主表面。
+- assertion marker 第一版采用 `^a-*` 短 marker。
+- block reference 只允许作为 assertion marker target，不泛化为普通 link。
+- 当前不进入 CLI parser、format validator、全局 assertion ID 或全量 assertion marker。

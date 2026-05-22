@@ -330,7 +330,7 @@ owner: sayori
 
 ## Loop 10：theory / practice / implementation 边界
 
-状态：in review。
+状态：accepted。
 
 目标：整理 contexta 当前整体阶段，并界定 theory、practice reference、task material、implementation 的边界。
 
@@ -345,6 +345,15 @@ owner: sayori
 当前产物：
 
 - `theory-practice-implementation-boundary.md`
+
+当前结果：
+
+- 已通过 sayori 审核。
+- 当前阶段确认为 `theory stabilization -> practice reference -> future implementation`。
+- `.contexta` 承接已 review、需要长期稳定读取的 theory 与 practice reference。
+- `.docwarden/task` 承接 loop、纠偏、candidate 和 review outcome。
+- CLI lint engine 留到 implementation 层。
+- `docs/文档体系建设/理念-v3.md` 已在用户明确要求下记录 v3 breaking changes；本 task 默认仍不修改 `docs/`。
 
 ## Loop 11：example quality 未来抽象
 
@@ -364,10 +373,57 @@ owner: sayori
 - 当前不应过早建立新结构承接 sample set / contrast set。
 - 后续从实际写作反馈中补充 Positive / Negative / Borderline 的高质量样本。
 
-## 本轮不做
+## Loop 12：format / locator 基础层
+
+状态：accepted。
+
+目标：定义 contexta 在进入 CLI implementation 前需要的可寻址基础。
+
+当前基线：
+
+- module 是 md file scope。
+- assertion 是 module 内部最小可审查语义判断。
+- assertion 后续需要能成为 locator target。
+- locator 原有 concept 曾写成至少支持 module 和 heading，本轮已修正为 assertion 取向。
+- contexta 内部连接只使用 OFM path alias。
+- semantic lint 未来需要输出 signal instance，并通过 locator 指回命中位置。
+
+当前候选：
+
+- format = contexta module 的稳定可读形状。
+- locator = 服务 assertion 审核的定位机制。
+- format 先承认 frontmatter、H1、heading、section body、OFM wikilink、relation block heading 等可读表面。
+- module / section / relation block 是 locator 的上下文或宿主表面，不是 locator 定义的核心。
+- locator 第一版应尽可能简单，重点设计 assertion marker。
+- assertion marker 采用 `^a-*` 短 marker，其中 `a-` 是 assertion magic prefix。
+- 本轮不引入全局 assertion ID 或完整 parser contract。
+
+当前产物：
+
+- `format-locator-foundation-review.md`
+
+当前进展：
+
+- 已按 sayori 指定落地第三种候选效果。
+- 已新增 `.contexta/mapping/bootstrap/modules/concept/format.md`。
+- 已修订 `.contexta/mapping/bootstrap/modules/concept/locator.md`，将 locator 定义为服务 assertion 审核的定位机制。
+- 已修订 `.contexta/mapping/bootstrap/modules/policy/link-resolution.md`，允许 block reference 作为 assertion marker target，但不允许泛化为普通 link。
+- 已将 `^assertion-*` 长 marker 收短为 `^a-*`，避免污染 Obsidian 阅读面。
+- 当前只是最小效果验证，不对所有 assertion 强制加 marker。
+
+当前结果：
+
+- 已通过 sayori 审核。
+- format 作为 contexta 基础 concept 落地。
+- locator 重新收窄为 assertion 审核定位机制。
+- `^a-*` 短 marker 当前阅读效果可接受。
+- assertion locator 继续保持最小第一版，不进入完整 parser、全局 ID 或全量标记。
+
+## 当前不做
 
 - 修改 `docs/`。
 - 重新打开 task 11 已归档判断。
 - 把 example 恢复为 kind、role、template kind 或 directory kind。
 - 建立 `structure_type` metadata 分类树。
 - 把 docwarden workflow 生命周期放进 contexta template。
+- 实现 CLI parser、format validator 或 semantic lint engine。

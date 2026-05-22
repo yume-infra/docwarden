@@ -14,6 +14,8 @@ kind: policy
 
 Applies to:
 
+- [[mapping/bootstrap/modules/concept/format|format]]
+- [[mapping/bootstrap/modules/concept/locator|locator]]
 - [[mapping/bootstrap/modules/concept/naming|naming]]
 - [[mapping/bootstrap/modules/concept/relation|relation]]
 - [[mapping/bootstrap/modules/concept/module|module]]
@@ -27,8 +29,7 @@ Applies to:
 
 不适用条件：
 
-- 需要设计 assertion locator。
-- 需要设计 block reference 标识。
+- 需要定义 assertion locator 的语义边界。
 - 需要引用 contexta 外部资料。
 
 ## Rules
@@ -39,7 +40,8 @@ Applies to:
 - contexta internal link MUST NOT use short wikilink.
 - contexta section link MUST include both target path and display alias.
 - relation file From / To / Read next MUST use path alias.
-- block reference MUST NOT be introduced before assertion locator is designed.
+- block reference MUST NOT be used as a general internal link form.
+- block reference MAY be used as an assertion marker target when locator requires assertion-level reference.
 
 ## Rationale
 
@@ -49,7 +51,9 @@ OFM wikilink 是 contexta 的内部连接语言。
 
 path alias 让 target 和 display 同时成立：target 保持稳定落点，display 保持 Obsidian 阅读干净。
 
-section link 可以稳定指向 Definition、Delimitation 或其他 heading，但不等于 assertion locator。更细粒度的 block reference 应留到 assertion locator 设计。
+section link 可以稳定指向 Definition、Delimitation 或其他 heading，但不等于 assertion locator。
+
+assertion locator 可以使用 block reference target，但它的用途是定位 assertion，不是替代普通 module / section link。
 
 ## Examples
 
@@ -84,3 +88,9 @@ relation file 需要指向 concept pipeline。
 ```
 
 这是 section link，可以用于 Read next。它稳定到 heading，但还不是 assertion locator。
+
+```md
+[[mapping/bootstrap/modules/concept/locator#^a-def|locator definition]]
+```
+
+这是 assertion-level reference。只有当目标位置存在 assertion marker 时才成立。
