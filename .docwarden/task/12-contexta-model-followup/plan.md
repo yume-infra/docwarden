@@ -252,7 +252,7 @@ owner: sayori
 
 ## Loop 8：semantic lint 误用信号
 
-状态：pending。
+状态：accepted。
 
 目标：从当前已暴露的问题中整理第一批 semantic lint 可识别信号。
 
@@ -269,6 +269,32 @@ owner: sayori
 
 - 哪些信号已经足够稳定，可以先落地为 policy 或 lint note。
 - 哪些信号仍需等待更多真实材料。
+
+当前产物：
+
+- `semantic-lint-signal-review.md`
+
+当前候选：
+
+- semantic lint 当前阶段先做 warning signal，但明确未来会进入独立 lint layer 和 CLI lint step。
+- semantic lint signal definition 的最小结构是 Signal / Trigger / Why / Source / Inspection。
+- 未来 CLI 输出的是 signal instance，至少包含 Signal / Locator / Trigger / Evidence / Inspection。
+- 第一批信号来自当前已暴露误用。
+- Trigger 应尽量是脚本可观察条件，不是人工语义结论。
+- 当前不设计完整 lint engine、severity 和 assertion locator。
+- 后续需要 locator，以辅助脚本级 lint。
+
+当前结果：
+
+- 已通过 sayori 审核。
+- 已新增 `.contexta/mapping/bootstrap/modules/concept/semantic-lint.md`。
+- 已新增 `.contexta/mapping/bootstrap/modules/concept/signal.md`。
+- 已新增 `.contexta/mapping/bootstrap/modules/concept/trigger.md`。
+- 已新增 `.contexta/mapping/bootstrap/modules/concept/locator.md`。
+- 已新增 `.contexta/mapping/bootstrap/modules/policy/semantic-lint-boundary.md`。
+- 已新增 `.contexta/mapping/bootstrap/lint/semantic-signals.md`。
+- 暂不设计完整 CLI lint engine。
+- 暂不设计完整 assertion locator。
 
 ## Loop 9：example quality 未来抽象
 

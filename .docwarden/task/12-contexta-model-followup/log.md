@@ -358,3 +358,81 @@ sayori 审核通过 Loop 7。
 - contexta 内部连接不使用短 link。
 - section link 可以用于 heading 级职责位置。
 - block reference 留给 assertion locator loop。
+
+## [2026-05-22] loop-8-started | 进入 semantic lint 误用信号
+
+进入 Loop 8。
+
+本轮最小 review 单元：
+
+- semantic lint 当前阶段是否先做 warning signal。
+- semantic lint 未来是否进入独立 lint layer 和 CLI lint step。
+- semantic lint signal 的最小结构。
+- 第一批信号是否只来自当前已暴露误用。
+- 是否暂不设计 severity。
+- 是否暂不设计完整 assertion locator，但明确 locator 是未来脚本级 lint 的必要承接。
+
+已生成：
+
+- `semantic-lint-signal-review.md`
+
+## [2026-05-22] loop-8-correction | 明确未来 lint layer
+
+sayori 纠正：
+
+- semantic lint 后续肯定会做成 CLI 中的一步。
+- semantic lint 后续会做成 lint 引擎。
+- 当前初步阶段不需要设计得太死。
+- 但需要明确未来会有独立 lint layer。
+- 未来需要 locator 辅助脚本级 lint。
+
+已修正：
+
+- Loop 8 改为“当前 warning signal，未来独立 lint layer / CLI lint step”。
+- 保留当前不设计完整 lint engine、severity 和 assertion locator。
+- 明确 locator 是未来脚本级 lint 的必要承接。
+
+## [2026-05-22] loop-8-subagent-review | 审查 signal / trigger / assertion / locator
+
+sayori 要求使用 subagents 从不同方面审查 signal、trigger、assertion、locator 的架构关系。
+
+审查结论：
+
+- 关系成立：trigger 发现可观察现象，signal 命名语义风险，locator 指向审查位置，assertion 是被审查语义内容。
+- 需要区分 signal definition 和 signal instance。
+- Trigger 必须尽量是脚本可观察条件，不能写成人工语义结论。
+- locator 当前可先支持 module / heading，未来再扩展到 assertion。
+- `Review` 字段容易混淆 docwarden review surface，应改为 `Inspection`。
+- semantic lint 长期应进入独立 lint layer，不应把具体 signals 放进 concept、policy 或 relation。
+
+已修正：
+
+- `semantic-lint-signal-review.md` 增加关系模型。
+- 增加 Signal Definition / Signal Instance 区分。
+- 将 signal definition 字段改为 Signal / Trigger / Why / Source / Inspection。
+- 增加 signal instance 字段 Signal / Locator / Trigger / Evidence / Inspection。
+- 将候选信号的 Trigger 改成更可脚本化的观察条件。
+- 增加后续落点判断：concept 定义名字，policy 约束边界，lint layer 承载具体 signal definitions。
+
+## [2026-05-22] loop-8-landed | 落地 semantic lint 初步层
+
+sayori 确认 Loop 8 修订方向正确，并要求组织落地。
+
+已落地：
+
+- `.contexta/mapping/bootstrap/modules/concept/semantic-lint.md`
+- `.contexta/mapping/bootstrap/modules/concept/signal.md`
+- `.contexta/mapping/bootstrap/modules/concept/trigger.md`
+- `.contexta/mapping/bootstrap/modules/concept/locator.md`
+- `.contexta/mapping/bootstrap/modules/policy/semantic-lint-boundary.md`
+- `.contexta/mapping/bootstrap/lint/semantic-signals.md`
+
+当前口径：
+
+- semantic lint 是语义偏移检测语言。
+- signal 是 semantic-lint 中被命名的 warning。
+- trigger 是可观察、可脚本化的触发条件。
+- locator 是稳定指向 module、heading 或未来 assertion 的地址机制。
+- 具体 signal definitions 放在独立 lint layer。
+- 当前不设计完整 CLI lint engine。
+- 当前不设计完整 assertion locator。
