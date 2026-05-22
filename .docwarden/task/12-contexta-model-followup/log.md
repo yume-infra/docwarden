@@ -436,3 +436,40 @@ sayori 确认 Loop 8 修订方向正确，并要求组织落地。
 - 具体 signal definitions 放在独立 lint layer。
 - 当前不设计完整 CLI lint engine。
 - 当前不设计完整 assertion locator。
+
+## [2026-05-22] loop-9-started | 进入 semantic lint instance dry run
+
+sayori 指出当前还没有落地具体实例，要求展开。
+
+本轮最小 review 单元：
+
+- 用当前 `.contexta` 内容手动验证 signal definitions。
+- 区分 raw hit、candidate 和 signal instance。
+- 用 locator / evidence / inspection 组织具体命中。
+- 判断当前是否存在 accepted signal instance。
+- 暂不设计完整 CLI lint engine。
+
+已生成：
+
+- `semantic-lint-instance-dry-run.md`
+
+当前候选判断：
+
+- raw hit 不能直接等于 signal instance。
+- 当前 `.contexta/mapping/**/*.md` 中没有确认的 accepted signal instance。
+- 当前主要命中来自 Examples、code fence、template skeleton 和 signal definition 自身描述。
+- 后续 lint layer 需要 target scope 和 code fence exclusion。
+
+## [2026-05-22] loop-9-accepted | 收口 semantic lint instance dry run
+
+sayori 确认本轮方向基本成立，并补充：
+
+- 当前不需要奢求一次做好。
+- 先稳定 concept / signal / trigger / locator / assertion 等基础概念。
+- 后续落实到 CLI lint engine 时，本轮 dry run 可以作为具体参照物。
+
+已同步：
+
+- `semantic-lint-instance-dry-run.md` 标记为 accepted。
+- `plan.md` 将 Loop 9 标记为 accepted。
+- `index.md` 将下一步改为继续稳定 contexta 基础概念，不直接进入 CLI 实现。

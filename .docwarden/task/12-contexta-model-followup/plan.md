@@ -296,7 +296,39 @@ owner: sayori
 - 暂不设计完整 CLI lint engine。
 - 暂不设计完整 assertion locator。
 
-## Loop 9：example quality 未来抽象
+## Loop 9：semantic lint instance dry run
+
+状态：accepted。
+
+目标：用当前 `.contexta` 内容手动验证 Loop 8 的 signal definitions 如何产生具体 signal instance。
+
+当前基线：
+
+- semantic lint 当前只有 signal definitions，没有完整 CLI lint engine。
+- 未来 CLI 输出的是 signal instance，而不是抽象 signal definition。
+- signal instance 至少需要 Signal / Locator / Trigger / Evidence / Inspection。
+- 当前 locator 先指向 module / heading，后续再扩展到 assertion。
+
+当前产物：
+
+- `semantic-lint-instance-dry-run.md`
+
+当前候选：
+
+- raw hit 不能直接等于 signal instance。
+- 需要先区分 `raw hit -> candidate -> signal instance`。
+- 当前 `.contexta/mapping/**/*.md` 中没有确认的 accepted signal instance。
+- 当前主要命中来自 Examples、code fence、template skeleton 和 signal definition 自身描述。
+- 后续 lint layer 需要 target scope 和 code fence exclusion，但当前不设计完整 CLI。
+
+当前结果：
+
+- 已通过 sayori 审核。
+- 当前不追求一次做好完整 semantic lint instance 体系。
+- 本轮 dry run 作为后续 CLI lint engine 的具体参照物。
+- 后续先稳定 contexta 基础概念，再在 CLI 实现阶段用真实 lint case 校准 target scope、code fence exclusion 和 locator 精度。
+
+## Loop 10：example quality 未来抽象
 
 状态：deferred。
 

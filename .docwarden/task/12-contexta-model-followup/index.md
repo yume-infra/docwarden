@@ -37,6 +37,8 @@ owner: sayori
 - Delimitation 只保留关键边界压力；contexta 自己的 relation 后续应进入 bootstrap mapping 下的独立 relation layer。
 - contexta 内部连接只使用 OFM path alias，不使用短 link。
 - semantic lint 当前已作为独立 lint layer 的初步形态落地，先承载 signal definitions。
+- semantic lint instance 需要经过 `raw hit -> candidate -> signal instance`，不能把 raw scan 直接当成实例。
+- semantic lint instance dry run 当前作为后续 CLI lint engine 的具体参照物，不追求一次完整。
 - example 已被修正为样本语言，不是 kind、role、template kind 或 directory kind。
 - `example-quality` 当前只是临时质量提示，未来需要真实使用反馈再抽象。
 - semantic lint 后续需要继续从实际误用中扩展可审查信号。
@@ -54,7 +56,8 @@ owner: sayori
 - `relation-content-model-review.md`：Loop 6 relation content 建模审查材料。
 - `ofm-link-resolution-review.md`：Loop 7 OFM link resolution 审查材料。
 - `semantic-lint-signal-review.md`：Loop 8 semantic lint 误用信号审查材料。
+- `semantic-lint-instance-dry-run.md`：Loop 9 semantic lint 实例干跑审查材料。
 
 ## 下一步
 
-Loop 8 已通过审核并落地。下一步进入 Loop 9：example quality 未来抽象。
+Loop 9 已通过审核。下一步先继续稳定 contexta 基础概念，不直接进入 CLI lint engine 实现。
