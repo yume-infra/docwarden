@@ -14,8 +14,8 @@ kind: policy
 
 Applies to:
 
-- [[module]]
-- [[assertion]]
+- [[mapping/bootstrap/modules/concept/module|module]]
+- [[mapping/bootstrap/modules/concept/assertion|assertion]]
 
 适用条件：
 
@@ -45,7 +45,7 @@ Applies to:
 
 ## Rationale
 
-本 policy 已通过 `Applies to` 指向 [[assertion]] 和 [[module]]。
+本 policy 已通过 `Applies to` 指向 [[mapping/bootstrap/modules/concept/assertion|assertion]] 和 [[mapping/bootstrap/modules/concept/module|module]]。
 
 这里不重新定义这两个 concept，只解释为什么需要约束它们的粒度关系。
 

@@ -14,10 +14,10 @@ kind: policy
 
 Applies to:
 
-- [[kind]]
-- [[module]]
-- [[template]]
-- [[relation]]
+- [[mapping/bootstrap/modules/concept/kind|kind]]
+- [[mapping/bootstrap/modules/concept/module|module]]
+- [[mapping/bootstrap/modules/concept/template|template]]
+- [[mapping/bootstrap/modules/concept/relation|relation]]
 
 适用条件：
 
@@ -40,7 +40,7 @@ Applies to:
 - `kind` MUST NOT 表达 concept network 上位关系。
 - `kind` MUST NOT 被用作 `module`、`assertion`、`example` 或 `role` 的伪分类字段。
 - contexta MUST NOT 用 `sub_type`、`structure_type` 或等价 frontmatter 字段表达 structure 关系。
-- structure language 之间的上位关系 SHOULD 由 [[relation]] 承接。
+- structure language 之间的上位关系 SHOULD 由 [[mapping/bootstrap/modules/concept/relation|relation]] 承接。
 - template 文件中的 `kind` MAY 指向复制后目标 module 的 content kind。
 - template 文件中的 `kind` MUST NOT 被解释为 template artifact 自身的 kind。
 - `status / created / updated / owner` MUST 被视为 docwarden operation metadata，而不是 contexta content kind。

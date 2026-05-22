@@ -30,7 +30,7 @@ user-context 不覆盖当前用户明确指令，不覆盖项目规则，也不�
 
 | Neighbor | Difference |
 | --- | --- |
-| [[policy]] | policy 表达约束语言；user-context 记录用户协作上下文，作为默认判断材料使用。 |
+| [[mapping/bootstrap/modules/concept/policy|policy]] | policy 表达约束语言；user-context 记录用户协作上下文，作为默认判断材料使用。 |
 | docwarden workflow | docwarden workflow 处理 task / review / promote / pick / cleanup；user-context 只提供协作判断背景。 |
 | 私人身份信息 | 私人身份信息描述个人身份；user-context 不记录私人身份，只记录当前协作需要的上下文断言。 |
 

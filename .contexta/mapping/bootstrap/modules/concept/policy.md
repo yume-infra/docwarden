@@ -22,8 +22,8 @@ contexta 需要一个名字表示约束语言。
 
 | Neighbor | Difference |
 | --- | --- |
-| [[concept]] | concept 稳定名字和含义；policy 稳定使用和处理约束。 |
-| [[template]] | template 提供复制骨架；policy 提供规则本体。 |
+| [[mapping/bootstrap/modules/concept/concept|concept]] | concept 稳定名字和含义；policy 稳定使用和处理约束。 |
+| [[mapping/bootstrap/modules/concept/template|template]] | template 提供复制骨架；policy 提供规则本体。 |
 
 ## Examples
 

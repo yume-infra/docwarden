@@ -33,9 +33,9 @@ relation 应由独立 concept / policy 维护，避免每个 concept module 都�
 
 | Neighbor | Difference |
 | --- | --- |
-| [[concept]] | concept 稳定命名和定义；relation 稳定 concept 之间的连接语言。 |
+| [[mapping/bootstrap/modules/concept/concept|concept]] | concept 稳定命名和定义；relation 稳定 concept 之间的连接语言。 |
 | Delimitation | Delimitation 处理局部边界压力；relation 处理 concept network 中的稳定连接。 |
-| [[kind]] | kind 是内容语言入口；relation 表达内容语言或 concept 之间的理论关系。 |
+| [[mapping/bootstrap/modules/concept/kind|kind]] | kind 是内容语言入口；relation 表达内容语言或 concept 之间的理论关系。 |
 | subtype metadata | subtype metadata 把关系塞进 frontmatter；relation 不通过 `sub_type` 或 `structure_type` 表达。 |
 | link | 普通链接只是引用；relation 必须表达稳定、可命名、可复用的语义连接。 |
 
@@ -77,7 +77,7 @@ sub_type: workflow
 
 | Neighbor | Difference |
 | --- | --- |
-| [[pipeline]] | workflow 表达推进；pipeline 表达转换。 |
+| [[mapping/bootstrap/modules/concept/pipeline|pipeline]] | workflow 表达推进；pipeline 表达转换。 |
 ```
 
 这是 Delimitation，不是 relation。它用于消歧相邻概念，不负责维护 workflow 在 concept network 中的全局位置。

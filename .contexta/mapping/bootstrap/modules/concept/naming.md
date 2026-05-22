@@ -34,7 +34,7 @@ naming 的核心是让 agent 能通过名称找到正确内容，并避免把相
 
 | Neighbor | Difference |
 | --- | --- |
-| [[concept]] | concept 稳定一个名字指向的语义对象；naming 关注名称如何形成并保持可定位。 |
+| [[mapping/bootstrap/modules/concept/concept|concept]] | concept 稳定一个名字指向的语义对象；naming 关注名称如何形成并保持可定位。 |
 | style | style 关注表现一致；naming 关注语义定位和消歧。 |
 
 ## Examples

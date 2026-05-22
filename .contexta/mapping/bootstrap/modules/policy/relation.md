@@ -14,9 +14,9 @@ kind: policy
 
 Applies to:
 
-- [[relation]]
-- [[concept]]
-- [[kind]]
+- [[mapping/bootstrap/modules/concept/relation|relation]]
+- [[mapping/bootstrap/modules/concept/concept|concept]]
+- [[mapping/bootstrap/modules/concept/kind|kind]]
 
 适用条件：
 
@@ -63,9 +63,9 @@ agent 想在 workflow concept module 里加入一整节 `Concept Relations`。
 ```md
 ## Concept Relations
 
-- [[structure]]：workflow 是 structure 的一种。
-- [[pipeline]]：workflow 与 pipeline 相邻。
-- [[template]]：workflow 有 template。
+- [[mapping/bootstrap/modules/concept/structure|structure]]：workflow 是 structure 的一种。
+- [[mapping/bootstrap/modules/concept/pipeline|pipeline]]：workflow 与 pipeline 相邻。
+- [[mapping/bootstrap/modules/concept/template|template]]：workflow 有 template。
 ```
 
 ### Positive
@@ -86,7 +86,7 @@ workflow 与 structure 的稳定网络关系应由 relation 体系集中承接�
 
 | Neighbor | Difference |
 | --- | --- |
-| [[structure]] | workflow 属于 structure。 |
+| [[mapping/bootstrap/modules/concept/structure|structure]] | workflow 属于 structure。 |
 ```
 
 这不是有效 Delimitation。它没有处理关键边界压力，只是把 relation 伪装成消歧。
@@ -94,7 +94,7 @@ workflow 与 structure 的稳定网络关系应由 relation 体系集中承接�
 ### Borderline
 
 ```md
-| [[pipeline]] | workflow 表达推进；pipeline 表达转换。 |
+| [[mapping/bootstrap/modules/concept/pipeline|pipeline]] | workflow 表达推进；pipeline 表达转换。 |
 ```
 
 这可以留在 Delimitation，因为 workflow 与 pipeline 容易混淆，且差异会影响正文写法。

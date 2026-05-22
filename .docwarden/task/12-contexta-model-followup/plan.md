@@ -188,7 +188,7 @@ owner: sayori
 
 ## Loop 6：relation content 建模
 
-状态：in review。
+状态：accepted。
 
 目标：设计 contexta bootstrap relation layer 中具体 relation 内容的最小结构。
 
@@ -213,8 +213,44 @@ owner: sayori
 当前结果：
 
 - 已新增 `.contexta/mapping/bootstrap/relations/structure-language.md`，用于展示 OFM relation block 的阅读效果。
+- 已通过 sayori 审核。
 
-## Loop 7：semantic lint 误用信号
+## Loop 7：OFM link resolution / locator
+
+状态：accepted。
+
+目标：定义 contexta 在 OFM 中如何稳定表达 link。
+
+当前基线：
+
+- sayori 明确偏好使用 OFM wiki link 语法。
+- contexta 内部连接不使用 Markdown link 作为第一表达。
+- contexta 内部连接不使用短 link，避免后续因同名或 locator 需求反复改写。
+- relation file 已经依赖 wikilink、heading anchor 和 section link。
+- `.contexta` 中已存在同名文件风险，例如 concept pipeline 与 template pipeline。
+
+当前产物：
+
+- `ofm-link-resolution-review.md`
+
+需要 review：
+
+- 稳定连接是否只使用 path alias：`[[path|display]]`。
+- 短 link 是否完全排除出 contexta 内部连接规范。
+- section link 是否用于指向具体职责位置：`[[path#Heading|display]]`。
+- relation file 的 From / To / Read next 是否必须使用 path alias。
+- block reference 是否留到 assertion locator loop。
+
+当前结果：
+
+- 已通过 sayori 审核。
+- 已新增 `.contexta/mapping/bootstrap/modules/policy/link-resolution.md`。
+- 已将 `.contexta/mapping/bootstrap/relations/structure-language.md` 改为 path alias。
+- 已将 `.contexta/mapping/**/*.md` 中已有短 link 迁移为 path alias。
+- 已确认短 link 不进入 contexta 内部连接规范。
+- 已确认 block reference 留给 assertion locator loop。
+
+## Loop 8：semantic lint 误用信号
 
 状态：pending。
 
@@ -234,7 +270,7 @@ owner: sayori
 - 哪些信号已经足够稳定，可以先落地为 policy 或 lint note。
 - 哪些信号仍需等待更多真实材料。
 
-## Loop 8：example quality 未来抽象
+## Loop 9：example quality 未来抽象
 
 状态：deferred。
 

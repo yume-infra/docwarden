@@ -33,7 +33,7 @@ boundary 是 layer 之间不可混淆或不可跨越的边界。
 | workflow | workflow 关注 state 如何经 move 和 transition 推进；architecture 关注 layer 如何通过 relation 和 boundary 共同成立。 |
 | pipeline | pipeline 关注 input 如何经 transform 形成 output；architecture 关注层级、关系和边界。 |
 | branch | branch 关注 condition 如何 route 到 target；architecture 关注 target 所在整体的层级位置和边界。 |
-| [[policy]] | policy 表达约束强度；architecture 表达层级关系和边界。 |
+| [[mapping/bootstrap/modules/concept/policy|policy]] | policy 表达约束强度；architecture 表达层级关系和边界。 |
 
 ## Examples
 

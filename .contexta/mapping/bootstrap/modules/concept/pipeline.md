@@ -32,7 +32,7 @@ output 是 transform 产生的结果。
 | --- | --- |
 | workflow | workflow 关注推进、确认点和完成条件；pipeline 关注 input 如何经 transform 形成 output。 |
 | list | list 只是并列枚举；pipeline 必须表达转换关系。 |
-| [[mapping]] | mapping 表达理论到实体的映射关系；pipeline 表达 input 到 output 的转换动作。 |
+| [[mapping/bootstrap/modules/concept/mapping|mapping]] | mapping 表达理论到实体的映射关系；pipeline 表达 input 到 output 的转换动作。 |
 
 ## Examples
 

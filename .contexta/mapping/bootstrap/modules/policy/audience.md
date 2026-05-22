@@ -14,7 +14,7 @@ kind: policy
 
 Applies to:
 
-- [[module]]
+- [[mapping/bootstrap/modules/concept/module|module]]
 
 适用条件：
 

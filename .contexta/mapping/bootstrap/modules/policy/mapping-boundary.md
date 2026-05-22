@@ -14,10 +14,10 @@ kind: policy
 
 Applies to:
 
-- [[mapping]]
-- [[kind]]
-- [[template]]
-- [[module]]
+- [[mapping/bootstrap/modules/concept/mapping|mapping]]
+- [[mapping/bootstrap/modules/concept/kind|kind]]
+- [[mapping/bootstrap/modules/concept/template|template]]
+- [[mapping/bootstrap/modules/concept/module|module]]
 
 适用条件：
 

@@ -12,7 +12,7 @@ kind: policy
 
 Applies to:
 
-- [[<concept-id>]]
+- [[mapping/bootstrap/modules/concept/<concept-id>|<concept-id>]]
 
 适用条件：
 

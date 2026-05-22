@@ -40,8 +40,8 @@ composition 定义 module / assertion 的 part-whole 关系，不把 module 改�
 
 | Neighbor | Difference |
 | --- | --- |
-| [[module]] | module 是 md file scope；composition 可以把 module 建模为 whole，但不决定 module 是否成立。 |
-| [[assertion]] | assertion 是 module 内部的最小可审查语义判断；composition 可以把 assertion 建模为 part。 |
+| [[mapping/bootstrap/modules/concept/module|module]] | module 是 md file scope；composition 可以把 module 建模为 whole，但不决定 module 是否成立。 |
+| [[mapping/bootstrap/modules/concept/assertion|assertion]] | assertion 是 module 内部的最小可审查语义判断；composition 可以把 assertion 建模为 part。 |
 | pipeline | pipeline 关注 input 如何经 transform 形成 output；composition 关注 part 如何组成 whole。 |
 | workflow | workflow 关注 state 如何经 move 和 transition 推进；composition 关注组成关系，不表达推进。 |
 | architecture | architecture 关注 layer 的 relation 和 boundary；composition 关注 part 在语义边界下组成 whole。 |

@@ -14,12 +14,12 @@ kind: policy
 
 Applies to:
 
-- [[naming]]
-- [[module]]
-- [[concept]]
-- [[policy]]
-- [[template]]
-- [[structure]]
+- [[mapping/bootstrap/modules/concept/naming|naming]]
+- [[mapping/bootstrap/modules/concept/module|module]]
+- [[mapping/bootstrap/modules/concept/concept|concept]]
+- [[mapping/bootstrap/modules/concept/policy|policy]]
+- [[mapping/bootstrap/modules/concept/template|template]]
+- [[mapping/bootstrap/modules/concept/structure|structure]]
 
 适用条件：
 

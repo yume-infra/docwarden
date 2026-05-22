@@ -37,11 +37,11 @@ kind 是 content language entry。
 
 | Neighbor | Difference |
 | --- | --- |
-| [[module]] | module 是 md file scope；kind 是 module frontmatter 中的内容语言入口。 |
-| [[relation]] | relation 表达 concept network 中的稳定连接；kind 不表达上位关系或 subtype metadata。 |
-| [[template]] | template 是复制骨架；template 文件中的 kind 指向复制后目标 module 的内容语言。 |
-| [[assertion]] | assertion 是 module 内部最小可审查语义判断；assertion 当前不作为 kind。 |
-| [[example]] | example 是样本语言；当前不作为独立 module kind、template kind 或 directory kind。 |
+| [[mapping/bootstrap/modules/concept/module|module]] | module 是 md file scope；kind 是 module frontmatter 中的内容语言入口。 |
+| [[mapping/bootstrap/modules/concept/relation|relation]] | relation 表达 concept network 中的稳定连接；kind 不表达上位关系或 subtype metadata。 |
+| [[mapping/bootstrap/modules/concept/template|template]] | template 是复制骨架；template 文件中的 kind 指向复制后目标 module 的内容语言。 |
+| [[mapping/bootstrap/modules/concept/assertion|assertion]] | assertion 是 module 内部最小可审查语义判断；assertion 当前不作为 kind。 |
+| [[mapping/bootstrap/modules/concept/example|example]] | example 是样本语言；当前不作为独立 module kind、template kind 或 directory kind。 |
 | status | status 是 docwarden workflow 维护状态字段；不是 contexta content kind。 |
 
 ## Examples

@@ -14,8 +14,8 @@ kind: policy
 
 Applies to:
 
-- [[policy]]
-- [[assertion]]
+- [[mapping/bootstrap/modules/concept/policy|policy]]
+- [[mapping/bootstrap/modules/concept/assertion|assertion]]
 
 适用条件：
 

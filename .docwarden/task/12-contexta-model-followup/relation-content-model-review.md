@@ -1,5 +1,5 @@
 ---
-status: draft
+status: accepted
 created: 2026-05-22
 updated: 2026-05-22
 owner: sayori
@@ -101,21 +101,21 @@ relation file 中的最小单元是 relation block。
 
 From:
 
-- [[workflow]]
+- [[mapping/bootstrap/modules/concept/workflow|workflow]]
 
 To:
 
-- [[structure]]
+- [[mapping/bootstrap/modules/concept/structure|structure]]
 
 Reading:
 
-沿 `structure-language-of` 读取时，[[workflow]] 进入 [[structure]] 的 structure language 位置。
+沿 `structure-language-of` 读取时，[[mapping/bootstrap/modules/concept/workflow|workflow]] 进入 [[mapping/bootstrap/modules/concept/structure|structure]] 的 structure language 位置。
 
 Read next:
 
-- Definition: [[workflow#Definition]], [[structure#Definition]]
-- Constraint: [[relation]]
-- Boundary: [[workflow#Delimitation]]
+- Definition: [[mapping/bootstrap/modules/concept/workflow#Definition|workflow#Definition]], [[mapping/bootstrap/modules/concept/structure#Definition|structure#Definition]]
+- Constraint: [[mapping/bootstrap/modules/concept/relation|relation]]
+- Boundary: [[mapping/bootstrap/modules/concept/workflow#Delimitation|workflow#Delimitation]]
 ```
 
 ### 3. link pull-in
@@ -150,11 +150,11 @@ kind: relation
 
 From:
 
-- [[source]]
+- [[path/to/source|source]]
 
 To:
 
-- [[target]]
+- [[path/to/target|target]]
 
 Reading:
 
@@ -162,9 +162,9 @@ Reading:
 
 Read next:
 
-- Definition: [[source#Definition]], [[target#Definition]]
-- Constraint: [[relation]]
-- Boundary: [[source#Delimitation]], [[target#Delimitation]]
+- Definition: [[path/to/source#Definition|source#Definition]], [[path/to/target#Definition|target#Definition]]
+- Constraint: [[mapping/bootstrap/modules/concept/relation|relation]]
+- Boundary: [[path/to/source#Delimitation|source#Delimitation]], [[path/to/target#Delimitation|target#Delimitation]]
 ````
 
 ### 5. 第一个 relation file 候选
@@ -190,25 +190,25 @@ Read next:
 
 From:
 
-- [[pipeline]]
-- [[workflow]]
-- [[architecture]]
-- [[branch]]
-- [[composition]]
+- [[mapping/bootstrap/modules/concept/pipeline|pipeline]]
+- [[mapping/bootstrap/modules/concept/workflow|workflow]]
+- [[mapping/bootstrap/modules/concept/architecture|architecture]]
+- [[mapping/bootstrap/modules/concept/branch|branch]]
+- [[mapping/bootstrap/modules/concept/composition|composition]]
 
 To:
 
-- [[structure]]
+- [[mapping/bootstrap/modules/concept/structure|structure]]
 
 Reading:
 
-沿 `structure-language-of` 读取时，From 中的 concept 进入 [[structure]] 的 structure language 位置。
+沿 `structure-language-of` 读取时，From 中的 concept 进入 [[mapping/bootstrap/modules/concept/structure|structure]] 的 structure language 位置。
 
 Read next:
 
-- Definition: [[structure#Definition]], [[pipeline#Definition]], [[workflow#Definition]], [[architecture#Definition]], [[branch#Definition]], [[composition#Definition]]
-- Constraint: [[relation]], [[kind-boundary]]
-- Boundary: [[pipeline#Delimitation]], [[workflow#Delimitation]], [[architecture#Delimitation]], [[branch#Delimitation]], [[composition#Delimitation]]
+- Definition: [[mapping/bootstrap/modules/concept/structure#Definition|structure#Definition]], [[mapping/bootstrap/modules/concept/pipeline#Definition|pipeline#Definition]], [[mapping/bootstrap/modules/concept/workflow#Definition|workflow#Definition]], [[mapping/bootstrap/modules/concept/architecture#Definition|architecture#Definition]], [[mapping/bootstrap/modules/concept/branch#Definition|branch#Definition]], [[mapping/bootstrap/modules/concept/composition#Definition|composition#Definition]]
+- Constraint: [[mapping/bootstrap/modules/concept/relation|relation]], [[mapping/bootstrap/modules/policy/kind-boundary|kind-boundary]]
+- Boundary: [[mapping/bootstrap/modules/concept/pipeline#Delimitation|pipeline#Delimitation]], [[mapping/bootstrap/modules/concept/workflow#Delimitation|workflow#Delimitation]], [[mapping/bootstrap/modules/concept/architecture#Delimitation|architecture#Delimitation]], [[mapping/bootstrap/modules/concept/branch#Delimitation|branch#Delimitation]], [[mapping/bootstrap/modules/concept/composition#Delimitation|composition#Delimitation]]
 ```
 
 ## 待审核问题

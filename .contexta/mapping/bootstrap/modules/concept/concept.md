@@ -26,7 +26,7 @@ contexta 需要一个名字表示被稳定命名和界定的语义对象。
 
 | Neighbor | Difference |
 | --- | --- |
-| [[policy]] | policy 表达约束；concept 表达命名和界定。 |
+| [[mapping/bootstrap/modules/concept/policy|policy]] | policy 表达约束；concept 表达命名和界定。 |
 | glossary entry | glossary entry 偏词表；concept 还需要表达命名需要、区分特征和概念关系。 |
 
 ## Examples

@@ -16,8 +16,8 @@ kind: policy
 
 Applies to:
 
-- [[example]]
-- [[template]]
+- [[mapping/bootstrap/modules/concept/example|example]]
+- [[mapping/bootstrap/modules/concept/template|template]]
 
 适用条件：
 

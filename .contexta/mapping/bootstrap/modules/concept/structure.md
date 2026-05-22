@@ -22,18 +22,18 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 
 当前已验证的 structure subtype 是：
 
-- [[pipeline]]：input、transform、output 共同成立的转换结构。
-- [[workflow]]：state、move、transition 共同成立的推进结构。
-- [[architecture]]：layer、relation、boundary 共同成立的层级结构。
-- [[branch]]：condition、route、target 共同成立的分流结构。
-- [[composition]]：whole、part、stable semantic boundary 共同成立的组合结构。
+- [[mapping/bootstrap/modules/concept/pipeline|pipeline]]：input、transform、output 共同成立的转换结构。
+- [[mapping/bootstrap/modules/concept/workflow|workflow]]：state、move、transition 共同成立的推进结构。
+- [[mapping/bootstrap/modules/concept/architecture|architecture]]：layer、relation、boundary 共同成立的层级结构。
+- [[mapping/bootstrap/modules/concept/branch|branch]]：condition、route、target 共同成立的分流结构。
+- [[mapping/bootstrap/modules/concept/composition|composition]]：whole、part、stable semantic boundary 共同成立的组合结构。
 
 ## Delimitation
 
 | Neighbor | Difference |
 | --- | --- |
-| [[policy]] | policy 表达约束强度；structure 表达组织方式。 |
-| [[module]] | module 是 md file scope；structure 表达 module 内部或多个 module 之间的组织方式。 |
+| [[mapping/bootstrap/modules/concept/policy|policy]] | policy 表达约束强度；structure 表达组织方式。 |
+| [[mapping/bootstrap/modules/concept/module|module]] | module 是 md file scope；structure 表达 module 内部或多个 module 之间的组织方式。 |
 | list | list 是语言形式；structure 是语义单元共同成立的组织方式。 |
 
 ## Examples

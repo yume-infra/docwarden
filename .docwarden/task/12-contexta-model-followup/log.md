@@ -308,3 +308,53 @@ sayori 确认 OFM 是 Obsidian Favored Markdown，并指出表格可以表达连
 - 使用 wikilink 表达 From / To。
 - 使用 section link 在 Read next 中拉入 definition、constraint 和 boundary。
 - 新增 `.contexta/mapping/bootstrap/relations/structure-language.md` 展示实际效果。
+
+## [2026-05-22] loop-7-started | 进入 OFM link resolution
+
+sayori 确认下一个 loop 先处理 link resolution / locator，并明确偏好使用 OFM 的 wiki link 语法。
+
+本轮最小 review 单元：
+
+- contexta 内部连接是否以 OFM wiki link 为第一表达。
+- 稳定连接是否只使用 path alias。
+- 短 link 是否完全排除出 contexta 内部连接规范。
+- section link 如何指向具体职责位置。
+- block reference 是否留到 assertion locator。
+
+已生成：
+
+- `ofm-link-resolution-review.md`
+
+## [2026-05-22] loop-7-correction | 排除短 link
+
+sayori 明确：
+
+- 只使用 OFM wiki link。
+- 短 link 直接不要，避免后续来回改。
+
+已修正：
+
+- Loop 7 口径改为 contexta 内部连接只使用 path alias。
+- 删除 basename 唯一时可用短 link 的例外。
+- 将 `.contexta/mapping/bootstrap/relations/structure-language.md` 改为 path alias。
+- 同步 relation content review 中的 relation block 示例。
+
+## [2026-05-22] loop-7-landed | 落地 OFM path alias
+
+sayori 审核通过 Loop 7。
+
+已落地：
+
+- 新增 `.contexta/mapping/bootstrap/modules/policy/link-resolution.md`。
+- 将 `.contexta/mapping/bootstrap/relations/structure-language.md` 改为 path alias。
+- 将 `.contexta/mapping/**/*.md` 中已有短 link 迁移为 path alias。
+- 将 `ofm-link-resolution-review.md` 标记为 accepted。
+- 将 `relation-content-model-review.md` 标记为 accepted。
+
+当前口径：
+
+- contexta 内部连接只使用 OFM wiki link。
+- contexta 内部连接只使用 path alias。
+- contexta 内部连接不使用短 link。
+- section link 可以用于 heading 级职责位置。
+- block reference 留给 assertion locator loop。
