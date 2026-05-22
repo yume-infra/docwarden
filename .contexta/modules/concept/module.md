@@ -16,7 +16,7 @@ Aliases:
 
 contexta 需要一个名字表示 md 文件形成的文档作用域。
 
-这个名字用于避免把 file scope、content kind、template、docwarden entity 和 assertion 混成同一种对象。
+这个名字用于避免把 file scope、content kind、template、docwarden workflow 对象和 assertion 混成同一种对象。
 
 ## Definition
 
@@ -40,17 +40,6 @@ stable semantic boundary 是 module 组织 assertion 的质量边界，不是 mo
 | [[template]] | template 是复制骨架这一内容角色；template 文件本身也可以是 md module，但 template 角色不等于 module 定义。 |
 | [[composition]] | composition 可以把 module 建模为 whole；composition 不决定 module 是否成立。 |
 | task | task 是 docwarden 的短命过程工作面；task 中的 md 文件可以是 module，但 task 生命周期不属于 module 定义。 |
-| entity | entity 是 docwarden 或项目中的具体资产；一个 entity 可以由 md module 承载，但 entity lifecycle 不属于 module 定义。 |
-
-## Concept Relations
-
-- [[assertion]]：assertion 位于 module 内部，并以 module 作为默认上下文。
-- [[composition]]：在 module / assertion 关系中，module 是 composition 的 whole。
-- [[concept]]：concept module 用于稳定一个命名入口。
-- [[policy]]：policy module 用于表达约束语言。
-- [[structure]]：structure module 可以承载具体结构内容。
-- [[template]]：template 可以提供新建 module 时的复制骨架。
-- [[naming]]：module 文件名应帮助定位 md file scope 的稳定主题。
 
 ## Examples
 

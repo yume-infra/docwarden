@@ -37,14 +37,6 @@ output 是 transform 产生的结果。
 | [[template]] | template 提供复制骨架；pipeline 是被骨架承载的转换表达。 |
 | [[example]] | example 提供具体判断场景；pipeline 表达内容如何被转换。 |
 
-## Concept Relations
-
-- [[template]]：pipeline template 提供 pipeline 的复制骨架。
-- [[module]]：pipeline 可以作为 module 承载具体转换内容。
-- [[assertion]]：pipeline 的 input、transform 和 output 说明可以由 assertion 表达。
-- [[naming]]：pipeline 名称应表达它处理的转换主题。
-- [[example]]：example 可以示范 pipeline 如何书写。
-
 ## Examples
 
 ### Scenario

@@ -80,14 +80,14 @@ sayori 进一步纠正：
 
 - assertion 其实需要有 locator 能力。
 - 后续可能要有更多标识让 assertion 能成为 locator。
-- assertion 仍然不是文件、实体等。
+- assertion 仍然不是文件、独立资产等。
 - composition 是 structure 的一种，用来定义当前 module 和 assertion 的关系。
 
 已修正 `composition-module-assertion-landing.md`：
 
 - 不再把 locator 整体排除出 assertion 设计。
 - assertion 被定义为未来应该能够成为 locator target 的最小语义单位。
-- 当前不新增 assertion 文件、实体、frontmatter、全局 ID 或完整 locator 机制。
+- 当前不新增 assertion 文件、独立资产、frontmatter、全局 ID 或完整 locator 机制。
 - composition 改为 structure subtype，负责定义 module / assertion 的 part-whole 关系。
 
 ## [2026-05-22] loop-1-landed | 落地 module / assertion / composition
@@ -117,3 +117,66 @@ sayori 审核通过 Loop 1 方案。
 下一步：
 
 - 进入 Loop 2：kind 与 metadata 边界。
+
+## [2026-05-22] loop-2 | 建立 kind / metadata review 单元
+
+当前进入 task 12 Loop 2。
+
+已生成：
+
+- `kind-metadata-boundary.md`
+
+当前候选判断：
+
+- `kind` 是 md module 的内容语言选择器。
+- `kind` 不表达 primitive 层级。
+- pipeline / workflow / architecture / branch / composition 当前可直接作为 kind，不引入 `kind: structure` + subtype metadata。
+- module / assertion / example 当前都不应成为 kind。
+- template artifact 中的 `kind` 暂时记录为对复制后目标 module kind 的指向，留到 Loop 3 再处理。
+- `status / created / updated / owner` 属于 docwarden operation metadata，不属于 contexta 内容字段。
+
+## [2026-05-22] loop-2-relation | 确认 relation / delimitation 分工
+
+sayori 确认：
+
+- Delimitation 处理相邻概念的边界压力。
+- relation 处理 concept network 中的稳定位置。
+- 不应在每个 concept module 中都放 `Concept Relations`。
+- relation 应作为独立 concept / policy 设计。
+- 每个 concept module 的重点是维护正确、必要、简洁的 Delimitation。
+
+已生成：
+
+- `relation-delimitation-boundary.md`
+
+同时澄清：
+
+- `entity` 不是当前 contexta concept。
+- 该词只是 agent 从早期 docwarden “具体实体落点”语境带入的工作词。
+- 当前不新增 `entity` concept，也不把它作为 Delimitation neighbor。
+
+## [2026-05-22] loop-2-landed | 落地 kind 与 relation
+
+sayori 审核通过 Loop 2 口径。
+
+已落地：
+
+- `.contexta/modules/concept/kind.md`
+- `.contexta/modules/policy/kind-boundary.md`
+- `.contexta/modules/concept/relation.md`
+- `.contexta/modules/policy/relation.md`
+- `.contexta/templates/concept.md`
+
+同步修正：
+
+- 移除当前 concept modules 中默认的 `Concept Relations` 章节。
+- 将 relation / delimitation 分工写入长期层。
+- 将 `entity` 相关误导表述改成独立资产、docwarden workflow 对象或具体资产落点。
+
+当前口径：
+
+- kind 是 content language entry。
+- relation 是 concept network 的稳定连接语言。
+- Delimitation 只处理局部边界压力。
+- protocol 不作为独立 concept 或 frontmatter 字段引入。
+- template 下的 `kind` 暂时理解为对复制后目标 module kind 的指向，进入 Loop 3 继续审查。

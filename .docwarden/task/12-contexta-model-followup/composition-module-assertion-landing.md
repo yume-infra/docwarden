@@ -10,7 +10,7 @@ loop: 1
 
 本文件是 task 12 Loop 1 的最小 review 单元，已通过审核并落地到 `.contexta`。
 
-本版修正前一版错误：不再把 module 理解成“只有由多条 assertion 组合出来的语义对象”，也不再把 assertion 误写成文件、实体或完整 locator 机制。
+本版修正前一版错误：不再把 module 理解成“只有由多条 assertion 组合出来的语义对象”，也不再把 assertion 误写成文件、独立资产或完整 locator 机制。
 
 ## 当前纠正
 
@@ -19,7 +19,7 @@ sayori 明确纠正：
 - module 实际上就是 file scope。
 - 只要是一个 md，在当前 contexta / docwarden 描述系统里都属于 module。
 - 当前描述文件都以 md 形式存在，因此它们都天然是 module。
-- assertion 需要保留可定位性，但当前不应被写成文件、实体或完整 locator 机制。
+- assertion 需要保留可定位性，但当前不应被写成文件、独立资产或完整 locator 机制。
 - 后续可以通过更多标识让 assertion 成为稳定 locator。
 - composition 是 structure 的一种，用来定义当前 module 和 assertion 的关系。
 
@@ -63,9 +63,9 @@ module 的落点已经由 md 文件天然给出：
 当前真正缺口是：
 
 - 如何把 module 定义为 file scope，而不是只定义为抽象语义组合单元。
-- 如何说明 assertion 是 file scope 内部的最小语义判断，而不是独立实体。
+- 如何说明 assertion 是 file scope 内部的最小语义判断，而不是独立资产。
 - 如何说明 composition 作为 structure subtype 定义 module / assertion 的关系。
-- 如何保留 assertion 的可定位性，而不把 assertion 写成文件、实体或完整 locator 机制。
+- 如何保留 assertion 的可定位性，而不把 assertion 写成文件、独立资产或完整 locator 机制。
 
 ## 修正后的候选判断
 
@@ -140,7 +140,7 @@ module path + heading path + assertion text
 当前判断：
 
 - assertion 不是文件。
-- assertion 不是实体。
+- assertion 不是独立资产。
 - assertion 不是 frontmatter。
 - assertion 不是全局 ID。
 - assertion 当前也不是完整 locator 机制。
@@ -164,7 +164,7 @@ module path + heading path + assertion text
 - 修订 `.contexta/modules/concept/assertion.md`：强调 assertion 是 module 内部最小语义判断，并保留后续成为 locator target 的需求。
 - 修订 `.contexta/modules/concept/composition.md`：说明 composition 是 structure subtype，并定义 module / assertion 的 part-whole 关系，但不定义 module 的成立条件。
 - 同步 `.contexta/modules/concept/concept.md`、`.contexta/modules/concept/example.md`、`.contexta/modules/concept/structure.md` 中对 module 的旧描述。
-- 暂不新增 assertion 文件、实体、ID、frontmatter 或完整 locator 机制。
+- 暂不新增 assertion 文件、独立资产、ID、frontmatter 或完整 locator 机制。
 - 暂不修改 `.contexta/templates/` 的 `kind` 设计，留给 Loop 2 / Loop 3。
 
 ## 待审核点
@@ -174,5 +174,5 @@ module path + heading path + assertion text
 1. module 是否应直接定义为 md file scope。
 2. 是否应明确“当前所有 md 描述文件都是 module”。
 3. assertion 是否应定义为 module 内部最小可审查语义判断，并保留后续成为 locator target 的需求。
-4. assertion 当前是否不应被写成文件、实体、frontmatter、全局 ID 或完整 locator 机制。
+4. assertion 当前是否不应被写成文件、独立资产、frontmatter、全局 ID 或完整 locator 机制。
 5. composition 是否应作为 structure subtype 定义 module / assertion 的 part-whole 关系，但不作为 module 的成立前提。

@@ -36,17 +36,6 @@ boundary 是 layer 之间不可混淆或不可跨越的边界。
 | [[policy]] | policy 表达约束强度；architecture 表达层级关系和边界。 |
 | [[template]] | template 提供复制骨架；architecture 是被骨架承载的层级表达。 |
 
-## Concept Relations
-
-- [[structure]]：architecture 是 structure subtype 的建模材料，但当前不反向重写 structure。
-- [[workflow]]：workflow 可以发生在 architecture 的某些 layer 之间，但 workflow 不定义 layer 的稳定边界。
-- [[pipeline]]：pipeline 可以发生在 architecture 的某个 layer 内，但 pipeline 不定义整体层级。
-- [[template]]：architecture template 提供 architecture 的复制骨架。
-- [[module]]：architecture 可以作为 module 承载具体层级内容。
-- [[assertion]]：architecture 的 layer、relation 和 boundary 说明可以由 assertion 表达。
-- [[naming]]：architecture 名称应表达它描述的整体对象。
-- [[example]]：example 可以示范 architecture 如何书写。
-
 ## Examples
 
 ### Scenario
@@ -55,14 +44,14 @@ boundary 是 layer 之间不可混淆或不可跨越的边界。
 
 ### Judgment Material
 
-- docwarden 负责 task / review / promote / pick / cleanup 和具体实体落点。
+- docwarden 负责 task / review / promote / pick / cleanup 和具体资产落点。
 - contexta 负责 template / metadata / module / assertion / semantic lint。
 - template 只提供复制后的内容骨架，不负责来源、review、pick、更新、写入或生命周期。
 
 ### Positive
 
 ```md
-这是 architecture。它同时说明了 layer、relation 和 boundary：docwarden 与 contexta 是稳定层位；二者通过实体落点和内容格式协议相邻；template 的职责边界说明两层不能混写。
+这是 architecture。它同时说明了 layer、relation 和 boundary：docwarden 与 contexta 是稳定层位；二者通过具体资产落点和内容格式协议相邻；template 的职责边界说明两层不能混写。
 ```
 
 这个 example 给出了真实混淆压力：同一组内容可能被误写成 workflow 或 policy。正确判断必须同时看到层位、关系和边界。

@@ -32,16 +32,6 @@ contexta 需要一个名字表示被稳定命名和界定的语义对象。
 | [[structure]] | structure 表达对象之间的组织关系；concept 稳定这些对象和关系形态的名称。 |
 | glossary entry | glossary entry 偏词表；concept 还需要表达命名需要、区分特征和概念关系。 |
 
-## Concept Relations
-
-- [[policy]]：policy 通过 `Applies to` 声明其约束适用于哪些 concept。
-- [[module]]：每个 concept 文件本身也是一个 module。
-- [[assertion]]：concept 中的定义和消歧内容可以由 assertion 表达。
-- [[template]]：concept template 提供 concept module 的复制骨架。
-- [[naming]]：concept 依赖 naming 建立稳定 designation。
-- [[example]]：concept 可以通过 example 提供具体场景，帮助 agent 理解 designation 的使用。
-- [[structure]]：concept 可以命名 structure，structure 表达多个 concept 或语义对象之间的组织关系。
-
 ## Examples
 
 ### Scenario

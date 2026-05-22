@@ -17,7 +17,7 @@ Aliases:
 
 contexta 需要一个名字表示 module 内部可以被单独审查的最小语义单位。
 
-这个名字用于避免审查只能停留在整篇 md、整段解释或整个 module 上，也避免把 assertion 误写成文件、实体或完整 locator 机制。
+这个名字用于避免审查只能停留在整篇 md、整段解释或整个 module 上，也避免把 assertion 误写成文件、独立资产或完整 locator 机制。
 
 ## Definition
 
@@ -39,17 +39,7 @@ assertion 需要保留后续成为 locator target 的能力，但当前不等于
 | rule | rule 是规范性 assertion 的一种；assertion 也可以是定义性判断、边界判断或关系判断。 |
 | locator target | assertion 需要未来可被 locator 指向；locator target 需求不等于当前已经存在完整 locator mechanism。 |
 | file | file 是存储对象；assertion 不默认独立成文件。 |
-| entity | entity 是具体资产；assertion 不默认拥有独立实体生命周期。 |
 | [[template]] | template 可以提供 assertion 的书写槽位；template slot 不是 assertion 本身。 |
-
-## Concept Relations
-
-- [[module]]：assertion 位于 module 内部，并以 module 作为默认语义上下文。
-- [[composition]]：在 module / assertion 关系中，assertion 是 composition 的 part。
-- [[policy]]：policy 中的 rule 是规范性 assertion。
-- [[concept]]：concept 中的 definition、delimitation 和 relation 说明可以包含定义性 assertion。
-- [[structure]]：structure 的位置、关系和边界说明可以由 assertion 表达。
-- [[naming]]：assertion 后续若需要稳定 locator，应使用额外标识承接，不应把 assertion 本身改成文件或 entity。
 
 ## Examples
 

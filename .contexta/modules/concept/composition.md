@@ -49,15 +49,6 @@ composition 定义 module / assertion 的 part-whole 关系，不把 module 改�
 | list | list 是并列语言形式；composition 必须表达 part 为什么属于同一个 whole。 |
 | [[policy]] | policy 表达约束强度；composition 表达组合结构。 |
 
-## Concept Relations
-
-- [[structure]]：composition 是当前已验证的 structure subtype。
-- [[module]]：在 module / assertion 关系中，module 是 composition 的 whole。
-- [[assertion]]：在 module / assertion 关系中，assertion 是 composition 的 part。
-- [[template]]：composition template 提供 composition 的复制骨架。
-- [[naming]]：composition 名称应表达它描述的组合整体或组合关系。
-- [[example]]：example 可以示范 composition 如何书写。
-
 ## Examples
 
 ### Scenario

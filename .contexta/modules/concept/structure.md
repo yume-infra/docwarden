@@ -44,21 +44,6 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 | [[branch]] | branch 是分流结构；structure 不等于分支表或 routing table。 |
 | [[composition]] | composition 是组合结构；structure 不等于普通列表或容器。 |
 
-## Concept Relations
-
-- [[concept]]：structure 本身由 concept module 定义和命名。
-- [[policy]]：policy 可以约束 structure 的使用方式，但不定义 structure 本体。
-- [[template]]：template 可以提供 structure module 的复制骨架。
-- [[example]]：example 可以示范 structure 在具体文本中的表现。
-- [[module]]：structure module 可以承载具体结构内容。
-- [[assertion]]：structure 的位置、作用和边界说明可以由 assertion 表达。
-- [[naming]]：structure 的名称应表达它组织的语义整体或组织方式。
-- [[pipeline]]：pipeline 是当前已验证的 structure subtype。
-- [[workflow]]：workflow 是当前已验证的 structure subtype。
-- [[architecture]]：architecture 是当前已验证的 structure subtype。
-- [[branch]]：branch 是当前已验证的 structure subtype。
-- [[composition]]：composition 是当前已验证的 structure subtype。
-
 ## Examples
 
 ### Scenario

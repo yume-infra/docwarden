@@ -37,21 +37,11 @@ transition 是 move 如何使一个 state 进入下一个 state 的成立关系�
 | [[template]] | template 提供复制骨架；workflow 是被骨架承载的推进表达。 |
 | docwarden workflow | docwarden workflow 是 docwarden 操作流程实例；contexta workflow concept 只命名和界定 workflow 这种表达。 |
 
-## Concept Relations
-
-- [[structure]]：workflow 是 structure subtype 的建模材料，但当前不反向重写 structure。
-- [[pipeline]]：pipeline 可以出现在 workflow 的某个 move 内，但二者定义位置不同。
-- [[template]]：workflow template 提供 workflow 的复制骨架。
-- [[module]]：workflow 可以作为 module 承载具体推进内容。
-- [[assertion]]：workflow 的 state、move 和 transition 说明可以由 assertion 表达。
-- [[naming]]：workflow 名称应表达它推进的协作或工作对象。
-- [[example]]：example 可以示范 workflow 如何书写。
-
 ## Examples
 
 ### Scenario
 
-pick 后的候选内容需要进入 review surface，让用户确认资产性质和实体落点。
+pick 后的候选内容需要进入 review surface，让用户确认资产性质和具体资产落点。
 
 ### Judgment Material
 

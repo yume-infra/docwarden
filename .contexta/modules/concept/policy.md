@@ -28,15 +28,6 @@ contexta 需要一个名字表示约束语言。
 | workflow | workflow 表达阶段、流转和交接；policy 表达约束强度。 |
 | guide | guide 服务连续理解；policy 服务执行约束。 |
 
-## Concept Relations
-
-- [[concept]]：policy 通过 `Applies to` 指向其约束适用的 concept。
-- [[assertion]]：policy 的规则通常是规范性 assertion。
-- [[module]]：policy 文件是以约束为主题的 module。
-- [[template]]：policy template 提供 policy module 的复制骨架。
-- [[structure]]：policy 可以约束 structure 的使用，但不替代 structure 表达关系形态。
-- [[naming]]：policy module filename 应由 naming policy 约束。
-
 ## Examples
 
 ### Scenario

@@ -41,18 +41,6 @@ target 是该路径承接的落点或后续对象。
 | [[policy]] | policy 表达约束强度；branch 表达分流结构。 |
 | [[template]] | template 提供复制骨架；branch 是被骨架承载的分流表达。 |
 
-## Concept Relations
-
-- [[structure]]：branch 是 structure subtype 的建模材料，但当前不反向重写 structure。
-- [[workflow]]：branch 可以出现在 workflow 的某个 transition 处，但 branch 的核心是分流，不是完整推进链。
-- [[pipeline]]：pipeline 的 output 可以进入 branch，但 branch 不负责 transform。
-- [[architecture]]：branch 的 target 往往落到 architecture 中的某个 layer 或实体层。
-- [[template]]：branch template 提供 branch 的复制骨架。
-- [[module]]：branch 可以作为 module 承载具体分流内容。
-- [[assertion]]：branch 的 condition、route 和 target 说明可以由 assertion 表达。
-- [[naming]]：branch 名称应表达它处理的分流主题。
-- [[example]]：example 可以示范 branch 如何书写。
-
 ## Examples
 
 ### Scenario

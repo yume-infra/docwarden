@@ -32,16 +32,6 @@ example 的核心不是证明正文正确，而是在一个具体判断场景里
 | [[assertion]] | assertion 是最小可审查语义单元；example 可以用 assertion 解释样本里的判断点。 |
 | test case | test case 偏验证预期结果；example 偏教学、示范和迁移。 |
 
-## Concept Relations
-
-- [[concept]]：example 可以帮助 agent 理解 concept 的命名和使用场景。
-- [[policy]]：example 可以示范 policy 在具体文本中的表现。
-- [[template]]：example 可以展示 template 被填充后的内容形态。
-- [[structure]]：example 可以示范 structure 在具体文本中的表现。
-- [[module]]：example 可以作为 module 内的教学材料，但不作为独立目录 kind、module kind 或 template kind。
-- [[assertion]]：example 的解释和迁移说明可以由 assertion 组成。
-- [[naming]]：example 的名称应表达它示范的对象或场景。
-
 ## Examples
 
 ### Scenario

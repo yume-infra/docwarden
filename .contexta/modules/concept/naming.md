@@ -40,14 +40,6 @@ naming 的核心是让 agent 能通过名称找到正确内容，并避免把相
 | [[structure]] | structure 表达对象之间的组织关系；naming 让这些关系形态有稳定名称。 |
 | style | style 关注表现一致；naming 关注语义定位和消歧。 |
 
-## Concept Relations
-
-- [[concept]]：concept 依赖 naming 建立稳定 designation。
-- [[module]]：module 文件名应表达稳定主题边界。
-- [[policy]]：naming 的规范由 policy 承接。
-- [[template]]：template 可以提供命名占位符。
-- [[structure]]：structure 的关系形态需要由 naming 稳定定位。
-
 ## Examples
 
 ### Scenario

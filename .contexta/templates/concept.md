@@ -32,11 +32,7 @@ Avoid:
 
 | Neighbor | Difference |
 | --- | --- |
-| <相邻 concept> | <说明差异。重点是消歧，不写规则。> |
-
-## Concept Relations
-
-- [[<related-concept>]]：<说明概念关系。>
+| <关键相邻 concept> | <说明关键差异。只放容易混淆且会导致错误落点、错误书写或错误判断的边界。> |
 
 ## Examples
 
