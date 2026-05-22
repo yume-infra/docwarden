@@ -328,7 +328,25 @@ owner: sayori
 - 本轮 dry run 作为后续 CLI lint engine 的具体参照物。
 - 后续先稳定 contexta 基础概念，再在 CLI 实现阶段用真实 lint case 校准 target scope、code fence exclusion 和 locator 精度。
 
-## Loop 10：example quality 未来抽象
+## Loop 10：theory / practice / implementation 边界
+
+状态：in review。
+
+目标：整理 contexta 当前整体阶段，并界定 theory、practice reference、task material、implementation 的边界。
+
+当前基线：
+
+- contexta 当前不处在纯理论阶段，也不处在 CLI 实现阶段。
+- 当前阶段更接近 `theory stabilization -> practice reference -> future implementation`。
+- `.contexta` 承接已经 review 过、需要长期稳定读取的 theory 和 practice reference。
+- `.docwarden/task` 承接 loop、纠偏、candidate 和 review outcome。
+- CLI lint engine 属于 implementation 层，当前只用 signal definitions 和 dry run 做参照。
+
+当前产物：
+
+- `theory-practice-implementation-boundary.md`
+
+## Loop 11：example quality 未来抽象
 
 状态：deferred。
 

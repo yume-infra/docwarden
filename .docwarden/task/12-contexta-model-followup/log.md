@@ -473,3 +473,28 @@ sayori 确认本轮方向基本成立，并补充：
 - `semantic-lint-instance-dry-run.md` 标记为 accepted。
 - `plan.md` 将 Loop 9 标记为 accepted。
 - `index.md` 将下一步改为继续稳定 contexta 基础概念，不直接进入 CLI 实现。
+
+## [2026-05-22] example-table-format | 修复 example Delimitation 表格
+
+发现 `.contexta/mapping/bootstrap/modules/concept/example.md` 的 Delimitation 表格被 formatter 拆坏，OFM wikilink alias 中的 `|` 被错误识别为表格分隔。
+
+处理结果：
+
+- 已将该 Delimitation 改为列表表达。
+- 保留 OFM path alias。
+- 该问题后续可回到 link / Delimitation 表达方式设计中继续收敛。
+
+## [2026-05-22] loop-10-started | 进入 theory / practice / implementation 边界整理
+
+sayori 确认先修复 example 表格，再进入整体阶段与理论实践边界整理。
+
+本轮最小 review 单元：
+
+- contexta 当前处于什么阶段。
+- theory、practice reference、task material、implementation 各自负责什么。
+- `.contexta` 与 `.docwarden/task` 的长期边界。
+- CLI lint engine 何时进入 implementation 层。
+
+已生成：
+
+- `theory-practice-implementation-boundary.md`
