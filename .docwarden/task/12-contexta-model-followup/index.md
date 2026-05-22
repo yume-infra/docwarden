@@ -34,6 +34,7 @@ owner: sayori
 - `kind` 应表达内容类型；docwarden operation metadata 应表达 workflow 维护状态。
 - template 只应服务已成立的内容语言骨架，不应制造伪 kind。
 - contexta 目录第一层应表达 mapping 关系，区分 bootstrap mapping 和 docwarden mapping。
+- Delimitation 只保留关键边界压力；contexta 自己的 relation 后续应进入 bootstrap mapping 下的独立 relation layer。
 - example 已被修正为样本语言，不是 kind、role、template kind 或 directory kind。
 - `example-quality` 当前只是临时质量提示，未来需要真实使用反馈再抽象。
 - semantic lint 后续需要从实际误用中整理第一批可审查信号。
@@ -47,7 +48,9 @@ owner: sayori
 - `relation-delimitation-boundary.md`：Loop 2 relation / delimitation 分工记录。
 - `template-skeleton-review.md`：Loop 3 template 骨架审查落地记录。
 - `mapping-layer-review.md`：Loop 4 mapping layer 落地记录。
+- `delimitation-narrowing-review.md`：Loop 5 Delimitation 收窄记录。
+- `relation-content-model-review.md`：Loop 6 relation content 建模审查材料。
 
 ## 下一步
 
-Loop 4 已落地。下一步进入 Loop 5：semantic lint 误用信号。
+Loop 6 已进入 review，当前审查 relation file 和 relation block 的 OFM 表达。

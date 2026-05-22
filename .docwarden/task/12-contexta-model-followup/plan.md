@@ -162,7 +162,59 @@ owner: sayori
 - `.docwarden/user/profile.md` 保持为 docwarden 长期资产，不移动到 `.contexta`。
 - format、locator、semantic lint 留给后续 loop。
 
-## Loop 5：semantic lint 误用信号
+## Loop 5：Delimitation 收窄
+
+状态：accepted。
+
+目标：把当前 concept modules 中的 Delimitation 收窄为关键边界压力。
+
+当前基线：
+
+- Delimitation 处理局部边界压力。
+- relation 处理 concept network 中的稳定位置和连接。
+- concept module 不应默认包含 `Concept Relations` 章节。
+- 不是“相关就列”，而是“会错才列”。
+
+当前产物：
+
+- `delimitation-narrowing-review.md`
+
+当前结果：
+
+- 已通过 sayori 审核。
+- 已收窄当前 concept modules 的 Delimitation。
+- 已确认 contexta 自己的 relation 应放在 bootstrap mapping 下的独立 relation layer。
+- 暂不新增 `.contexta/mapping/bootstrap/relations/`，等待 relation entry 格式 review。
+
+## Loop 6：relation content 建模
+
+状态：in review。
+
+目标：设计 contexta bootstrap relation layer 中具体 relation 内容的最小结构。
+
+当前基线：
+
+- contexta 自己的 relation 应放在 `.contexta/mapping/bootstrap/relations/`。
+- relation concept / policy 只定义 relation 语言和边界。
+- 具体 relation network 不应回到每个 concept module 的 Delimitation。
+
+当前产物：
+
+- `relation-content-model-review.md`
+
+需要 review：
+
+- relation layer 中的文件是否按 network topic 拆分。
+- relation block 是否使用 heading / From / To / Reading / Read next。
+- relation file 是否只说明连接语言，并通过 link 拉入 concept / policy / Delimitation / example。
+- relation file 是否使用 `kind: relation`。
+- 第一批 relation file 是否从 `structure-language.md` 开始。
+
+当前结果：
+
+- 已新增 `.contexta/mapping/bootstrap/relations/structure-language.md`，用于展示 OFM relation block 的阅读效果。
+
+## Loop 7：semantic lint 误用信号
 
 状态：pending。
 
@@ -182,7 +234,7 @@ owner: sayori
 - 哪些信号已经足够稳定，可以先落地为 policy 或 lint note。
 - 哪些信号仍需等待更多真实材料。
 
-## Loop 6：example quality 未来抽象
+## Loop 8：example quality 未来抽象
 
 状态：deferred。
 

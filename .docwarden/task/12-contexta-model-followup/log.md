@@ -245,3 +245,66 @@ sayori 确认当前缺口是 contexta 的 bootstrap 内容与 contexta 到 docwa
 - docwarden mapping 表达 contexta 内容语言如何投射给 docwarden 资产使用。
 - docwarden 具体长期资产仍留在 `.docwarden`。
 - format、locator、semantic lint 后续再推进。
+
+## [2026-05-22] loop-5-landed | 收窄 Delimitation
+
+sayori 确认 Delimitation 的核心是区分边界，而不是承接 relation network。
+
+已落地：
+
+- 收窄当前 concept modules 的 Delimitation。
+- 删除只表示普通相关、承载、使用、上位关系的 Delimitation 项。
+- 保留容易导致错误落点、错误书写或错误判断的边界项。
+- 新增 `delimitation-narrowing-review.md`。
+
+当前口径：
+
+- Delimitation = 局部边界压力。
+- relation = concept network 中的稳定连接。
+- 属于 contexta 自己的 relation 应放在 bootstrap mapping 下的独立 relation layer。
+- 当前不新增 `.contexta/mapping/bootstrap/relations/`，等待 relation entry 格式 review。
+
+## [2026-05-22] loop-6-started | 进入 relation content 建模
+
+进入 Loop 6。
+
+初始最小 review 单元：
+
+- relation layer 中的文件如何拆分。
+- relation assertion 的最小结构。
+- relation module 是否使用 `kind: relation`。
+- 第一批 relation module 是否从 `structure-language` 开始。
+
+已生成：
+
+- `relation-content-model-review.md`
+
+## [2026-05-22] loop-6-correction | relation 收窄为连接语言
+
+sayori 纠正：
+
+- md 文档是互联的。
+- relation 不应重复定义 concept、policy、example 或 Delimitation 已经负责的内容。
+- relation 只说明自己的连接语言。
+- 其他方面应通过 link 拉入已有 md。
+
+已修正：
+
+- 将 `relation assertion` 改为 `relation record`。
+- 将最小结构从 Source / Predicate / Target / Effect 改为 Source / Relation / Target / Reading。
+- 移除 relation file skeleton 中自足的 Boundaries 和 Examples 章节。
+- 增加 link pull-in 思路，而不是重复说明。
+- 保留按 network topic 拆分 relation file 的候选方案。
+
+## [2026-05-22] loop-6-ofm | 改为 OFM relation block
+
+sayori 确认 OFM 是 Obsidian Favored Markdown，并指出表格可以表达连接，但不够适合作为第一阅读形态。
+
+已修正：
+
+- 将 relation record 改为 relation block。
+- 将第一表达从表格改为 heading / From / To / Reading / Read next。
+- 使用 heading anchor 表达 relation name。
+- 使用 wikilink 表达 From / To。
+- 使用 section link 在 Read next 中拉入 definition、constraint 和 boundary。
+- 新增 `.contexta/mapping/bootstrap/relations/structure-language.md` 展示实际效果。
