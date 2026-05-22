@@ -44,7 +44,8 @@ owner: sayori
 - `composition-module-assertion-landing.md`：Loop 1 composition / module / assertion 落地记录。
 - `kind-metadata-boundary.md`：Loop 2 kind / metadata 边界落地记录。
 - `relation-delimitation-boundary.md`：Loop 2 relation / delimitation 分工记录。
+- `template-skeleton-review.md`：Loop 3 template 骨架审查落地记录。
 
 ## 下一步
 
-Loop 2 已落地。下一步进入 Loop 3：template 骨架审查。
+Loop 3 已落地。下一步进入 Loop 4：semantic lint 误用信号。

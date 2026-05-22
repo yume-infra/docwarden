@@ -180,3 +180,37 @@ sayori 审核通过 Loop 2 口径。
 - Delimitation 只处理局部边界压力。
 - protocol 不作为独立 concept 或 frontmatter 字段引入。
 - template 下的 `kind` 暂时理解为对复制后目标 module kind 的指向，进入 Loop 3 继续审查。
+
+## [2026-05-22] loop-3-started | 进入 template 骨架审查
+
+进入 Loop 3。
+
+本轮最小 review 单元：
+
+- template 什么时候可以存在。
+- template 文件中的 `kind` 是否继续表示复制后目标 module kind。
+- 当前 `.contexta/templates/` inventory 是否成立。
+- 是否需要恢复 example template 或新增更多 concept template。
+
+已生成：
+
+- `template-skeleton-review.md`
+
+## [2026-05-22] loop-3-landed | 落地 template 骨架边界
+
+sayori 审核通过 Loop 3 口径，并要求本轮一并补 `user-context` concept。
+
+已落地：
+
+- `.contexta/modules/concept/template.md`
+- `.contexta/modules/policy/template-boundary.md`
+- `.contexta/modules/concept/user-context.md`
+- `template-skeleton-review.md`
+
+当前口径：
+
+- template 的成立条件是已确认内容语言、稳定正文骨架和复制需求。
+- template 文件中的 `kind` 暂时继续表示复制后目标 module kind，不改成 `target_kind`。
+- template 不能仅因为某个 concept 存在就被创建。
+- template 不能反向证明一个 kind 成立。
+- 当前全部 `.contexta/templates/` 先保留。

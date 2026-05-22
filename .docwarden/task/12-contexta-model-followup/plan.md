@@ -95,7 +95,7 @@ owner: sayori
 
 ## Loop 3：template 骨架审查
 
-状态：pending。
+状态：accepted。
 
 目标：审查当前 template 是否只服务已成立的内容语言骨架。
 
@@ -115,6 +115,25 @@ owner: sayori
 
 - 修订 `.contexta/templates/*.md`。
 - 修订 `.contexta/modules/policy/template-boundary.md`。
+
+当前产物：
+
+- `template-skeleton-review.md`
+
+当前进展：
+
+- 已整理 template 的成立条件候选。
+- 已整理当前 `.contexta/templates/` inventory。
+- 已将 `target_kind` 是否需要引入留作本轮 review 问题，不直接修改 frontmatter。
+
+当前结果：
+
+- 已通过 sayori 审核。
+- 已落地 `.contexta/modules/concept/template.md` 的 template 成立条件。
+- 已落地 `.contexta/modules/policy/template-boundary.md` 的 template 反向制造 kind 约束。
+- 已新增 `.contexta/modules/concept/user-context.md`。
+- 暂不修改 `.contexta/templates/*.md` 的 frontmatter。
+- 暂不新增 `target_kind`。
 
 ## Loop 4：semantic lint 误用信号
 
