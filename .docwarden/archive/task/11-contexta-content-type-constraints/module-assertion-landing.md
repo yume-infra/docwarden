@@ -1,12 +1,36 @@
 ---
-status: draft
+status: superseded
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-05-20
 owner: sayori
 loop: 6.1
 ---
 
 # module / assertion landing
+
+## 归档同步
+
+本文件是 Loop 6.1 的历史草案，当前已被 task 11 归档口径部分替代。
+
+保留有效判断：
+
+- module 是语义组合单元，不是 `kind: module`。
+- assertion 是最小可审查语义单元。
+- assertion 不默认独立成文件。
+- template 不管理 assertion 生命周期。
+
+需要转入 task 12 重新 review 的判断：
+
+- `.contexta/modules/<kind>/<module-id>.md` 是否仍是 module 的稳定长期落点。
+- assertion 在 module 内如何被最小审查和定位。
+- module / assertion 是否应通过 composition 显式建模。
+- `kind`、content type metadata 与 docwarden operation metadata 的边界。
+
+当前后续承接：
+
+- `.docwarden/task/12-contexta-model-followup/`
+
+---
 
 本文件定义 `module` 和 `assertion` 在 contexta 中的第一版落地方式候选。
 

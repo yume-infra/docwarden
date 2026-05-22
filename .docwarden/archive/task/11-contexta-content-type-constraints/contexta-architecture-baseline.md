@@ -8,7 +8,7 @@ loop: 6.4
 
 # contexta architecture baseline
 
-本文件记录当前已落地到 `.contexta` 的架构基线。
+本文件记录 task 11 归档时已落地到 `.contexta` 的架构基线。
 
 ## 核心架构
 
@@ -24,8 +24,9 @@ designation -> concept -> module -> assertion
 policy --applies to--> concept
 
 template -> copied skeleton
-example -> teaching sample
+example -> semantic teaching material
 structure -> organization language
+composition -> whole / part / stable semantic boundary
 semantic lint -> consumes concept / policy / template / example / structure
 ```
 
@@ -64,6 +65,7 @@ concept 不承接：
 - `.contexta/modules/concept/workflow.md`
 - `.contexta/modules/concept/architecture.md`
 - `.contexta/modules/concept/branch.md`
+- `.contexta/modules/concept/composition.md`
 
 ## policy
 
@@ -96,7 +98,7 @@ template 是复制骨架。
 
 它负责：
 
-- 给某类 module 提供初始章节结构。
+- 给已成立的内容类型提供初始章节结构。
 - 给 assertion、definition 或 rule 提供书写槽位。
 
 template 不负责：
@@ -134,6 +136,7 @@ example 不负责：
 - 规定 policy。
 - 提供 template 骨架。
 - 替代 review 或 semantic lint。
+- 成为 independent module kind、template kind、directory kind 或 role。
 
 边界识别、review 对照或 semantic lint 参考是样本产生的派生用途，不是 example 的本体定义。
 
@@ -141,32 +144,22 @@ example 的概念定义在：
 
 - `.contexta/modules/concept/example.md`
 
-example 的复制骨架在：
-
-- `.contexta/templates/example.md`
-
-example 的质量约束在：
+example 的质量提示在：
 
 - `.contexta/modules/policy/example-quality.md`
 
-example 的第一版编写样本在：
+当前 example 编写的已确认局部口径：
 
-- `.contexta/modules/example/example-authoring.md`
-
-当前 example 编写使用局部教学结构：
-
-```text
-Target -> Teaching Point -> Sample -> Reading -> Transfer -> Limits
-```
-
-这个结构服务 example authoring，不表示这条教学链已经成为独立 structure module。
+- Positive / Negative / Borderline 是 example section 内的对照材料。
+- Scenario 与 Judgment Material 是三类样本共享的外部上下文，不放入 Positive 层级。
+- 现在的 example 质量仍有限，后续会在实际使用和调优中补充真实 example。
 
 当前不做：
 
+- 不新增 `.contexta/templates/example.md`。
+- 不新增 `.contexta/modules/example/`。
 - 不把 sample set / contrast set 作为当前 structure subtype。
-- 不把 positive / negative / borderline 写成单个 `Sample` 的内部小标题。
-
-多样本对照和 example 设计后续重新讨论。
+- 不把 example quality 抽象成成熟质量模型。
 
 ## structure
 
@@ -175,7 +168,7 @@ structure 是组织语言。
 它负责：
 
 - 表达多个语义位置如何在同一目的下共同成立。
-- 作为 pipeline、workflow、architecture、branch 的上位组织语言。
+- 作为 pipeline、workflow、architecture、branch、composition 的上位组织语言。
 
 structure 不负责：
 
@@ -194,11 +187,11 @@ structure 的概念定义在：
 - 不新增 `structure_type` metadata。
 - 不新增 structure template。
 - 不把 subtype 固化为 `structure_type` metadata 分类树。
-- 不直接把 sample set / contrast set 落为 structure module；example 设计后续重新讨论。
+- 不直接把 sample set / contrast set 落为 structure module。
 
 ## pipeline
 
-pipeline 是第一个直接落地的 structure subtype 草案。
+pipeline 是已落地的 structure subtype。
 
 当前 pipeline 不按 structure 定义，而是直接由三个位置完整定义：
 
@@ -214,14 +207,9 @@ pipeline 的复制骨架在：
 
 - `.contexta/templates/pipeline.md`
 
-当前不做：
-
-- 不添加 Boundary、Review Checks、failure、handoff 或 lifecycle。
-- 不通过 pipeline 立即重写 structure。
-
 ## workflow
 
-workflow 是第二个直接落地的 structure subtype 草案。
+workflow 是已落地的 structure subtype。
 
 当前 workflow 不按 structure 定义，而是直接由三个位置完整定义：
 
@@ -244,14 +232,9 @@ workflow 与 pipeline 的边界：
 - workflow 的最小问题是 state 如何通过 move 和 transition 进入 next state。
 - pipeline 的最小问题是 input 如何通过 transform 形成 output。
 
-当前不做：
-
-- 不添加 actor、artifact、gateway、lifecycle 或运行时执行语义。
-- 不通过 workflow 立即重写 structure。
-
 ## architecture
 
-architecture 是第三个直接落地且已通过 review 的 structure subtype 草案。
+architecture 是已落地的 structure subtype。
 
 当前 architecture 不按 structure 定义，而是直接由三个位置完整定义：
 
@@ -274,14 +257,9 @@ architecture 与 workflow / pipeline / branch 的边界：
 - pipeline 表达转换。
 - branch 表达条件分流。
 
-当前不做：
-
-- 不添加 lifecycle、runtime dependency graph 或完整系统设计模板。
-- 不通过 architecture 立即重写 structure。
-
 ## branch
 
-branch 是第四个直接落地且已通过 review 的 structure subtype 草案。
+branch 是已落地的 structure subtype。
 
 当前 branch 不按 structure 定义，而是直接由三个位置完整定义：
 
@@ -304,10 +282,38 @@ branch 与 workflow / pipeline / architecture 的边界：
 - pipeline 表达转换。
 - architecture 表达层级关系与边界。
 
-当前不做：
+## composition
 
-- 不添加 routing table、priority、fallback 或运行时选择算法。
-- 不通过 branch 立即重写 structure。
+composition 是已落地的 structure subtype。
+
+当前 composition 不按完整 structure 分类树定义，而是直接由三个位置完整定义：
+
+- whole：被组成的语义整体。
+- part：组成 whole 的语义部分。
+- stable semantic boundary：让多个 part 能够属于同一个 whole 的稳定语义边界。
+
+composition 的概念定义在：
+
+- `.contexta/modules/concept/composition.md`
+
+composition 的复制骨架在：
+
+- `.contexta/templates/composition.md`
+
+composition 与 module / assertion 的边界：
+
+- module 可以作为 composition 的 whole。
+- assertion 可以作为 composition 的 part。
+- composition 不是 module 本身，也不是 assertion 本身。
+- composition 表达 whole 与 part 为什么能在同一稳定语义边界下共同成立。
+
+composition 与其他 structure subtype 的边界：
+
+- composition 表达组合。
+- workflow 表达推进。
+- pipeline 表达转换。
+- architecture 表达层级关系与边界。
+- branch 表达条件分流。
 
 ## naming
 
@@ -341,13 +347,17 @@ kind: concept
 kind: policy
 ```
 
+module 可以作为 composition 的 whole。
+
 ## assertion
 
 assertion 是最小可审查语义单元。
 
 第一版不将 assertion 默认独立成文件。
 
-assertion 的概念定义在 concept 中；assertion 的拆分、组合和落地约束由 policy 处理。
+assertion 可以作为 composition 的 part。
+
+assertion 的概念定义在 concept 中；assertion 的拆分、组合和落地约束后续由 task 12 继续推进。
 
 ## 当前落地原则
 
@@ -355,8 +365,8 @@ assertion 的概念定义在 concept 中；assertion 的拆分、组合和落地
 - policy 只通过 `Applies to` 指向 concept，并约束其使用。
 - template 只提供骨架和槽位，不承接内容本体。
 - example 只提供样本和示范，不承接 concept 定义本体或 policy 规则本体。
-- example 的局部教学结构先停留在 policy、template 和 example module 中，不升级为独立 structure module。
-- sample set / contrast set 当前不由 structure 承接；example 设计后续重新讨论。
-- structure 已由 pipeline / workflow / architecture / branch 反推为组织语言定义，不通过 `structure_type` 固化分类树。
+- example 不作为 kind、role、template kind 或 directory kind。
+- structure 已由 pipeline / workflow / architecture / branch / composition 反推为组织语言定义，不通过 `structure_type` 固化分类树。
+- composition 暂时承接 module / assertion 的组合关系，但具体落地规则转入 task 12。
 - docwarden 仍负责 task / review / promote / pick / cleanup。
 - contexta 不承接 docwarden 操作流程生命周期。

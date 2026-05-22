@@ -1,5 +1,6 @@
 ---
-status: draft
+status: accepted
+workspace_status: archived
 created: 2026-05-19
 updated: 2026-05-20
 owner: sayori
@@ -520,3 +521,34 @@ sayori 确认：
 - 不新增 structure template。
 - 不继续新增 subtype。
 - 不用 structure 承接 sample set / contrast set；example 设计后续重新讨论。
+
+## [2026-05-20] sync-archive | 同步当前实现并归档 task 11
+
+sayori 指令：
+
+- 进入 task 11 sync loop。
+- 把还需要做的单独拿出来启 task。
+- 原 task 全部修改口径并 archive。
+
+已同步口径：
+
+- task 11 归档为已完成工作面。
+- `.docwarden/task/index.md` 的 active task 切到 `12-contexta-model-followup/`。
+- architecture 状态同步为 accepted。
+- structure subtype 同步为 pipeline / workflow / architecture / branch / composition。
+- composition 记录为 whole / part / stable semantic boundary 共同成立的组合表达。
+- example 修正为样本语言，不再作为 kind、role、template kind 或 directory kind。
+- `.contexta/templates/example.md` 与 `.contexta/modules/example/` 从 task 11 口径中移除。
+- `example-quality` 同步为临时质量提示，不是成熟质量抽象。
+
+拆出的后续 task：
+
+- `.docwarden/task/12-contexta-model-followup/`
+
+task 12 承接：
+
+- composition 与 module / assertion 的落地关系。
+- `kind`、content type metadata 与 docwarden operation metadata 的边界。
+- template 是否只服务已成立的内容类型。
+- semantic lint 的第一批误用信号。
+- example quality 的未来抽象方式。
