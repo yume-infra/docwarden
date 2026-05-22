@@ -64,15 +64,15 @@ agent 新建一个约束 template 职责边界的 policy module。
 
 ### Judgment Material
 
-- `.contexta/modules/policy/template-boundary-policy.md`
-- `.contexta/modules/policy/template-must-not-own-lifecycle.md`
+- `.contexta/mapping/bootstrap/modules/policy/template-boundary-policy.md`
+- `.contexta/mapping/bootstrap/modules/policy/template-must-not-own-lifecycle.md`
 
 ### Positive
 
 ```md
 正确命名：
 
-- `.contexta/modules/policy/template-boundary.md`
+- `.contexta/mapping/bootstrap/modules/policy/template-boundary.md`
 
 正确判断：
 

@@ -96,15 +96,15 @@ sayori 审核通过 Loop 1 方案。
 
 已落地：
 
-- `.contexta/modules/concept/module.md`
-- `.contexta/modules/concept/assertion.md`
-- `.contexta/modules/concept/composition.md`
+- `.contexta/mapping/bootstrap/modules/concept/module.md`
+- `.contexta/mapping/bootstrap/modules/concept/assertion.md`
+- `.contexta/mapping/bootstrap/modules/concept/composition.md`
 
 同步修正：
 
-- `.contexta/modules/concept/concept.md`
-- `.contexta/modules/concept/example.md`
-- `.contexta/modules/concept/structure.md`
+- `.contexta/mapping/bootstrap/modules/concept/concept.md`
+- `.contexta/mapping/bootstrap/modules/concept/example.md`
+- `.contexta/mapping/bootstrap/modules/concept/structure.md`
 
 当前口径：
 
@@ -161,11 +161,11 @@ sayori 审核通过 Loop 2 口径。
 
 已落地：
 
-- `.contexta/modules/concept/kind.md`
-- `.contexta/modules/policy/kind-boundary.md`
-- `.contexta/modules/concept/relation.md`
-- `.contexta/modules/policy/relation.md`
-- `.contexta/templates/concept.md`
+- `.contexta/mapping/bootstrap/modules/concept/kind.md`
+- `.contexta/mapping/bootstrap/modules/policy/kind-boundary.md`
+- `.contexta/mapping/bootstrap/modules/concept/relation.md`
+- `.contexta/mapping/bootstrap/modules/policy/relation.md`
+- `.contexta/mapping/bootstrap/templates/concept.md`
 
 同步修正：
 
@@ -189,7 +189,7 @@ sayori 审核通过 Loop 2 口径。
 
 - template 什么时候可以存在。
 - template 文件中的 `kind` 是否继续表示复制后目标 module kind。
-- 当前 `.contexta/templates/` inventory 是否成立。
+- 当前 `.contexta` template inventory 是否成立。
 - 是否需要恢复 example template 或新增更多 concept template。
 
 已生成：
@@ -202,9 +202,9 @@ sayori 审核通过 Loop 3 口径，并要求本轮一并补 `user-context` conc
 
 已落地：
 
-- `.contexta/modules/concept/template.md`
-- `.contexta/modules/policy/template-boundary.md`
-- `.contexta/modules/concept/user-context.md`
+- `.contexta/mapping/bootstrap/modules/concept/template.md`
+- `.contexta/mapping/bootstrap/modules/policy/template-boundary.md`
+- `.contexta/mapping/docwarden/modules/concept/user-context.md`
 - `template-skeleton-review.md`
 
 当前口径：
@@ -213,4 +213,35 @@ sayori 审核通过 Loop 3 口径，并要求本轮一并补 `user-context` conc
 - template 文件中的 `kind` 暂时继续表示复制后目标 module kind，不改成 `target_kind`。
 - template 不能仅因为某个 concept 存在就被创建。
 - template 不能反向证明一个 kind 成立。
-- 当前全部 `.contexta/templates/` 先保留。
+- 当前全部 template 先保留；Loop 4 会进一步按 mapping 关系拆分目录。
+
+## [2026-05-22] loop-4-landed | 落地 mapping layer
+
+sayori 确认当前缺口是 contexta 的 bootstrap 内容与 contexta 到 docwarden 的映射内容混在一起。
+
+已确认：
+
+- contexta 本身就是理论到实体的映射。
+- 一部分是 contexta 的 bootstrap mapping。
+- 一部分是 contexta 到 docwarden 的 mapping。
+- 文件夹结构应表征这两类关系。
+- bootstrap layer 使用英文目录名 `bootstrap`。
+
+已落地：
+
+- `.contexta/mapping/bootstrap/modules/concept/mapping.md`
+- `.contexta/mapping/bootstrap/modules/policy/mapping-boundary.md`
+- `.contexta/mapping/bootstrap/modules/concept/`
+- `.contexta/mapping/bootstrap/modules/policy/`
+- `.contexta/mapping/bootstrap/templates/`
+- `.contexta/mapping/docwarden/modules/concept/user-context.md`
+- `.contexta/mapping/docwarden/templates/user-context.md`
+- `mapping-layer-review.md`
+
+当前口径：
+
+- 目录第一层表达 mapping 关系。
+- bootstrap mapping 表达 contexta 用自己的内容语言定义自己。
+- docwarden mapping 表达 contexta 内容语言如何投射给 docwarden 资产使用。
+- docwarden 具体长期资产仍留在 `.docwarden`。
+- format、locator、semantic lint 后续再推进。

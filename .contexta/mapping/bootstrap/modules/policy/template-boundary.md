@@ -64,7 +64,7 @@ template 是否存在取决于目标内容语言是否已经成立、骨架是�
 
 ### Scenario
 
-agent 准备把 template 边界规则写进 `.contexta/templates/policy.md`。
+agent 准备把 template 边界规则写进 `.contexta/mapping/bootstrap/templates/policy.md`。
 
 ### Judgment Material
 
@@ -77,7 +77,7 @@ agent 准备把 template 边界规则写进 `.contexta/templates/policy.md`。
 ### Positive
 
 ```md
-这是真实规则，应进入 `.contexta/modules/policy/template-boundary.md`。template 只能保留占位骨架。
+这是真实规则，应进入 `.contexta/mapping/bootstrap/modules/policy/template-boundary.md`。template 只能保留占位骨架。
 ```
 
 这个 example 给出 template 最容易越界的场景：把规则本体写进复制骨架。

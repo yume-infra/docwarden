@@ -37,7 +37,7 @@ target 是该路径承接的落点或后续对象。
 | workflow | workflow 关注 state 如何经 move 和 transition 推进；branch 关注 condition 如何选择 route 和 target。 |
 | pipeline | pipeline 关注 input 如何经 transform 形成 output；branch 关注条件分流，不表达转换动作。 |
 | architecture | architecture 关注 layer 的 relation 和 boundary；branch 关注内容或判断如何被路由到 target。 |
-| mapping | mapping 表达对应关系；branch 必须表达分流条件。 |
+| [[mapping]] | mapping 表达理论到实体的映射关系；branch 表达条件分流。 |
 | [[policy]] | policy 表达约束强度；branch 表达分流结构。 |
 | [[template]] | template 提供复制骨架；branch 是被骨架承载的分流表达。 |
 

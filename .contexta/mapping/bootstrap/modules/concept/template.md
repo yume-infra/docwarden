@@ -37,7 +37,7 @@ template 的语义重点是生成初始形状，而不是承接内容本体、�
 
 ### Scenario
 
-agent 看到 `relation` 已经有 concept module，准备新增 `.contexta/templates/relation.md`。
+agent 看到 `relation` 已经有 concept module，准备新增 `.contexta/mapping/bootstrap/templates/relation.md`。
 
 ### Judgment Material
 
@@ -58,7 +58,7 @@ kind: relation
 ### Negative
 
 ```md
-新增 `.contexta/templates/relation.md`，因为 relation 已经是 concept，所以它也应该成为 kind。
+新增 `.contexta/mapping/bootstrap/templates/relation.md`，因为 relation 已经是 concept，所以它也应该成为 kind。
 ```
 
 这把 template 当成证明 kind 成立的手段，反向制造了内容语言。
@@ -66,7 +66,7 @@ kind: relation
 ### Borderline
 
 ```md
-.contexta/templates/user-context.md
+.contexta/mapping/docwarden/templates/user-context.md
 ```
 
 这可以保留，因为 user-context 已被确认为内容语言，并且有稳定正文骨架：Context / Boundary / Assertions / Notes。

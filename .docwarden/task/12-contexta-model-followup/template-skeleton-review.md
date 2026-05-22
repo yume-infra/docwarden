@@ -10,7 +10,7 @@ loop: 3
 
 本文件是 task 12 Loop 3 的最小 review 单元，已通过审核并落地到 `.contexta`。
 
-目标是审查 `.contexta/templates/` 是否只提供已成立内容语言的复制骨架，而不是制造新 kind、承接真实内容或混入 docwarden lifecycle。
+目标是审查 `.contexta` 中的 template 是否只提供已成立内容语言的复制骨架，而不是制造新 kind、承接真实内容或混入 docwarden lifecycle。
 
 ## 当前已有设计
 
@@ -21,20 +21,20 @@ loop: 3
 - template 不承接真实 policy、concept definition 或 docwarden workflow。
 - `kind` 是 content language entry。
 - template 文件中的 `kind` 暂时指向复制后目标 module 的内容语言。
-- `.contexta/templates/example.md` 已移除，example 当前不是 kind、template kind 或 directory kind。
+- `.contexta/mapping/bootstrap/templates/example.md` 已移除，example 当前不是 kind、template kind 或 directory kind。
 
 当前 template inventory：
 
-| Template | Frontmatter kind | 当前判断 |
-| --- | --- | --- |
-| `concept.md` | `concept` | 已有稳定 concept 内容语言，可保留。 |
-| `policy.md` | `policy` | 已有稳定 policy 内容语言，可保留。 |
-| `pipeline.md` | `pipeline` | 当前作为 structure language 的直接骨架，可保留。 |
-| `workflow.md` | `workflow` | 当前作为 structure language 的直接骨架，可保留。 |
-| `architecture.md` | `architecture` | 当前作为 structure language 的直接骨架，可保留。 |
-| `branch.md` | `branch` | 当前作为 structure language 的直接骨架，可保留。 |
-| `composition.md` | `composition` | 当前作为 structure language 的直接骨架，可保留。 |
-| `user-context.md` | `user-context` | 已由当前项目确认是 user context 内容类型模板，可保留；本轮一并补 concept。 |
+| Template | Frontmatter kind | Mapping | 当前判断 |
+| --- | --- | --- | --- |
+| `concept.md` | `concept` | bootstrap | 已有稳定 concept 内容语言，可保留。 |
+| `policy.md` | `policy` | bootstrap | 已有稳定 policy 内容语言，可保留。 |
+| `pipeline.md` | `pipeline` | bootstrap | 当前作为 structure language 的直接骨架，可保留。 |
+| `workflow.md` | `workflow` | bootstrap | 当前作为 structure language 的直接骨架，可保留。 |
+| `architecture.md` | `architecture` | bootstrap | 当前作为 structure language 的直接骨架，可保留。 |
+| `branch.md` | `branch` | bootstrap | 当前作为 structure language 的直接骨架，可保留。 |
+| `composition.md` | `composition` | bootstrap | 当前作为 structure language 的直接骨架，可保留。 |
+| `user-context.md` | `user-context` | docwarden | 已由当前项目确认是 user context 内容类型模板，可保留；本轮一并补 concept。 |
 
 ## 当前缺口
 
@@ -85,7 +85,7 @@ loop: 3
 kind: policy
 ```
 
-在 `.contexta/templates/policy.md` 中，它表示：
+在 `.contexta/mapping/bootstrap/templates/policy.md` 中，它表示：
 
 ```text
 这个 template 复制后要生成的目标 module kind 是 policy。
@@ -132,7 +132,7 @@ structure_type: workflow
 
 ### 4. user-context template 当前保留
 
-`.contexta/templates/user-context.md` 当前保留。
+`.contexta/mapping/docwarden/templates/user-context.md` 当前保留。
 
 原因：
 
@@ -146,11 +146,11 @@ structure_type: workflow
 
 审核后调整：
 
-- 本轮一并补 `.contexta/modules/concept/user-context.md`。
+- 本轮一并补 `.contexta/mapping/docwarden/modules/concept/user-context.md`。
 
 ### 5. example template 不恢复
 
-当前不恢复 `.contexta/templates/example.md`。
+当前不恢复 `.contexta/mapping/bootstrap/templates/example.md`。
 
 原因：
 
@@ -164,11 +164,11 @@ structure_type: workflow
 
 本轮长期层落地：
 
-- 修订 `.contexta/modules/concept/template.md`，补充 template 的成立条件。
-- 修订 `.contexta/modules/policy/template-boundary.md`，补充 template MUST NOT 反向制造 kind。
-- 新增 `.contexta/modules/concept/user-context.md`。
-- 暂不修改 `.contexta/templates/*.md` 的 frontmatter。
-- 暂不新增或恢复 `.contexta/templates/example.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/template.md`，补充 template 的成立条件。
+- 修订 `.contexta/mapping/bootstrap/modules/policy/template-boundary.md`，补充 template MUST NOT 反向制造 kind。
+- 新增 `.contexta/mapping/docwarden/modules/concept/user-context.md`。
+- 暂不修改 `.contexta/mapping/*/templates/*.md` 的 frontmatter。
+- 暂不新增或恢复 `.contexta/mapping/bootstrap/templates/example.md`。
 - 暂不新增 `target_kind`。
 
 ## 审核结果

@@ -45,18 +45,18 @@ stable semantic boundary 是 module 组织 assertion 的质量边界，不是 mo
 
 ### Scenario
 
-agent 需要判断 `.contexta/modules/concept/module.md` 是不是 module。
+agent 需要判断 `.contexta/mapping/bootstrap/modules/concept/module.md` 是不是 module。
 
 ### Judgment Material
 
-- `.contexta/modules/concept/module.md` 是一个 md 文件。
+- `.contexta/mapping/bootstrap/modules/concept/module.md` 是一个 md 文件。
 - frontmatter 中写的是 `kind: concept`。
 - 该文件定义 `module` 这个 concept。
 
 ### Positive
 
 ```md
-`.contexta/modules/concept/module.md` 是 module，因为它是一个 md file scope。
+`.contexta/mapping/bootstrap/modules/concept/module.md` 是 module，因为它是一个 md file scope。
 
 它的 `kind` 是 `concept`，说明这个 module 的内容语言是 concept。
 ```
@@ -74,7 +74,7 @@ kind: module
 ### Borderline
 
 ```text
-.contexta/templates/policy.md
+.contexta/mapping/bootstrap/templates/policy.md
 ```
 
 这是一个 md file，因此在 file scope 意义上也是 module。但它的内容角色是 template，负责提供复制骨架，不是 policy module 实例。

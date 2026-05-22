@@ -90,4 +90,4 @@ kind: module
 kind: policy
 ```
 
-在 `.contexta/templates/policy.md` 中，这个字段暂时指向复制后目标 module 的 kind。是否改成 `target_kind` 属于 template loop，不在本 policy 中直接修改。
+在 `.contexta/mapping/bootstrap/templates/policy.md` 中，这个字段暂时指向复制后目标 module 的 kind。是否改成 `target_kind` 属于 template loop，不在本 policy 中直接修改。

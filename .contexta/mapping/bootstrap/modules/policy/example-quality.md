@@ -65,7 +65,7 @@ example 的价值在于降低 agent 从抽象理解到实际判断之间的损�
 
 ### Scenario
 
-用户要求 agent “把 template 规则写进 `.contexta/templates/user-context.md`”。
+用户要求 agent “把 template 规则写进 `.contexta/mapping/docwarden/templates/user-context.md`”。
 
 ### Judgment Material
 
@@ -78,7 +78,7 @@ example 的价值在于降低 agent 从抽象理解到实际判断之间的损�
 ### Positive
 
 ```md
-这条内容是 policy，不是 template 骨架。template 只能提供复制后的初始结构；template 的边界规则应进入 `.contexta/modules/policy/template-boundary.md`。
+这条内容是 policy，不是 template 骨架。template 只能提供复制后的初始结构；template 的边界规则应进入 `.contexta/mapping/bootstrap/modules/policy/template-boundary.md`。
 ```
 
 这个 example 有真实压力、具体错误文本和可迁移的纠偏判断。agent 下次遇到“把规则写进 template”的请求时，能判断落点问题。

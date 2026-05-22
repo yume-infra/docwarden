@@ -25,16 +25,16 @@ loop: 2
 
 当前 `.contexta` 中已有的 `kind` 用法：
 
-- `.contexta/modules/concept/*.md` 使用 `kind: concept`。
-- `.contexta/modules/policy/*.md` 使用 `kind: policy`。
-- `.contexta/templates/concept.md` 使用 `kind: concept`。
-- `.contexta/templates/policy.md` 使用 `kind: policy`。
-- `.contexta/templates/pipeline.md` 使用 `kind: pipeline`。
-- `.contexta/templates/workflow.md` 使用 `kind: workflow`。
-- `.contexta/templates/architecture.md` 使用 `kind: architecture`。
-- `.contexta/templates/branch.md` 使用 `kind: branch`。
-- `.contexta/templates/composition.md` 使用 `kind: composition`。
-- `.contexta/templates/user-context.md` 使用 `kind: user-context`。
+- `.contexta/mapping/bootstrap/modules/concept/*.md` 使用 `kind: concept`。
+- `.contexta/mapping/bootstrap/modules/policy/*.md` 使用 `kind: policy`。
+- `.contexta/mapping/bootstrap/templates/concept.md` 使用 `kind: concept`。
+- `.contexta/mapping/bootstrap/templates/policy.md` 使用 `kind: policy`。
+- `.contexta/mapping/bootstrap/templates/pipeline.md` 使用 `kind: pipeline`。
+- `.contexta/mapping/bootstrap/templates/workflow.md` 使用 `kind: workflow`。
+- `.contexta/mapping/bootstrap/templates/architecture.md` 使用 `kind: architecture`。
+- `.contexta/mapping/bootstrap/templates/branch.md` 使用 `kind: branch`。
+- `.contexta/mapping/bootstrap/templates/composition.md` 使用 `kind: composition`。
+- `.contexta/mapping/docwarden/templates/user-context.md` 使用 `kind: user-context`。
 
 ## 当前缺口
 
@@ -158,7 +158,7 @@ kind: example
 
 ### 6. template 中的 kind 暂时视为 target kind
 
-`.contexta/templates/*.md` 里的 `kind` 当前有一个特殊点：
+`.contexta/mapping/bootstrap/templates/*.md` 里的 `kind` 当前有一个特殊点：
 
 它更像是在说明这个 template 复制后要生成的目标内容语言。
 
@@ -168,13 +168,13 @@ kind: example
 kind: policy
 ```
 
-在 `.contexta/templates/policy.md` 中，含义更接近：
+在 `.contexta/mapping/bootstrap/templates/policy.md` 中，含义更接近：
 
 ```text
 这个 template 的目标 module kind 是 policy。
 ```
 
-这和普通 `.contexta/modules/policy/*.md` 中的 `kind: policy` 不完全一样。
+这和普通 `.contexta/mapping/bootstrap/modules/policy/*.md` 中的 `kind: policy` 不完全一样。
 
 当前不立刻改成：
 
@@ -221,18 +221,18 @@ target_kind: policy
 
 本轮已落地：
 
-- `.contexta/modules/concept/kind.md`
-- `.contexta/modules/policy/kind-boundary.md`
-- `.contexta/modules/concept/relation.md`
-- `.contexta/modules/policy/relation.md`
-- `.contexta/templates/concept.md`
+- `.contexta/mapping/bootstrap/modules/concept/kind.md`
+- `.contexta/mapping/bootstrap/modules/policy/kind-boundary.md`
+- `.contexta/mapping/bootstrap/modules/concept/relation.md`
+- `.contexta/mapping/bootstrap/modules/policy/relation.md`
+- `.contexta/mapping/bootstrap/templates/concept.md`
 - 移除当前 concept modules 中默认的 `Concept Relations` 章节。
-- 将 `.contexta/modules/concept/module.md` 和 `.contexta/modules/concept/assertion.md` 中误导性的 `entity` 表述改为独立资产或 docwarden workflow 对象表述。
-- 将 `.contexta/modules/concept/workflow.md` 和 `.contexta/modules/concept/architecture.md` 中的“实体落点”改为“具体资产落点”。
+- 将 `.contexta/mapping/bootstrap/modules/concept/module.md` 和 `.contexta/mapping/bootstrap/modules/concept/assertion.md` 中误导性的 `entity` 表述改为独立资产或 docwarden workflow 对象表述。
+- 将 `.contexta/mapping/bootstrap/modules/concept/workflow.md` 和 `.contexta/mapping/bootstrap/modules/concept/architecture.md` 中的“实体落点”改为“具体资产落点”。
 
 当前仍不做：
 
-- 暂不修改 `.contexta/templates/*.md` 的 frontmatter。
+- 暂不修改 `.contexta/mapping/*/templates/*.md` 的 frontmatter。
 - 将 template artifact 中 `kind` 的特殊语义留给 Loop 3 处理。
 
 ## 审核结果

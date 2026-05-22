@@ -37,18 +37,18 @@ owner: sayori
 可能产物：
 
 - `composition-module-assertion-landing.md`
-- 修订 `.contexta/modules/concept/module.md`。
-- 修订 `.contexta/modules/concept/assertion.md`。
-- 修订 `.contexta/modules/concept/composition.md`。
-- 同步 `.contexta/modules/concept/concept.md`、`.contexta/modules/concept/example.md`、`.contexta/modules/concept/structure.md` 中对 module 的旧描述。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/module.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/assertion.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/composition.md`。
+- 同步 `.contexta/mapping/bootstrap/modules/concept/concept.md`、`.contexta/mapping/bootstrap/modules/concept/example.md`、`.contexta/mapping/bootstrap/modules/concept/structure.md` 中对 module 的旧描述。
 - 修订或替代 archived task 11 中 `module-assertion-landing.md` 的旧口径。
 
 当前结果：
 
 - 已通过 sayori 审核。
-- 已落地 `.contexta/modules/concept/module.md`。
-- 已落地 `.contexta/modules/concept/assertion.md`。
-- 已落地 `.contexta/modules/concept/composition.md`。
+- 已落地 `.contexta/mapping/bootstrap/modules/concept/module.md`。
+- 已落地 `.contexta/mapping/bootstrap/modules/concept/assertion.md`。
+- 已落地 `.contexta/mapping/bootstrap/modules/concept/composition.md`。
 - 已同步当前层中对 module 的旧描述。
 - 暂不新增 assertion 文件、独立资产、ID、frontmatter 或完整 locator 机制。
 - 下一步进入 Loop 2：kind 与 metadata 边界。
@@ -75,7 +75,7 @@ owner: sayori
 可能产物：
 
 - 新增 frontmatter / metadata boundary working note。
-- 修订 `.contexta/templates/` 的 frontmatter 口径。
+- 修订 `.contexta/mapping/bootstrap/templates/` 的 frontmatter 口径。
 
 当前产物：
 
@@ -85,10 +85,10 @@ owner: sayori
 当前结果：
 
 - 已通过 sayori 审核。
-- 已落地 `.contexta/modules/concept/kind.md`。
-- 已落地 `.contexta/modules/policy/kind-boundary.md`。
-- 已落地 `.contexta/modules/concept/relation.md`。
-- 已落地 `.contexta/modules/policy/relation.md`。
+- 已落地 `.contexta/mapping/bootstrap/modules/concept/kind.md`。
+- 已落地 `.contexta/mapping/bootstrap/modules/policy/kind-boundary.md`。
+- 已落地 `.contexta/mapping/bootstrap/modules/concept/relation.md`。
+- 已落地 `.contexta/mapping/bootstrap/modules/policy/relation.md`。
 - 已移除 concept template 和当前 concept modules 中默认的 `Concept Relations` 章节。
 - 已确认 Delimitation 只维护关键边界压力，relation 维护 concept network 稳定位置。
 - template 中的 `kind` 暂时理解为对复制后目标 module kind 的指向，留到 Loop 3 继续处理。
@@ -103,7 +103,7 @@ owner: sayori
 
 - template 只负责复制后的内容骨架。
 - template 不负责来源、review、pick、更新、写入、生命周期。
-- `.contexta/templates/example.md` 已移除。
+- `.contexta/mapping/bootstrap/templates/example.md` 已移除。
 
 需要 review：
 
@@ -113,8 +113,8 @@ owner: sayori
 
 可能产物：
 
-- 修订 `.contexta/templates/*.md`。
-- 修订 `.contexta/modules/policy/template-boundary.md`。
+- 修订 `.contexta/mapping/bootstrap/templates/*.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/policy/template-boundary.md`。
 
 当前产物：
 
@@ -123,19 +123,46 @@ owner: sayori
 当前进展：
 
 - 已整理 template 的成立条件候选。
-- 已整理当前 `.contexta/templates/` inventory。
+- 已整理当前 `.contexta` template inventory。
 - 已将 `target_kind` 是否需要引入留作本轮 review 问题，不直接修改 frontmatter。
 
 当前结果：
 
 - 已通过 sayori 审核。
-- 已落地 `.contexta/modules/concept/template.md` 的 template 成立条件。
-- 已落地 `.contexta/modules/policy/template-boundary.md` 的 template 反向制造 kind 约束。
-- 已新增 `.contexta/modules/concept/user-context.md`。
-- 暂不修改 `.contexta/templates/*.md` 的 frontmatter。
+- 已落地 `.contexta/mapping/bootstrap/modules/concept/template.md` 的 template 成立条件。
+- 已落地 `.contexta/mapping/bootstrap/modules/policy/template-boundary.md` 的 template 反向制造 kind 约束。
+- 已新增 `.contexta/mapping/docwarden/modules/concept/user-context.md`。
+- 暂不修改 `.contexta/mapping/*/templates/*.md` 的 frontmatter。
 - 暂不新增 `target_kind`。
 
-## Loop 4：semantic lint 误用信号
+## Loop 4：mapping layer
+
+状态：accepted。
+
+目标：定义 contexta 如何用目录结构说明理论到实体的 mapping 关系。
+
+当前基线：
+
+- contexta 本身就是理论到实体的映射。
+- 当前 `.contexta` 中混有两类内容：contexta 的 bootstrap 内容，以及 contexta 到 docwarden 的映射内容。
+- 目录结构应表征这两类 mapping 关系。
+- bootstrap layer 使用英文目录名 `bootstrap`。
+
+当前产物：
+
+- `mapping-layer-review.md`
+
+当前结果：
+
+- 已通过 sayori 审核。
+- 已新增 `.contexta/mapping/bootstrap/modules/concept/mapping.md`。
+- 已新增 `.contexta/mapping/bootstrap/modules/policy/mapping-boundary.md`。
+- 已将 contexta 的 bootstrap concept / policy / template 迁移到 `.contexta/mapping/bootstrap/`。
+- 已将 `user-context` concept / template 迁移到 `.contexta/mapping/docwarden/`。
+- `.docwarden/user/profile.md` 保持为 docwarden 长期资产，不移动到 `.contexta`。
+- format、locator、semantic lint 留给后续 loop。
+
+## Loop 5：semantic lint 误用信号
 
 状态：pending。
 
@@ -155,7 +182,7 @@ owner: sayori
 - 哪些信号已经足够稳定，可以先落地为 policy 或 lint note。
 - 哪些信号仍需等待更多真实材料。
 
-## Loop 5：example quality 未来抽象
+## Loop 6：example quality 未来抽象
 
 状态：deferred。
 

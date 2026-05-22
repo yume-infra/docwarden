@@ -84,8 +84,8 @@ composition -> structure
 
 本轮已新增：
 
-- `.contexta/modules/concept/relation.md`
-- `.contexta/modules/policy/relation.md`
+- `.contexta/mapping/bootstrap/modules/concept/relation.md`
+- `.contexta/mapping/bootstrap/modules/policy/relation.md`
 
 这两个长期层文件只负责稳定 relation 语言本身，不要求每个 concept module 都新增 `Concept Relations` 章节。
 

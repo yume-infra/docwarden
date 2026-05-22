@@ -81,6 +81,6 @@ sub_type: workflow
 kind: policy
 ```
 
-如果这出现在 `.contexta/modules/policy/*.md` 中，它表示当前 module 使用 policy 内容语言。
+如果这出现在 `.contexta/mapping/bootstrap/modules/policy/*.md` 中，它表示当前 module 使用 policy 内容语言。
 
-如果这出现在 `.contexta/templates/policy.md` 中，它表示复制后目标 module 的 kind 是 policy；template 自身作为复制骨架的身份由路径和 template 边界承接。
+如果这出现在 `.contexta/mapping/bootstrap/templates/policy.md` 中，它表示复制后目标 module 的 kind 是 policy；template 自身作为复制骨架的身份由路径和 template 边界承接。
