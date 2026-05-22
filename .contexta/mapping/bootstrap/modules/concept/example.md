@@ -22,11 +22,9 @@ example 的核心不是证明正文正确，而是在一个具体判断场景里
 
 ## Delimitation
 
-| Neighbor | Difference |
-| --- | --- |
-| [[mapping/bootstrap/modules/concept/policy|policy]] | policy 表达约束；example 把约束放进具体判断场景中示范。 |
-| [[mapping/bootstrap/modules/concept/template|template]] | template 提供复制骨架；example 提供一个可读、可模仿或可对照的具体样本。 |
-| test case | test case 偏验证预期结果；example 偏教学、示范和迁移。 |
+- [[mapping/bootstrap/modules/concept/policy|policy]]：policy 表达约束；example 把约束放进具体判断场景中示范。
+- [[mapping/bootstrap/modules/concept/template|template]]：template 提供复制骨架；example 提供一个可读、可模仿或可对照的具体样本。
+- test case：test case 偏验证预期结果；example 偏教学、示范和迁移。
 
 ## Examples
 
