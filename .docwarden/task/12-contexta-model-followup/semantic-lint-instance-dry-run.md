@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-22
-updated: 2026-05-22
+updated: 2026-05-23
 owner: sayori
 loop: 9
 ---
@@ -16,7 +16,7 @@ loop: 9
 
 - raw hit 如何进入 candidate。
 - candidate 如何经过 inspection 才能成为 signal instance。
-- locator 在当前阶段能否至少指到 module / heading。
+- locator 如何在后续通过 assertion marker 指到具体 assertion。
 - 当前 signal definitions 是否会误伤 example、code fence 或 template skeleton。
 
 ## Scope
@@ -47,7 +47,9 @@ Signal:
 
 Locator:
 
-指向被检查位置。当前只使用 module / heading 级 locator。
+指向被检查 assertion。Loop 13 后，真正 signal instance 的 locator 应指向 `^a-*` assertion marker。
+
+本 dry run 中使用的 module / heading 级链接应读作 candidate context，不再读作最终 signal instance locator。
 
 Trigger:
 
@@ -264,3 +266,15 @@ Disposition:
 - 当前不需要奢求一次做好 semantic lint instance 体系。
 - 先稳定 concept / signal / trigger / locator / assertion 等基础概念。
 - 等后续落实到 CLI lint engine 时，再用本轮 dry run 作为具体参照物校准实现。
+
+## Loop 13 Correction
+
+Loop 13 修正后，本 dry run 中的 heading locator 统一读作 candidate context。
+
+后续 signal instance 需要 locator 指向 assertion marker，例如：
+
+```md
+[[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
+```
+
+如果命中没有 assertion marker，当前只能保留为 candidate，不能直接升级为 signal instance。

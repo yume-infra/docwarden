@@ -29,15 +29,16 @@ signal 是 warning，不是最终判罚。
 
 未来 CLI lint step 输出的是 signal instance，而不是抽象 signal definition。
 
+signal candidate 可以只有上下文；signal instance 需要 locator 指向 assertion marker。
+
 ## Delimitation
 
-| Neighbor | Difference |
-| --- | --- |
-| [[mapping/bootstrap/modules/concept/semantic-lint|semantic-lint]] | semantic-lint 是检测语言；signal 是其中被命名的 warning。 |
-| [[mapping/bootstrap/modules/concept/trigger|trigger]] | trigger 是可观察条件；signal 是对该条件的语义风险命名。 |
-| [[mapping/bootstrap/modules/concept/assertion|assertion]] | assertion 是被审查的语义判断；signal 是指向其可能偏移的 warning。 |
-| [[mapping/bootstrap/modules/concept/policy|policy]] | policy 表达约束；signal 只提示可能违反语义边界。 |
-| docwarden review item | docwarden review item 属于操作流程；signal 只是 contexta lint 输出。 |
+- [[mapping/bootstrap/modules/concept/semantic-lint|semantic-lint]]：semantic-lint 是检测语言；signal 是其中被命名的 warning。
+- [[mapping/bootstrap/modules/concept/trigger|trigger]]：trigger 是可观察条件；signal 是对该条件的语义风险命名。
+- [[mapping/bootstrap/modules/concept/assertion|assertion]]：assertion 是被审查的语义判断；signal 是指向其可能偏移的 warning。
+- [[mapping/bootstrap/modules/concept/locator|locator]]：locator 让 signal instance 指向具体 assertion marker；signal 本身不定义定位机制。
+- [[mapping/bootstrap/modules/concept/policy|policy]]：policy 表达约束；signal 只提示可能违反语义边界。
+- docwarden review item：docwarden review item 属于操作流程；signal 只是 contexta lint 输出。
 
 ## Examples
 
@@ -71,7 +72,14 @@ signal: section contains MUST
 
 ```md
 signal: concept-as-policy
-locator: mapping/bootstrap/modules/concept/example.md#Definition
+context: mapping/bootstrap/modules/concept/example.md#Definition
 ```
 
-这是 signal instance。它包含一次具体命中的位置，不是 signal definition 本身。
+这是 signal candidate。它有上下文，但还没有指向 assertion marker 的 locator。
+
+```md
+signal: concept-as-policy
+locator: [[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
+```
+
+这是 signal instance。它包含一次具体命中的 assertion locator，不是 signal definition 本身。

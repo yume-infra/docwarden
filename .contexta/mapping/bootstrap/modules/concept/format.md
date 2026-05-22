@@ -15,32 +15,41 @@ Aliases:
 
 ## Naming Need
 
-contexta 需要一个名字表示 md module 的稳定可读形状。
+contexta 需要一个名字表示 md module 在持续编辑中的形态保持机制。
 
-这个名字用于说明 agent、Obsidian、review 和未来 CLI 可以稳定读取哪些文本表面，避免把文本表面、语义结构、复制骨架和定位机制混在一起。
+这个名字用于避免把 template 的初始骨架、policy 的约束语言、semantic-lint 的检测语言和 locator 的定位机制混在一起。
+
+template 可以生成 0->1 的初始 md，但 md module 后续还会被 agent 继续修改。format 负责让 1->2、2->3 的持续编辑不破坏文档可消费形态。
 
 ## Definition
 
-format 是 contexta module 的稳定可读形状。 ^a-def
+format 是 md module 在持续编辑中的形态保持契约。 ^a-def
 
-format 说明 md module 中哪些表面可以被稳定读取，例如 frontmatter、H1、heading、section body、OFM wikilink 和 relation block heading。
+format 关心文档从 template 生成之后，继续修改、扩写和维护时，如何保持 semantic-lint 可以直接消费的 md 形态。
+
+format 保护的表面包括 frontmatter、H1、heading、section body、OFM wikilink、relation block heading 和 assertion marker。
+
+format 不生成初始骨架。
 
 format 不判断内容语义是否正确。
 
-format 不给 assertion 发 ID。
+format 不执行检查。
+
+format 不给 assertion 发全局 ID。
 
 ## Delimitation
 
-- [[mapping/bootstrap/modules/concept/template|template]]：template 提供复制后的正文骨架；format 说明 md module 可被稳定读取的文本表面。
-- [[mapping/bootstrap/modules/concept/structure|structure]]：structure 说明语义组织方式；format 说明文本表面如何被读取。
-- [[mapping/bootstrap/modules/concept/locator|locator]]：locator 服务 assertion 定位；format 提供 locator 可以依附的稳定表面。
-- [[mapping/bootstrap/modules/policy/link-resolution|link-resolution]]：link-resolution 约束 OFM link 写法；format 只承认 OFM wikilink 是可读表面。
+- [[mapping/bootstrap/modules/concept/template|template]]：template 负责 0->1 的初始骨架；format 负责后续编辑时保持 md 形态不被改坏。
+- [[mapping/bootstrap/modules/concept/policy|policy]]：policy 表达约束语言；format 表达持续编辑中的文档形态保持契约。policy 可以保护 format，但不替代 format 的形态职责。
+- [[mapping/bootstrap/modules/concept/semantic-lint|semantic-lint]]：semantic-lint 检查语义偏移；format 让 md 保持可被 semantic-lint 直接消费的形态。
+- [[mapping/bootstrap/modules/concept/locator|locator]]：locator 服务 assertion 定位；format 保证 assertion marker 在 md 中保持可见、可引用、可消费。
+- [[mapping/bootstrap/modules/concept/structure|structure]]：structure 说明语义组织方式；format 保持这些组织方式落到 md 后的文本形态。
 
 ## Examples
 
 ### Scenario
 
-agent 需要判断 heading 是否可以作为 semantic lint 的定位上下文。
+agent 继续修改一个已经由 template 生成的 concept module。
 
 ### Judgment Material
 
@@ -53,20 +62,22 @@ locator 是服务 assertion 审核的定位机制。 ^a-def
 ### Positive
 
 ```md
-`## Definition` 是 format surface。
+保留 `## Definition`。
 
-`^a-def` 是 assertion marker。
+保留 `^a-def`。
+
+继续使用 OFM path alias link。
 ```
 
-这个 example 让 agent 看到 heading 提供可读表面，marker 才定位具体 assertion。
+这个 example 让 agent 看到 format 的重点不是生成初稿，而是在后续编辑中保持可消费形态。
 
 ### Negative
 
 ```md
-只要某句话在 `## Definition` 下，就已经拥有 assertion locator。
+把 `## Definition` 改成随意标题，并删除 `^a-def`。
 ```
 
-这把 section context 当成 assertion locator。heading 只能提供上下文，不能替代 assertion marker。
+这会破坏 semantic-lint 和 locator 依赖的 md 形态。
 
 ### Borderline
 
@@ -74,4 +85,4 @@ locator 是服务 assertion 审核的定位机制。 ^a-def
 [[mapping/bootstrap/modules/concept/locator#Definition|locator#Definition]]
 ```
 
-这是 section link，能指向 format surface。它可以作为上下文地址，但还不能精确定位某条 assertion。
+这是 section link，可以作为上下文地址。它不破坏 format，但也不能替代 assertion marker。

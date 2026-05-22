@@ -22,18 +22,19 @@ contexta 需要一个名字表示 semantic-lint 中可观察、可脚本化的�
 
 trigger 是 semantic-lint 中可观察的触发条件。
 
-trigger 在 locator 指向的位置观察文本、结构、frontmatter、path、heading 或 link 等现象。
+trigger 直接检查 formatted md 中的文本、结构、frontmatter、path、heading、link 或 marker 等现象。
 
 trigger 不等于 signal，不等于 assertion，也不等于最终判断。
 
+trigger 不依赖 locator 才能观察。locator 用于 signal instance 指回 assertion marker。
+
 ## Delimitation
 
-| Neighbor | Difference |
-| --- | --- |
-| [[mapping/bootstrap/modules/concept/signal|signal]] | trigger 是可观察条件；signal 是对 trigger 的语义风险命名。 |
-| [[mapping/bootstrap/modules/concept/assertion|assertion]] | assertion 是被审查的语义判断；trigger 是检查条件。 |
-| [[mapping/bootstrap/modules/concept/locator|locator]] | locator 指向位置；trigger 在该位置观察现象。 |
-| docwarden trigger | docwarden trigger 可启动流程；semantic-lint trigger 只触发 lint warning。 |
+- [[mapping/bootstrap/modules/concept/signal|signal]]：trigger 是可观察条件；signal 是对 trigger 的语义风险命名。
+- [[mapping/bootstrap/modules/concept/assertion|assertion]]：assertion 是被审查的语义判断；trigger 是检查条件。
+- [[mapping/bootstrap/modules/concept/format|format]]：format 保持 md 可被直接消费的形态；trigger 检查这个 formatted md。
+- [[mapping/bootstrap/modules/concept/locator|locator]]：locator 指向 assertion marker；trigger 不依赖 locator 才能观察。
+- docwarden trigger：docwarden trigger 可启动流程；semantic-lint trigger 只触发 lint warning。
 
 ## Examples
 

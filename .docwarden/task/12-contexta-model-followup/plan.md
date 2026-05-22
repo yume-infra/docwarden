@@ -1,7 +1,7 @@
 ---
 status: draft
 created: 2026-05-20
-updated: 2026-05-22
+updated: 2026-05-23
 owner: sayori
 ---
 
@@ -390,9 +390,10 @@ owner: sayori
 
 当前候选：
 
-- format = contexta module 的稳定可读形状。
+- format = md module 在持续编辑中的形态保持契约。
 - locator = 服务 assertion 审核的定位机制。
-- format 先承认 frontmatter、H1、heading、section body、OFM wikilink、relation block heading 等可读表面。
+- template 负责 0->1 的初始骨架；format 负责 1->2、2->3 的持续编辑不改坏 md 形态。
+- format 保护 frontmatter、H1、heading、section body、OFM wikilink、relation block heading、assertion marker 等表面。
 - module / section / relation block 是 locator 的上下文或宿主表面，不是 locator 定义的核心。
 - locator 第一版应尽可能简单，重点设计 assertion marker。
 - assertion marker 采用 `^a-*` 短 marker，其中 `a-` 是 assertion magic prefix。
@@ -414,10 +415,56 @@ owner: sayori
 当前结果：
 
 - 已通过 sayori 审核。
-- format 作为 contexta 基础 concept 落地。
+- format 作为 contexta 基础 concept 落地，并在 Loop 13 中修正为持续编辑中的形态保持契约。
 - locator 重新收窄为 assertion 审核定位机制。
 - `^a-*` 短 marker 当前阅读效果可接受。
 - assertion locator 继续保持最小第一版，不进入完整 parser、全局 ID 或全量标记。
+
+## Loop 13：semantic lint / locator 对齐
+
+状态：accepted。
+
+目标：把 semantic-lint 的 signal instance 模型与 Loop 12 的 locator 口径对齐。
+
+当前基线：
+
+- format 是 1->2、2->3 持续编辑中的 md 形态保持契约。
+- semantic-lint 直接消费 formatted md，不等待额外 reading / facts layer。
+- locator 服务 assertion 审核定位。
+- assertion marker 第一版采用 `^a-*`。
+- signal definition 不绑定具体 locator。
+- 未来 CLI 输出 signal instance，但当前不实现 CLI。
+
+当前问题：
+
+- semantic-lint / signal / trigger 中仍有“locator 指向位置”的旧口径。
+- signal instance 示例仍使用 `path#Definition` 这类 heading locator。
+- semantic-signals 还没有说明 raw hit 如何进入 candidate，再如何借助 assertion marker 成为 instance。
+- Loop 13 初稿曾把 format 误写成 facts 产出层，需要修正为形态保持契约和直接消费关系。
+
+当前候选：
+
+- template 负责 0->1；format 负责持续编辑时保持 md 形态。
+- trigger 直接检查 formatted md。
+- signal candidate 记录可疑命中和上下文。
+- signal instance 必须有 locator 指向 assertion marker。
+- 如果命中只有 module path / heading，没有 assertion marker，则保留为 candidate。
+- 当前不自动补 marker，不进入 CLI parser，不新增 reading / facts layer。
+
+当前产物：
+
+- `semantic-lint-locator-alignment-review.md`
+
+当前结果：
+
+- 已通过 sayori 审核。
+- 已修订 `.contexta/mapping/bootstrap/modules/concept/format.md`。
+- 已修订 `.contexta/mapping/bootstrap/modules/concept/semantic-lint.md`。
+- 已修订 `.contexta/mapping/bootstrap/modules/concept/signal.md`。
+- 已修订 `.contexta/mapping/bootstrap/modules/concept/trigger.md`。
+- 已修订 `.contexta/mapping/bootstrap/lint/semantic-signals.md`。
+- 已修订 `semantic-lint-instance-dry-run.md`。
+- 当前不进入 CLI parser、自动补 marker、severity 或全量 signal instance fixture。
 
 ## 当前不做
 
@@ -427,3 +474,5 @@ owner: sayori
 - 建立 `structure_type` metadata 分类树。
 - 把 docwarden workflow 生命周期放进 contexta template。
 - 实现 CLI parser、format validator 或 semantic lint engine。
+- 自动为所有 assertion 补 marker。
+- 新增 reading / facts layer。

@@ -1,7 +1,7 @@
 ---
 status: draft
 created: 2026-05-20
-updated: 2026-05-22
+updated: 2026-05-23
 owner: sayori
 ---
 
@@ -583,3 +583,69 @@ sayori 确认短 marker 版本阅读效果更清爽，并要求收口本轮 loop
 - assertion marker 第一版采用 `^a-*` 短 marker。
 - block reference 只允许作为 assertion marker target，不泛化为普通 link。
 - 当前不进入 CLI parser、format validator、全局 assertion ID 或全量 assertion marker。
+
+## [2026-05-22] loop-13-started | 对齐 semantic lint 与 locator
+
+Loop 12 收口后进入下一轮。
+
+当前判断：
+
+- semantic-lint / signal / trigger 中仍有“locator 指向位置”的旧口径。
+- Loop 12 已确认 locator 服务 assertion 审核定位。
+- Loop 12 已确认 format 稳定可消费 md 形状，是双重保险，不是 facts layer。
+- 因此 semantic-lint 应直接消费 formatted md，并重新区分 trigger、signal candidate 和 signal instance。
+
+本轮最小 review 单元：
+
+- format 是否应被理解为可消费 md 形状的双重保险。
+- semantic-lint 是否应直接消费 formatted md，不新增 reading / facts layer。
+- trigger 是否应直接检查 formatted md。
+- signal candidate 是否保留 module path / heading 上下文。
+- signal instance 是否必须用 locator 指向 assertion marker。
+- 没有 assertion marker 的命中是否只能保留为 candidate。
+
+已生成：
+
+- `semantic-lint-locator-alignment-review.md`
+
+## [2026-05-22] loop-13-correction | 修正 format 与 semantic lint 关系
+
+sayori 纠正：
+
+- format 不是 md 到 facts 的额外产出层。
+- format 是生成后的形态保持机制，是文档可被 semantic-lint 直接消费的持续编辑契约。
+- semantic-lint 直接消费 formatted md。
+
+已修正：
+
+- 移除 reading / facts layer 口径。
+- 将 `trigger 观察 format surface` 改为 `trigger 直接检查 formatted md`。
+- 将 Loop 13 的核心链路改为 `content language -> formatted md -> trigger -> signal candidate -> assertion marker -> signal instance`。
+
+## [2026-05-23] loop-13-accepted | 收口 format 持续编辑口径
+
+sayori 进一步纠正并确认：
+
+- template 负责 0->1。
+- format 负责 1->2、2->3 的持续编辑不改坏 md 形态。
+- policy 是约束语言。
+- semantic-lint 是检测语言。
+
+当前结论：
+
+- format 是 md module 在持续编辑中的形态保持契约。
+- semantic-lint 直接消费 formatted md。
+- trigger 直接检查 formatted md。
+- signal candidate 可以只有 module path / heading 上下文。
+- signal instance 需要 locator 指向 `^a-*` assertion marker。
+- 没有 assertion marker 的命中只能保留为 candidate。
+
+已落地：
+
+- 修订 `.contexta/mapping/bootstrap/modules/concept/format.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/semantic-lint.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/signal.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/trigger.md`。
+- 修订 `.contexta/mapping/bootstrap/lint/semantic-signals.md`。
+- 修订 `semantic-lint-instance-dry-run.md`。
+- 收口 `semantic-lint-locator-alignment-review.md`。

@@ -14,6 +14,7 @@ kind: policy
 
 Applies to:
 
+- [[mapping/bootstrap/modules/concept/format|format]]
 - [[mapping/bootstrap/modules/concept/semantic-lint|semantic-lint]]
 - [[mapping/bootstrap/modules/concept/signal|signal]]
 - [[mapping/bootstrap/modules/concept/trigger|trigger]]
@@ -23,7 +24,7 @@ Applies to:
 
 - contexta 需要定义 semantic-lint signal。
 - contexta 需要判断 trigger 是否可以作为 lint 条件。
-- contexta 需要把 lint 命中指向 module、heading 或 assertion。
+- contexta 需要把 lint 命中从 candidate context 指向 assertion marker。
 - contexta 需要区分 warning signal 与 policy violation。
 
 不适用条件：
@@ -43,7 +44,9 @@ Applies to:
 - signal MUST name semantic drift risk, not raw trigger text.
 - signal definition SHOULD link to Source concept / policy / relation.
 - signal instance SHOULD include locator and evidence when CLI lint step exists.
-- locator MUST point to content location without judging correctness.
+- trigger MUST inspect formatted md directly.
+- locator MUST point to assertion marker without judging correctness.
+- module path and heading MAY be used as candidate context, not final assertion locator.
 
 ## Rationale
 
@@ -51,7 +54,11 @@ semantic-lint 是检测语言，不是约束语言。
 
 它可以发现内容疑似偏离 concept、policy、relation 或 template 的职责边界，但最终仍需要 agent 或用户检查。
 
-未来 CLI lint step 需要 signal、trigger、locator 和 evidence 协同工作。当前阶段先稳定 signal definition，不提前设计完整引擎。
+未来 CLI lint step 需要 signal、trigger、locator 和 evidence 协同工作。
+
+trigger 直接检查 formatted md。locator 只在 signal instance 中把 warning 指回 assertion marker。
+
+当前阶段先稳定 signal definition，不提前设计完整引擎。
 
 ## Examples
 
@@ -89,7 +96,7 @@ error: concept module MUST NOT contain MUST
 ```md
 signal instance:
   signal: concept-as-policy
-  locator: [[mapping/bootstrap/modules/concept/example#Definition|example#Definition]]
+  locator: [[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
   evidence: "agent MUST ..."
 ```
 

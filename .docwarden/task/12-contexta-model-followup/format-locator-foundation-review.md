@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-22
-updated: 2026-05-22
+updated: 2026-05-23
 owner: sayori
 loop: 12
 ---
@@ -236,3 +236,19 @@ locator 是让 assertion 在所在表面中被定位的标记机制。
 - assertion marker 第一版采用 `^a-*` 短 marker。
 - block reference 只允许作为 assertion marker target，不泛化为普通 link。
 - 当前不做 CLI parser、format validator、全局 assertion ID 或全量 assertion marker。
+
+## Loop 13 Correction
+
+Loop 13 进一步修正了 format 的定位。
+
+本文件中 `format = 可读表面` 是 Loop 12 的阶段性表达。
+
+当前收口口径是：
+
+```text
+template = 0->1 初始骨架
+format = 1->2 / 2->3 持续编辑中的形态保持契约
+semantic-lint = 直接消费 formatted md
+```
+
+format 不是 facts layer，也不是第一性语义来源。format 关注的是 md module 已经由 template 生成后，继续修改、扩写和维护时，不把 frontmatter、H1、heading、OFM link、relation block heading 和 assertion marker 等可消费形态改坏。

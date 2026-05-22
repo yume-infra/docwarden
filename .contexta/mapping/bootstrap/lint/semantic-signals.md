@@ -10,6 +10,16 @@ kind: semantic-lint
 
 当前 signal definitions 来自已经暴露过的误用，不穷举全部 policy。
 
+semantic-lint 直接消费 formatted md。
+
+Trigger 检查 md 中稳定存在的 path、frontmatter、heading、section、link、marker 和 magic words。
+
+Signal definition 不绑定具体 locator。
+
+一次命中如果只有 module path / heading 上下文，先进入 signal candidate。
+
+只有当命中可以用 locator 指向 `^a-*` assertion marker 时，才升级为 signal instance。
+
 ## `concept-as-policy`
 
 Trigger:

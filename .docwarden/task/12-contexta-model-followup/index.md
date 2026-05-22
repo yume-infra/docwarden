@@ -1,7 +1,7 @@
 ---
 status: draft
 created: 2026-05-20
-updated: 2026-05-22
+updated: 2026-05-23
 owner: sayori
 ---
 
@@ -41,11 +41,12 @@ owner: sayori
 - semantic lint instance dry run 当前作为后续 CLI lint engine 的具体参照物，不追求一次完整。
 - contexta 当前进入 theory stabilization 到 practice reference 的阶段，尚未进入 CLI implementation。
 - contexta 需要补上 format / locator 基础层，作为后续 semantic lint CLI 的可寻址前提。
-- format 当前已落地为 contexta module 的稳定可读形状。
+- format 当前已修正为 md module 在持续编辑中的形态保持契约。
 - locator 当前修正为服务 assertion 审核的定位机制，而不是泛化 link 地址。
 - module / section / relation block 是 locator 的上下文或宿主表面，不是 locator 的核心定义。
 - assertion marker 当前采用 `^a-*` 短 block reference target + OFM path alias link 的组合候选。
 - Loop 12 format / locator 基础层已收口，当前不进入 CLI parser 或全量 assertion marker。
+- Loop 13 已完成 semantic-lint 与 format / locator 对齐：format 保持 1->2、2->3 的 md 形态，semantic-lint 直接消费 formatted md，signal instance locator 指向 assertion marker。
 - example 已被修正为样本语言，不是 kind、role、template kind 或 directory kind。
 - `example-quality` 当前只是临时质量提示，未来需要真实使用反馈再抽象。
 - semantic lint 后续需要继续从实际误用中扩展可审查信号。
@@ -66,7 +67,8 @@ owner: sayori
 - `semantic-lint-instance-dry-run.md`：Loop 9 semantic lint 实例干跑审查材料。
 - `theory-practice-implementation-boundary.md`：Loop 10 theory / practice reference / implementation 边界审查材料。
 - `format-locator-foundation-review.md`：Loop 12 format / locator 基础层审查材料。
+- `semantic-lint-locator-alignment-review.md`：Loop 13 semantic lint / locator 对齐审查材料。
 
 ## 下一步
 
-Loop 12 已收口：format / locator 基础层已落地，后续再选择下一轮主线。
+Loop 13 已收口：format / semantic-lint / signal / trigger 已对齐，后续再选择下一轮主线。
