@@ -38,7 +38,6 @@ stable semantic boundary 是 module 组织 assertion 的质量边界，不是 mo
 | [[assertion]] | assertion 是 module 内部的最小可审查语义单元；module 是 assertion 所在的 md file scope。 |
 | kind | `kind` 表达 module 的内容类型或内容语言；module 不等于 `kind: module`。 |
 | [[template]] | template 是复制骨架这一内容角色；template 文件本身也可以是 md module，但 template 角色不等于 module 定义。 |
-| [[composition]] | composition 可以把 module 建模为 whole；composition 不决定 module 是否成立。 |
 | task | task 是 docwarden 的短命过程工作面；task 中的 md 文件可以是 module，但 task 生命周期不属于 module 定义。 |
 
 ## Examples

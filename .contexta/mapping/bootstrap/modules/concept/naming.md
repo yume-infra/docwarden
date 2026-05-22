@@ -35,9 +35,6 @@ naming 的核心是让 agent 能通过名称找到正确内容，并避免把相
 | Neighbor | Difference |
 | --- | --- |
 | [[concept]] | concept 稳定一个名字指向的语义对象；naming 关注名称如何形成并保持可定位。 |
-| [[policy]] | policy 表达约束；naming 可以被 policy 约束，但不是规则本体。 |
-| [[template]] | template 提供复制骨架；naming 决定骨架实例应如何命名。 |
-| [[structure]] | structure 表达对象之间的组织关系；naming 让这些关系形态有稳定名称。 |
 | style | style 关注表现一致；naming 关注语义定位和消歧。 |
 
 ## Examples

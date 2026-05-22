@@ -24,9 +24,6 @@ contexta 需要一个名字表示约束语言。
 | --- | --- |
 | [[concept]] | concept 稳定名字和含义；policy 稳定使用和处理约束。 |
 | [[template]] | template 提供复制骨架；policy 提供规则本体。 |
-| [[structure]] | structure 表达组织关系；policy 表达约束强度。 |
-| workflow | workflow 表达阶段、流转和交接；policy 表达约束强度。 |
-| guide | guide 服务连续理解；policy 服务执行约束。 |
 
 ## Examples
 

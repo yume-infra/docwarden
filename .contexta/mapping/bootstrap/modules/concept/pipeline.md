@@ -33,9 +33,6 @@ output 是 transform 产生的结果。
 | workflow | workflow 关注推进、确认点和完成条件；pipeline 关注 input 如何经 transform 形成 output。 |
 | list | list 只是并列枚举；pipeline 必须表达转换关系。 |
 | [[mapping]] | mapping 表达理论到实体的映射关系；pipeline 表达 input 到 output 的转换动作。 |
-| [[policy]] | policy 表达约束强度；pipeline 表达转换。 |
-| [[template]] | template 提供复制骨架；pipeline 是被骨架承载的转换表达。 |
-| [[example]] | example 提供具体判断场景；pipeline 表达内容如何被转换。 |
 
 ## Examples
 

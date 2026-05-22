@@ -28,8 +28,6 @@ template 的语义重点是生成初始形状，而不是承接内容本体、�
 | --- | --- |
 | [[module]] | module 是实际语义组合单位；template 是创建 module 时可复制的骨架。 |
 | [[policy]] | policy 承载规则本体；template 只提供结构槽位。 |
-| [[assertion]] | assertion 是最小可审查语义单元；template 只能提供 assertion 的书写位置。 |
-| [[structure]] | structure 表达对象之间的组织关系；template 可以提供 structure 的书写槽位。 |
 | [[kind]] | kind 是内容语言入口；template 文件中的 kind 指向复制后目标 module 的内容语言。 |
 | docwarden workflow | docwarden workflow 处理操作流程；template 不表达流程过程。 |
 

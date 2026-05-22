@@ -34,12 +34,10 @@ assertion 需要保留后续成为 locator target 的能力，但当前不等于
 | Neighbor | Difference |
 | --- | --- |
 | [[module]] | module 是 md file scope；assertion 是 module 内部的最小可审查语义判断。 |
-| [[composition]] | composition 可以把 assertion 建模为 module 这个 whole 中的 part；assertion 不等于 composition 本身。 |
 | sentence | sentence 是语言形式；assertion 是可审查语义判断。一句话可以包含零条、一条或多条 assertion。 |
 | rule | rule 是规范性 assertion 的一种；assertion 也可以是定义性判断、边界判断或关系判断。 |
 | locator target | assertion 需要未来可被 locator 指向；locator target 需求不等于当前已经存在完整 locator mechanism。 |
 | file | file 是存储对象；assertion 不默认独立成文件。 |
-| [[template]] | template 可以提供 assertion 的书写槽位；template slot 不是 assertion 本身。 |
 
 ## Examples
 

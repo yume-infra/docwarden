@@ -33,8 +33,6 @@ transition 是 move 如何使一个 state 进入下一个 state 的成立关系�
 | pipeline | pipeline 关注 input 如何经 transform 形成 output；workflow 关注 state 如何经 move 和 transition 进入 next state。 |
 | state machine | state machine 关注状态转移的形式合法性；workflow 关注协作或工作推进为什么成立。 |
 | task list | task list 只是列出待办项；workflow 必须表达当前处境、推进行动和状态承接。 |
-| [[policy]] | policy 表达约束强度；workflow 表达推进结构。 |
-| [[template]] | template 提供复制骨架；workflow 是被骨架承载的推进表达。 |
 | docwarden workflow | docwarden workflow 是 docwarden 操作流程实例；contexta workflow concept 只命名和界定 workflow 这种表达。 |
 
 ## Examples

@@ -32,17 +32,9 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 
 | Neighbor | Difference |
 | --- | --- |
-| [[concept]] | concept 稳定名字和含义；structure 表达多个已命名或可识别语义单元如何共同成立。 |
 | [[policy]] | policy 表达约束强度；structure 表达组织方式。 |
-| [[template]] | template 提供复制骨架；structure 是骨架中可能承载的组织语义。 |
-| [[example]] | example 提供具体判断场景；structure 表达多个语义位置如何共同成立。 |
 | [[module]] | module 是 md file scope；structure 表达 module 内部或多个 module 之间的组织方式。 |
 | list | list 是语言形式；structure 是语义单元共同成立的组织方式。 |
-| [[pipeline]] | pipeline 是转换结构；structure 是 pipeline、workflow、architecture、branch、composition 的上位组织语言。 |
-| [[workflow]] | workflow 是推进结构；structure 不承接 docwarden 操作生命周期。 |
-| [[architecture]] | architecture 是层级结构；structure 不等于 architecture。 |
-| [[branch]] | branch 是分流结构；structure 不等于分支表或 routing table。 |
-| [[composition]] | composition 是组合结构；structure 不等于普通列表或容器。 |
 
 ## Examples
 
