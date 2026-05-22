@@ -14,64 +14,73 @@ Aliases:
 
 ## Naming Need
 
-contexta 需要一个名字表示 md 内容中的语义组合单位。
+contexta 需要一个名字表示 md 文件形成的文档作用域。
 
-这个名字用于避免把文件、template、task 和 assertion 混成同一种东西。
+这个名字用于避免把 file scope、content kind、template、docwarden entity 和 assertion 混成同一种对象。
 
 ## Definition
 
-语义组合单元，由同一 stable semantic boundary 内的多条语义材料组成。
+module 是 md file scope。
 
-在 contexta 中，module 通常由一个 md 文件承载，但 module 的语义不等同于文件本身。
+在当前 contexta / docwarden 描述系统中，只要一个描述对象以 `.md` 文件存在，它就天然是 module。
+
+module 以一个 md 文件为作用域，承载 metadata 和结构化正文，并为 assertion 提供上下文和归属范围。
+
+module 的成立来自 md file scope，不来自 frontmatter `kind`、stable semantic boundary 或 composition。
+
+stable semantic boundary 是 module 组织 assertion 的质量边界，不是 module 是否成立的前提。
 
 ## Delimitation
 
 | Neighbor | Difference |
 | --- | --- |
-| [[assertion]] | assertion 是最小可审查语义单元；module 是 assertion 的组合上下文。 |
-| [[template]] | template 是复制骨架；module 是复制后承载实际语义的内容单元。 |
-| [[structure]] | structure 表达对象之间的组织关系；module 是承载这些语义材料的组合单位。 |
-| [[composition]] | composition 表达 whole、part 和 stable semantic boundary 如何共同成立；module 可以作为 composition 的 whole。 |
-| task | task 是 docwarden 的短命过程材料；module 是 contexta 的内容组合单位。 |
-| file | file 是存储载体；module 是文件中被组织出来的语义单位。 |
+| file | file 是存储对象；module 是 md 文件在当前文档系统中的作用域。非 md file 不自动成为 module。 |
+| [[assertion]] | assertion 是 module 内部的最小可审查语义单元；module 是 assertion 所在的 md file scope。 |
+| kind | `kind` 表达 module 的内容类型或内容语言；module 不等于 `kind: module`。 |
+| [[template]] | template 是复制骨架这一内容角色；template 文件本身也可以是 md module，但 template 角色不等于 module 定义。 |
+| [[composition]] | composition 可以把 module 建模为 whole；composition 不决定 module 是否成立。 |
+| task | task 是 docwarden 的短命过程工作面；task 中的 md 文件可以是 module，但 task 生命周期不属于 module 定义。 |
+| entity | entity 是 docwarden 或项目中的具体资产；一个 entity 可以由 md module 承载，但 entity lifecycle 不属于 module 定义。 |
 
 ## Concept Relations
 
-- [[assertion]]：module 由 assertion 等语义材料组成。
-- [[composition]]：module 是 contexta 中最常见的 composition whole。
+- [[assertion]]：assertion 位于 module 内部，并以 module 作为默认上下文。
+- [[composition]]：在 module / assertion 关系中，module 是 composition 的 whole。
 - [[concept]]：concept module 用于稳定一个命名入口。
 - [[policy]]：policy module 用于表达约束语言。
 - [[structure]]：structure module 可以承载具体结构内容。
-- [[template]]：template 可以提供 module 的复制骨架。
-- [[naming]]：module 文件名应表达稳定主题边界。
+- [[template]]：template 可以提供新建 module 时的复制骨架。
+- [[naming]]：module 文件名应帮助定位 md file scope 的稳定主题。
 
 ## Examples
 
 ### Scenario
 
-agent 需要保存“不要把单条 assertion 过早拆成独立文件”的规则。
+agent 需要判断 `.contexta/modules/concept/module.md` 是不是 module。
 
 ### Judgment Material
 
-- contexta MUST 将断言视为最小语义审查单位。
-- contexta MUST 将 md module 视为默认组合单位。
-- 单条断言 SHOULD NOT 仅因为重要就升级为独立 module。
+- `.contexta/modules/concept/module.md` 是一个 md 文件。
+- frontmatter 中写的是 `kind: concept`。
+- 该文件定义 `module` 这个 concept。
 
 ### Positive
 
 ```md
-这些规则共享同一个稳定主题边界，应放入 `.contexta/modules/policy/semantic-granularity.md` 这个 module，而不是为每条规则创建一个文件。
+`.contexta/modules/concept/module.md` 是 module，因为它是一个 md file scope。
+
+它的 `kind` 是 `concept`，说明这个 module 的内容语言是 concept。
 ```
 
-这个 example 让 agent 看到 module 是语义组合单位，不是“重要内容就单独成文件”。
+这个 example 让 agent 看到 module 和 kind 不在同一层：module 来自 md file scope，kind 表达内容类型。
 
 ### Negative
 
-```text
-docs-must-not-edit
+```yaml
+kind: module
 ```
 
-这个名称像一条局部禁止规则，不能稳定承载一组同主题语义材料。
+这不是定义 module 的正确方式。`module` 不是 content kind；把 module 写进 `kind` 会把 file scope 和内容类型混在一起。
 
 ### Borderline
 
@@ -79,4 +88,4 @@ docs-must-not-edit
 .contexta/templates/policy.md
 ```
 
-这是 md 文件，但它是复制骨架。只有复制后承载实际语义内容的文件，才是稳定 module 实例。
+这是一个 md file，因此在 file scope 意义上也是 module。但它的内容角色是 template，负责提供复制骨架，不是 policy module 实例。

@@ -27,7 +27,7 @@ contexta 需要一个名字表示被稳定命名和界定的语义对象。
 | Neighbor | Difference |
 | --- | --- |
 | [[policy]] | policy 表达约束；concept 表达命名和界定。 |
-| [[module]] | module 是语义组合单位；concept module 是承载某个 concept 的 module。 |
+| [[module]] | module 是 md file scope；concept module 是承载某个 concept 的 md module。 |
 | [[template]] | template 是复制骨架；concept 是被骨架承载的语义对象。 |
 | [[structure]] | structure 表达对象之间的组织关系；concept 稳定这些对象和关系形态的名称。 |
 | glossary entry | glossary entry 偏词表；concept 还需要表达命名需要、区分特征和概念关系。 |
