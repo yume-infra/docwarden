@@ -1,7 +1,7 @@
 ---
 status: draft
 created: 2026-05-20
-updated: 2026-05-23
+updated: 2026-05-25
 owner: sayori
 ---
 
@@ -366,7 +366,7 @@ sayori 审核通过 Loop 7。
 本轮最小 review 单元：
 
 - semantic lint 当前阶段是否先做 warning signal。
-- semantic lint 未来是否进入独立 lint layer 和 CLI lint step。
+- semantic lint 未来是否进入 CLI lint step / engine。
 - semantic lint signal 的最小结构。
 - 第一批信号是否只来自当前已暴露误用。
 - 是否暂不设计 severity。
@@ -376,19 +376,19 @@ sayori 审核通过 Loop 7。
 
 - `semantic-lint-signal-review.md`
 
-## [2026-05-22] loop-8-correction | 明确未来 lint layer
+## [2026-05-22] loop-8-correction | 明确未来 CLI lint step
 
 sayori 纠正：
 
 - semantic lint 后续肯定会做成 CLI 中的一步。
 - semantic lint 后续会做成 lint 引擎。
 - 当前初步阶段不需要设计得太死。
-- 但需要明确未来会有独立 lint layer。
+- 但需要明确未来会有 CLI lint step / engine。
 - 未来需要 locator 辅助脚本级 lint。
 
 已修正：
 
-- Loop 8 改为“当前 warning signal，未来独立 lint layer / CLI lint step”。
+- Loop 8 改为“当前 warning signal，未来 CLI lint step / engine”。
 - 保留当前不设计完整 lint engine、severity 和 assertion locator。
 - 明确 locator 是未来脚本级 lint 的必要承接。
 
@@ -403,7 +403,7 @@ sayori 要求使用 subagents 从不同方面审查 signal、trigger、assertion
 - Trigger 必须尽量是脚本可观察条件，不能写成人工语义结论。
 - locator 当前可先支持 module / heading，未来再扩展到 assertion。
 - `Review` 字段容易混淆 docwarden review surface，应改为 `Inspection`。
-- semantic lint 长期应进入独立 lint layer，不应把具体 signals 放进 concept、policy 或 relation。
+- semantic lint 长期应由 CLI lint step / engine 承接，不应把具体 signals 放进 concept、policy 或 relation。
 
 已修正：
 
@@ -412,7 +412,7 @@ sayori 要求使用 subagents 从不同方面审查 signal、trigger、assertion
 - 将 signal definition 字段改为 Signal / Trigger / Why / Source / Inspection。
 - 增加 signal instance 字段 Signal / Locator / Trigger / Evidence / Inspection。
 - 将候选信号的 Trigger 改成更可脚本化的观察条件。
-- 增加后续落点判断：concept 定义名字，policy 约束边界，lint layer 承载具体 signal definitions。
+- 增加后续落点判断：concept 定义名字，policy 约束边界，modules/signal 承载具体 signal definitions。
 
 ## [2026-05-22] loop-8-landed | 落地 semantic lint 初步层
 
@@ -425,7 +425,9 @@ sayori 确认 Loop 8 修订方向正确，并要求组织落地。
 - `.contexta/mapping/bootstrap/modules/concept/trigger.md`
 - `.contexta/mapping/bootstrap/modules/concept/locator.md`
 - `.contexta/mapping/bootstrap/modules/policy/semantic-lint-boundary.md`
-- `.contexta/mapping/bootstrap/lint/semantic-signals.md`
+- `.contexta/mapping/bootstrap/modules/signal/*.md`
+- `.contexta/mapping/bootstrap/modules/policy/signal-boundary.md`
+- `.contexta/mapping/bootstrap/structures/pipeline/semantic-lint.md`
 
 当前口径：
 
@@ -433,7 +435,7 @@ sayori 确认 Loop 8 修订方向正确，并要求组织落地。
 - signal 是 semantic-lint 中被命名的 warning。
 - trigger 是可观察、可脚本化的触发条件。
 - locator 是稳定指向 module、heading 或未来 assertion 的地址机制。
-- 具体 signal definitions 放在独立 lint layer。
+- 具体 signal definitions 放在 `.contexta/mapping/bootstrap/modules/signal/`。
 - 当前不设计完整 CLI lint engine。
 - 当前不设计完整 assertion locator。
 
@@ -458,7 +460,7 @@ sayori 指出当前还没有落地具体实例，要求展开。
 - raw hit 不能直接等于 signal instance。
 - 当前 `.contexta/mapping/**/*.md` 中没有确认的 accepted signal instance。
 - 当前主要命中来自 Examples、code fence、template skeleton 和 signal definition 自身描述。
-- 后续 lint layer 需要 target scope 和 code fence exclusion。
+- 后续 CLI lint engine 需要 target scope 和 code fence exclusion。
 
 ## [2026-05-22] loop-9-accepted | 收口 semantic lint instance dry run
 
@@ -646,6 +648,99 @@ sayori 进一步纠正并确认：
 - 修订 `.contexta/mapping/bootstrap/modules/concept/semantic-lint.md`。
 - 修订 `.contexta/mapping/bootstrap/modules/concept/signal.md`。
 - 修订 `.contexta/mapping/bootstrap/modules/concept/trigger.md`。
-- 修订 `.contexta/mapping/bootstrap/lint/semantic-signals.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/signal/*.md` 的说明层。
 - 修订 `semantic-lint-instance-dry-run.md`。
 - 收口 `semantic-lint-locator-alignment-review.md`。
+
+## [2026-05-23] loop-14-started | 进入 naming / magic word 消费口径
+
+Loop 13 收口后进入下一轮。
+
+当前判断：
+
+- semantic-lint 会直接消费 formatted md。
+- formatted md 中有 path、frontmatter、H1、heading、section、OFM link、marker 和 concept designation。
+- 不是所有稳定表面都应叫 magic word。
+- magic word 更适合理解为 naming 在 semantic-lint 消费场景中的稳定 token。
+
+本轮最小 review 单元：
+
+- 是否新增独立 `magic-word` concept。
+- concept `Canonical` / `Aliases` / `Avoid` 如何被 semantic-lint 消费。
+- filename stem / H1 / Canonical 是否作为 naming surface。
+- frontmatter / heading / link / marker 是否作为 format-maintained surface。
+- 是否需要新增 `naming-surface-drift` signal definition。
+
+已生成：
+
+- `naming-magic-word-consumption-review.md`
+
+## [2026-05-25] loop-14-correction | 分层 magic word
+
+sayori 确认分层建模方向，并修正：
+
+- `Canonical` 才是 primary magic word。
+- `Aliases` 只是 fallback token，置信度低于 canonical。
+- `Avoid` 是 negative token。
+
+进一步整理：
+
+- confirmed `kind` value 是 content language control word。
+- semantic-lint signal id 是 lint control word。
+- policy modal operator 是 policy control word。
+- locator marker prefix `a-` 是 locator control word。
+
+这些都可以被 semantic-lint 直接消费，但来源不同，不能全部归到 concept naming。
+
+## [2026-05-25] loop-14-accepted | 收口 naming / magic word 消费口径
+
+sayori 确认分层建模正确。
+
+当前结论：
+
+- 新增独立 `magic-word` concept，因为 md 单一职责优先于不要提前抽象。
+- concept `Canonical` 是 primary magic word。
+- `Aliases` 是 fallback token，置信度低于 canonical。
+- `Avoid` 是 negative token。
+- confirmed `kind` value、semantic-lint signal id、policy modal operator、locator marker prefix 是其他机制中的 control magic words。
+- filename stem / H1 / Canonical 是 naming surface。
+- frontmatter / heading / OFM link / assertion marker 是 format-maintained surface。
+
+已落地：
+
+- 新增 `.contexta/mapping/bootstrap/modules/concept/magic-word.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/naming.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/policy/naming.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/concept.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/signal/*.md` 的说明层。
+
+当前不新增：
+
+- `naming-surface-drift` signal definition。
+- 自动生成词表。
+
+## [2026-05-25] loop-15-started | 拆出 semantic-lint pipeline structure
+
+sayori 确认：当前 lint 链路属于 pipeline，服务 pipeline 的 concept 不应归入 pipeline 目录重定义。
+
+当前判断：
+
+- semantic-lint 是检测语言 concept。
+- semantic-lint 的执行链路是 pipeline structure。
+- pipeline 是 structure subtype。
+- concept 继续留在 `modules/concept`。
+- pipeline structure 只编排 formatted md 如何转换为 signal candidate / signal instance。
+
+已落地初版：
+
+- 新增 `.contexta/mapping/bootstrap/structures/pipeline/semantic-lint.md`。
+- 新增 `.contexta/mapping/bootstrap/modules/signal/*.md`。
+- 新增 `.contexta/mapping/bootstrap/modules/policy/signal-boundary.md`。
+- 新增 `.contexta/mapping/bootstrap/modules/concept/confidence.md`。
+- 删除旧 signal collection 路径。
+- 删除中间 signal collection 路径。
+- 修订 semantic-lint / pipeline / structure / magic-word concept 的关系说明。
+
+已生成：
+
+- `semantic-lint-pipeline-structure-review.md`

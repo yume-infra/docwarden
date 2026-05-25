@@ -250,7 +250,7 @@ Disposition:
 
 ## Design Findings
 
-本轮 dry run 暴露出三个需要后续进入 lint layer 的最小设计点：
+本轮 dry run 暴露出三个需要后续进入 CLI lint engine 的最小设计点：
 
 1. signal definition 需要稳定表达 target scope。
 2. raw scan 需要先产生 raw hit，不能直接生成 signal instance。
@@ -262,7 +262,7 @@ Disposition:
 
 - 当前没有 accepted signal instance 是合理结果。
 - Loop 9 的主要价值是确认 `raw hit -> candidate -> signal instance`。
-- 后续可以把 target scope / code fence exclusion 补入 lint layer，但当前不扩大成完整 CLI 设计。
+- 后续可以把 target scope / code fence exclusion 补入 CLI lint engine，但当前不扩大成完整 CLI 设计。
 - 当前不需要奢求一次做好 semantic lint instance 体系。
 - 先稳定 concept / signal / trigger / locator / assertion 等基础概念。
 - 等后续落实到 CLI lint engine 时，再用本轮 dry run 作为具体参照物校准实现。

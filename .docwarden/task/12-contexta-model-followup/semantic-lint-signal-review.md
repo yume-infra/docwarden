@@ -10,7 +10,7 @@ loop: 8
 
 本文件是 task 12 Loop 8 的最小 review 单元。
 
-目标是从当前已暴露的问题中整理第一批 semantic lint 可审查信号，并为未来独立 lint layer 和 CLI lint step 保留方向。
+目标是从当前已暴露的问题中整理第一批 semantic lint 可审查信号，并为未来 CLI lint step / engine 保留方向。
 
 ## 当前已有设计
 
@@ -21,8 +21,13 @@ loop: 8
 - contexta 内部连接已使用 OFM path alias，可以稳定指向 concept、policy、relation 和 heading。
 - assertion 保留后续成为 locator target 的能力，但当前不设计完整 assertion locator。
 - semantic lint 未来会成为 CLI 中的一步。
-- semantic lint 未来需要独立 lint layer。
+- semantic lint 未来需要 lint engine 承接。
 - semantic lint 未来需要 locator 辅助脚本级 lint。
+
+Loop 15 修正：
+
+- 具体 signal definition 不放在独立 `lint/` 目录。
+- 具体 signal definition 以 `kind: signal` 的 module 落在 `.contexta/mapping/bootstrap/modules/signal/`。
 
 ## 当前定位
 
@@ -32,7 +37,7 @@ semantic lint 在当前阶段是语义偏移信号语言。
 
 它的当前作用是：当一个 md module 的内容疑似落到错误内容语言、错误层级或错误职责时，提供可审查的 warning signal。
 
-它的未来形态是独立 lint layer，并作为 CLI 中的一步运行。届时 lint signal 需要能通过 locator 指向可审查位置，辅助脚本级 lint。
+它的未来形态是 CLI lint step / engine。届时 lint signal 需要能通过 locator 指向可审查位置，辅助脚本级 lint。
 
 ## 关系模型
 
@@ -64,7 +69,7 @@ signal 命名这个现象背后的语义偏移风险
 
 本轮需要明确：
 
-- 后续会做独立 lint layer。
+- 后续会做 CLI lint step / engine。
 - 后续会做 CLI lint step。
 - 后续会做 locator，以辅助脚本级 lint。
 - 当前只是 semantic lint 的初步信号层。
@@ -79,7 +84,7 @@ signal 命名这个现象背后的语义偏移风险
 - Source：这个判断依据来自哪些 concept / policy / relation。
 - Inspection：agent 或用户看到该信号后应该检查什么。
 
-未来进入 lint layer 后，signal 还需要增加 locator 相关字段；本轮先不设计字段细节。
+未来进入 CLI lint engine 后，signal instance 还需要增加 locator 相关字段；本轮先不设计字段细节。
 
 ### Signal Definition / Signal Instance
 
@@ -316,7 +321,7 @@ Inspection:
 
 ## 后续落点判断
 
-长期形态应是独立 lint layer，而不是 concept、policy 或 relation 本身。
+长期形态应由 CLI lint step / engine 承接，而不是 concept、policy 或 relation 本身。
 
 可能的后续结构：
 
@@ -327,14 +332,16 @@ Inspection:
 
 .contexta/mapping/bootstrap/modules/policy/semantic-lint-boundary.md
 
-.contexta/mapping/bootstrap/lint/
+.contexta/mapping/bootstrap/modules/signal/
+.contexta/mapping/bootstrap/structures/pipeline/semantic-lint.md
 ```
 
 其中：
 
 - concept 层只定义 signal / trigger / locator 等名字。
 - policy 层只约束 semantic lint 的边界。
-- lint layer 承载具体 signal definitions。
+- modules/signal 承载具体 signal definitions。
+- pipeline structure layer 编排 formatted md 如何转换为 signal candidate / signal instance。
 
 ## 已落地
 
@@ -343,15 +350,17 @@ Inspection:
 - 新增 `.contexta/mapping/bootstrap/modules/concept/trigger.md`。
 - 新增 `.contexta/mapping/bootstrap/modules/concept/locator.md`。
 - 新增 `.contexta/mapping/bootstrap/modules/policy/semantic-lint-boundary.md`。
-- 新增 `.contexta/mapping/bootstrap/lint/semantic-signals.md`。
+- 新增 `.contexta/mapping/bootstrap/modules/signal/*.md`。
+- 新增 `.contexta/mapping/bootstrap/modules/policy/signal-boundary.md`。
+- 新增 `.contexta/mapping/bootstrap/structures/pipeline/semantic-lint.md`。
 - 暂不设计完整 CLI lint engine。
 - 暂不设计完整 assertion locator。
 
 ## 待审核问题
 
-1. 是否同意：semantic lint 当前阶段先做 warning signal，但明确未来会进入独立 lint layer 和 CLI lint step？
+1. 是否同意：semantic lint 当前阶段先做 warning signal，但明确未来会进入 CLI lint step / engine？
 2. 是否同意：semantic lint signal definition 的最小结构是 Signal / Trigger / Why / Source / Inspection？
 3. 是否同意：第一批候选信号来自当前已暴露误用，而不是穷举全部 policy？
 4. 是否同意：未来 CLI 输出的是 signal instance，至少包含 Signal / Locator / Trigger / Evidence / Inspection？
 5. 是否同意：本轮先不设计完整 severity、lint engine 和 assertion locator，但明确 locator 是未来脚本级 lint 的必要承接？
-6. 是否同意：semantic lint 长期形态应是独立 lint layer，而不是把具体 signals 放进 concept、policy 或 relation？
+6. 是否同意：semantic lint 长期形态应由 CLI lint step / engine 承接，而不是把具体 signals 放进 concept、policy 或 relation？

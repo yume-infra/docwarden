@@ -29,7 +29,7 @@ Loop 12 已确认：
 - semantic-lint concept 里说 locator 指向位置。
 - signal / trigger examples 中的 signal instance 仍写成 `path#Definition`。
 - trigger concept 中说 trigger 在 locator 指向的位置观察文本、结构、frontmatter、path、heading 或 link。
-- `semantic-signals.md` 的 signal definitions 还没有说明命中后如何落到 assertion marker。
+- signal definitions 还没有说明命中后如何落到 assertion marker。
 
 这些内容在 Loop 8 / 9 当时成立，因为 locator 尚未完成。
 
@@ -225,7 +225,7 @@ instance 是已经拥有 assertion locator 的具体 warning。
 - 修订 `.contexta/mapping/bootstrap/modules/concept/semantic-lint.md`。
 - 修订 `.contexta/mapping/bootstrap/modules/concept/signal.md`。
 - 修订 `.contexta/mapping/bootstrap/modules/concept/trigger.md`。
-- 修订 `.contexta/mapping/bootstrap/lint/semantic-signals.md` 的说明层，不改造成 CLI spec。
+- 修订 `.contexta/mapping/bootstrap/modules/signal/*.md` 的说明层，不改造成 CLI spec。
 - 修订 `semantic-lint-instance-dry-run.md`，把 heading locator 改成 candidate context，把 assertion marker locator 作为 instance 条件。
 
 当前不落地：

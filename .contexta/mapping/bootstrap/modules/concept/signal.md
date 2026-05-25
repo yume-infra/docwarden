@@ -27,6 +27,8 @@ signal 由 trigger 触发，并通过 Source 指向判断依据。
 
 signal 是 warning，不是最终判罚。
 
+具体 signal definition 以 `kind: signal` 的 module 存在于 `.contexta/mapping/bootstrap/modules/signal/`。
+
 未来 CLI lint step 输出的是 signal instance，而不是抽象 signal definition。
 
 signal candidate 可以只有上下文；signal instance 需要 locator 指向 assertion marker。
@@ -38,6 +40,7 @@ signal candidate 可以只有上下文；signal instance 需要 locator 指向 a
 - [[mapping/bootstrap/modules/concept/assertion|assertion]]：assertion 是被审查的语义判断；signal 是指向其可能偏移的 warning。
 - [[mapping/bootstrap/modules/concept/locator|locator]]：locator 让 signal instance 指向具体 assertion marker；signal 本身不定义定位机制。
 - [[mapping/bootstrap/modules/concept/policy|policy]]：policy 表达约束；signal 只提示可能违反语义边界。
+- [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]：signal-boundary 约束具体 signal module 不越界为 policy、locator、pipeline 或 workflow。
 - docwarden review item：docwarden review item 属于操作流程；signal 只是 contexta lint 输出。
 
 ## Examples

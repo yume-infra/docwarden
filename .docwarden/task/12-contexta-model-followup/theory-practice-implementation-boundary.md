@@ -74,7 +74,7 @@ Practice reference 负责让 theory 有具体参照物。
 
 - `.contexta/mapping/bootstrap/templates/**`
 - `.contexta/mapping/bootstrap/relations/structure-language.md`
-- `.contexta/mapping/bootstrap/lint/semantic-signals.md`
+- `.contexta/mapping/bootstrap/modules/signal/**`
 - `semantic-lint-instance-dry-run.md`
 - 当前 concept / policy / relation modules 中的 example sections
 
@@ -109,7 +109,7 @@ Implementation 负责把已稳定的 theory 和 practice reference 转成可执�
 
 Implementation 不能反过来私自定义 theory。
 
-如果 implementation 暴露 theory 缺口，应回到 task loop，形成新的 review material，再决定是否修改 concept、policy、relation 或 lint layer。
+如果 implementation 暴露 theory 缺口，应回到 task loop，形成新的 review material，再决定是否修改 concept、policy、relation、signal module 或 CLI lint engine。
 
 ## Boundary Rules
 
@@ -143,7 +143,7 @@ task material 可以记录半成品、占位、纠偏和候选判断。
 
 - `concept` / `policy` / `structure` / `relation` 是 theory。
 - `template` 既有 concept 定义，也有 practice reference 文件。
-- `semantic-lint` 是 theory；`semantic-signals.md` 是 lint layer 的 practice reference。
+- `semantic-lint` 是 theory；`modules/signal/*.md` 是具体 signal definitions。
 - `semantic-lint-instance-dry-run.md` 是 task material 中的 implementation reference，不是 CLI fixture。
 - OFM path alias policy 是 theory；`structure-language.md` 是 relation practice reference。
 - `.docwarden/user/profile.md` 是 docwarden user context asset，不是 contexta theory，也不是 template。

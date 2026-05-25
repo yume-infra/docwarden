@@ -28,6 +28,10 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 - [[mapping/bootstrap/modules/concept/branch|branch]]：condition、route、target 共同成立的分流结构。
 - [[mapping/bootstrap/modules/concept/composition|composition]]：whole、part、stable semantic boundary 共同成立的组合结构。
 
+具体 structure instance 放在 `.contexta/mapping/bootstrap/structures/` 下，并按 subtype 分层。
+
+structure instance 负责表达组织关系，不负责替代被引用 concept 的定义。
+
 ## Delimitation
 
 | Neighbor | Difference |

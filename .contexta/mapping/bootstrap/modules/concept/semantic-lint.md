@@ -26,7 +26,11 @@ semantic-lint 是语义偏移检测语言。
 
 semantic-lint 当前阶段先整理 warning signal，不设计完整 lint engine。
 
-semantic-lint 的长期形态是独立 lint layer。
+semantic-lint 作为 concept 不承载完整执行结构。
+
+当前执行链路由 [[mapping/bootstrap/structures/pipeline/semantic-lint|semantic-lint pipeline]] 表达。
+
+当前第一批 signal definitions 放在 `.contexta/mapping/bootstrap/modules/signal/`。
 
 semantic-lint 不等待额外 reading layer 或 facts layer。format 保持 md 形态，semantic-lint 直接检查这个 md。
 
@@ -37,6 +41,8 @@ semantic-lint 不等待额外 reading layer 或 facts layer。format 保持 md �
 - [[mapping/bootstrap/modules/concept/signal|signal]]：signal 是被命名的 warning；semantic-lint 是组织这些 warning 的检测语言。
 - [[mapping/bootstrap/modules/concept/trigger|trigger]]：trigger 是可观察触发条件；semantic-lint 组织 trigger 如何生成 signal。
 - [[mapping/bootstrap/modules/concept/locator|locator]]：locator 指向 assertion marker；semantic-lint 使用 locator 把 signal instance 指回具体 assertion。
+- [[mapping/bootstrap/modules/concept/confidence|confidence]]：confidence 标记 candidate / instance 的识别强度；semantic-lint 产生 warning 本身。
+- [[mapping/bootstrap/modules/concept/pipeline|pipeline]]：pipeline 表达检测链路如何从 formatted md 转换出 candidate / instance；semantic-lint 是检测语言本身。
 - docwarden workflow：docwarden workflow 处理 task / review / promote / pick / cleanup；semantic-lint 只产生语义偏移信号。
 
 ## Examples

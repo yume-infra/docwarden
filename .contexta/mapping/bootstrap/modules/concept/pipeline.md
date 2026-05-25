@@ -26,6 +26,10 @@ output 是 transform 产生的结果。
 
 缺少 input、transform 或 output 中任一位置，都不构成完整 pipeline。
 
+具体 pipeline structure instance 放在 `.contexta/mapping/bootstrap/structures/pipeline/` 下。
+
+pipeline instance 引用相关 concept、policy、relation 或 signal definition，但不把它们收进自身重新定义。
+
 ## Delimitation
 
 | Neighbor | Difference |
