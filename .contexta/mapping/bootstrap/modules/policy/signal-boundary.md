@@ -6,7 +6,7 @@ kind: policy
 
 ## Context
 
-约束 signal 的职责边界。
+约束 signal 与 signal definition 的职责边界。
 
 本 policy 用于避免 signal 被写成 policy、trigger、locator、pipeline 或 docwarden review item。
 
@@ -18,14 +18,14 @@ kind: policy
 
 ## Policy
 
-- signal MUST name a semantic-lint warning type.
-- signal MUST NOT express final judgment.
-- signal MUST NOT replace policy.
-- signal MUST NOT replace trigger.
-- signal MUST NOT define locator.
-- signal MUST NOT define pipeline structure.
-- signal MUST NOT execute docwarden workflow.
-- signal instance MUST use locator when it points to a concrete assertion.
+- signal definition MUST name a semantic-lint warning.
+- signal definition MUST use `Definition / Trigger / Basis` as its minimal surface.
+- signal definition MUST NOT express review judgment.
+- signal definition MUST NOT replace policy.
+- signal definition MUST NOT define locator.
+- signal definition MUST NOT define pipeline structure.
+- signal definition MUST NOT execute docwarden workflow.
+- emitted signal SHOULD use locator when it points to a concrete assertion.
 
 ## Examples
 
@@ -48,7 +48,7 @@ signal: concept-as-policy
 locator: [[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
 ```
 
-这是 signal instance：signal 命名 warning，locator 指向 assertion。
+这是带有 locator 的 signal：signal 命名语义偏移 warning，locator 指向 assertion。
 
 ### Negative
 
@@ -65,4 +65,4 @@ signal: concept-as-policy
 context: mapping/bootstrap/modules/concept/example.md#Definition
 ```
 
-这是 signal candidate。它有上下文，但还没有 assertion locator。
+这是带有 context 的 signal。它有上下文，但还没有 assertion locator。

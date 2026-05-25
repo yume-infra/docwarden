@@ -24,8 +24,8 @@ Applies to:
 
 - contexta 需要定义 semantic-lint signal。
 - contexta 需要判断 trigger 是否可以作为 lint 条件。
-- contexta 需要把 lint 命中从 candidate context 指向 assertion marker。
-- contexta 需要区分 warning signal 与 policy violation。
+- contexta 需要让 lint signal 指向 assertion marker。
+- contexta 需要区分 signal 与 review judgment。
 
 不适用条件：
 
@@ -35,28 +35,28 @@ Applies to:
 
 ## Rules
 
-- semantic-lint MUST produce warning signals before final judgment.
+- semantic-lint MUST produce signal before review judgment.
 - semantic-lint MUST NOT replace policy.
 - semantic-lint MUST NOT redefine concept.
 - semantic-lint MUST NOT replace example.
 - semantic-lint MUST NOT execute docwarden workflow.
 - trigger SHOULD be observable and script-friendly.
-- signal MUST name semantic drift risk, not raw trigger text.
-- signal definition SHOULD link to Source concept / policy / relation.
-- signal instance SHOULD include locator and evidence when CLI lint step exists.
+- signal MUST name semantic drift warning, not raw trigger text.
+- signal definition SHOULD link to Basis concept / policy / relation.
+- emitted signal MAY include locator when it points to a concrete assertion.
 - trigger MUST inspect formatted md directly.
 - locator MUST point to assertion marker without judging correctness.
-- module path and heading MAY be used as candidate context, not final assertion locator.
+- module path and heading MAY be used as signal context, not final assertion locator.
 
 ## Rationale
 
 semantic-lint 是检测语言，不是约束语言。
 
-它可以发现内容疑似偏离 concept、policy、relation 或 template 的职责边界，但最终仍需要 agent 或用户检查。
+它可以发现内容疑似偏离 concept、policy、relation 或 template 的职责边界，并产生 signal；signal 进入 review 后才形成判断。
 
-未来 CLI lint step 需要 signal、trigger、locator 和 evidence 协同工作。
+未来 CLI lint step 可以携带 candidate、instance 或 evidence 这类实现细节。
 
-trigger 直接检查 formatted md。locator 只在 signal instance 中把 warning 指回 assertion marker。
+trigger 直接检查 formatted md。locator 只负责让 signal 指向 assertion marker。
 
 当前阶段先稳定 signal definition，不提前设计完整引擎。
 
@@ -78,10 +78,10 @@ section contains MUST
 
 ```md
 signal: concept-as-policy
-inspection: 检查该内容是在命名 concept，还是在写约束规则。
+locator: [[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
 ```
 
-这是 warning signal，需要检查后再决定是否迁移内容。
+这是 semantic-lint 产生的 signal，需要进入 review 后再形成判断。
 
 ### Negative
 
@@ -89,15 +89,15 @@ inspection: 检查该内容是在命名 concept，还是在写约束规则。
 error: concept module MUST NOT contain MUST
 ```
 
-这把 semantic-lint 写成了硬性 policy，过早把 warning 变成最终判罚。
+这把 semantic-lint 写成了硬性 policy，过早把 signal 变成 review judgment。
 
 ### Borderline
 
 ```md
-signal instance:
+CLI detail:
   signal: concept-as-policy
   locator: [[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
   evidence: "agent MUST ..."
 ```
 
-这是未来 CLI lint step 的输出形态。本轮只稳定其方向，不设计完整字段协议。
+这是未来 CLI lint step 可能附带的实现细节。本轮只稳定 pure 链路，不设计完整字段协议。

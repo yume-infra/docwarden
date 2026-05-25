@@ -26,4 +26,4 @@ trigger 直接检查 formatted md 中的文本、结构、frontmatter、path、h
 
 trigger 不等于 signal，不等于 assertion，也不等于最终判断。
 
-trigger 不依赖 locator 才能观察。locator 用于 signal instance 指回 assertion marker。
+trigger 不依赖 locator 才能观察。locator 用于 signal 指回 assertion marker。

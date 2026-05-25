@@ -21,16 +21,18 @@ contexta 需要一个名字表示 semantic-lint 中被命名的语义偏移 warn
 
 ## Definition
 
-signal 是 semantic-lint 中被命名的语义偏移 warning。
+signal 是 semantic-lint 产生的语义偏移提示。
 
-signal 由 trigger 触发，并通过 Source 指向判断依据。
+signal definition 是被 semantic-lint 使用的 warning name 定义。
 
-signal 是 warning，不是最终判罚。
+signal definition 只说明这个 warning name 表示什么语义偏移、什么 formatted md 形态会触发它，以及它依赖哪些判断依据。
+
+signal 进入 review 后才会被判断为有效、无效、需要迁移或违反 policy。
 
 具体 signal definition 以 `kind: signal` 的 module 存在于 `.contexta/mapping/bootstrap/modules/signal/`。
 
 `kind: signal` 表示 signal definition language，不表示 signal instance。
 
-未来 CLI lint step 输出的是 signal instance，而不是抽象 signal definition。
+当前 signal definition 的最小 surface 是 `Definition / Trigger / Basis`。
 
-signal candidate 可以只有上下文；signal instance 需要 locator 指向 assertion marker。
+一次 lint 命中可以在实现层携带 confidence 或 locator，但这些不是 signal definition 的理论定义。

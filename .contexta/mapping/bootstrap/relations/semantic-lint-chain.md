@@ -22,7 +22,7 @@ To:
 
 Reading:
 
-沿 `warning-language-of` 读取时，signal 命名 warning type，trigger 提供可观察条件，confidence 标记识别强度；三者共同服务 semantic-lint 的检测语言。
+沿 `warning-language-of` 读取时，signal 命名语义偏移提示，trigger 提供可观察条件，confidence 标记识别强度；三者共同服务 semantic-lint 的检测语言。
 
 本 relation file 不重复定义这些 concept；定义回到各自 concept module。
 
@@ -43,7 +43,7 @@ To:
 
 Reading:
 
-沿 `pipeline-realizes` 读取时，semantic-lint pipeline 表达 semantic-lint 如何从 formatted md 转换出 signal candidate / signal instance。
+沿 `pipeline-realizes` 读取时，semantic-lint pipeline 表达 semantic-lint 如何从 formatted md 产生 signal。
 
 pipeline 不重新定义 semantic-lint，也不拥有 signal definitions。
 
@@ -54,7 +54,7 @@ Read next:
 - Relation: [[mapping/bootstrap/relations/template-format-semantic-lint|template-format-semantic-lint]]
 - Signal modules: [[mapping/bootstrap/modules/signal/concept-as-policy|concept-as-policy]], [[mapping/bootstrap/modules/signal/workflow-as-policy|workflow-as-policy]], [[mapping/bootstrap/modules/signal/architecture-as-responsibility-card|architecture-as-responsibility-card]], [[mapping/bootstrap/modules/signal/template-owns-lifecycle|template-owns-lifecycle]], [[mapping/bootstrap/modules/signal/example-as-kind|example-as-kind]], [[mapping/bootstrap/modules/signal/composition-as-list|composition-as-list]]
 
-## `instance-target`
+## `locator-target`
 
 From:
 
@@ -66,7 +66,7 @@ To:
 
 Reading:
 
-沿 `instance-target` 读取时，signal instance 通过 locator 指向 assertion marker。
+沿 `locator-target` 读取时，locator 让 signal 可以指向 assertion marker。
 
 locator 提供定位，不判断 assertion 是否正确。
 

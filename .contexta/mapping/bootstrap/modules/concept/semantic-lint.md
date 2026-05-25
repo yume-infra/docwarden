@@ -22,9 +22,9 @@ contexta 需要一个名字表示检查语义偏移的检测语言。
 
 semantic-lint 是语义偏移检测语言。
 
-它直接消费 formatted md，通过 signal definition 描述可审查的语义偏移风险，并产生 warning signal。
+它直接消费 formatted md，通过 signal definition 描述可审查的语义偏移风险，并产生 signal。
 
-semantic-lint 当前阶段先整理 warning signal，不设计完整 lint engine。
+semantic-lint 的最小链路是 `formatted md -> semantic-lint -> signal -> review`。
 
 semantic-lint 作为 concept 不承载完整执行结构。
 
@@ -34,6 +34,6 @@ semantic-lint 作为 concept 不承载完整执行结构。
 
 这些 signal definitions 是 `kind: signal` 的长期 module。
 
-未来 CLI lint step 可以把 warning signal 细分为 signal candidate 或 signal instance。
+candidate、instance 和 evidence 是未来 CLI lint step 的实现层细节，不是 semantic-lint 的核心概念。
 
 semantic-lint 不等待额外 reading layer 或 facts layer。format 保持 md 形态，semantic-lint 直接检查这个 md。

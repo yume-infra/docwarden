@@ -4,6 +4,10 @@ kind: signal
 
 # example-as-kind
 
+## Definition
+
+`example-as-kind` 表示 example 可能被误用为证明或制造 kind 的依据，而不是提供具体样本。
+
 ## Trigger
 
 - `frontmatter.kind == example`
@@ -11,21 +15,9 @@ kind: signal
 - `directory name == example`
 - `text states example proves kind or content type`
 
-## Why
-
-example 是样本语言，kind 是内容语言入口。
-
-example 不能反向证明一个 content kind 成立。
-
-## Source
+## Basis
 
 - [[mapping/bootstrap/modules/concept/example|example]]
 - [[mapping/bootstrap/modules/concept/metadata/kind|kind]]
 - [[mapping/bootstrap/modules/policy/kind-boundary|kind-boundary]]
 - [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
-
-## Inspection
-
-- 检查 example 是否在提供具体样本。
-- 不要让 example 反向制造 kind。
-- 如果命中没有 assertion locator，保留为 signal candidate。

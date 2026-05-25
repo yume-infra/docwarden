@@ -66,7 +66,7 @@ To:
 
 Reading:
 
-沿 `emits` 读取时，semantic-lint 的结果是 warning signal，不是 final judgment。
+沿 `emits` 读取时，semantic-lint 的结果是 signal，不是 review judgment。
 
 Read next:
 

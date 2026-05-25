@@ -20,15 +20,20 @@ kind: pipeline
 ## Transform
 
 1. [[mapping/bootstrap/modules/concept/trigger|trigger]] 直接检查 formatted md 中稳定存在的 path、frontmatter、heading、section、OFM link、marker 和 magic word。
-2. [[mapping/bootstrap/modules/concept/signal|signal]] definition 命名语义偏移 warning，并生成 signal candidate。
-3. [[mapping/bootstrap/modules/concept/confidence|confidence]] 根据命中来源标记 candidate 的置信度。
-4. [[mapping/bootstrap/modules/concept/locator|locator]] 在 candidate 可以指向 `^a-*` assertion marker 时，把 candidate 升级为 signal instance。
-5. 没有 assertion marker 的命中保留为 candidate，不直接升级为 instance。
+2. [[mapping/bootstrap/modules/concept/signal|signal]] definition 命名语义偏移风险，并产生 signal。
+3. [[mapping/bootstrap/modules/concept/confidence|confidence]] 可以根据命中来源标记 signal 的识别强度。
+4. [[mapping/bootstrap/modules/concept/locator|locator]] 可以在 signal 指向具体 assertion 时提供 assertion marker。
+5. signal 进入 review 后才形成判断。
 
 ## Output
 
-- signal candidate：有 trigger evidence，但缺少 assertion locator。
-- signal instance：有 signal、trigger evidence、confidence 和 assertion locator。
+- signal：semantic-lint 的输出，进入 review。
+
+Implementation detail:
+
+- candidate：疑似 signal，通常缺少稳定 assertion locator。
+- instance：一次已定位 signal 命中，通常带有 assertion locator。
+- evidence：支持 signal 的检测材料。
 
 ## Boundary
 
@@ -36,4 +41,4 @@ kind: pipeline
 
 semantic-lint 相关 concept 仍由 `modules/concept` 维护；本 pipeline 只编排这些 concept 如何共同形成检测链路。
 
-当前只作为 contexta 的 structure reference，不是 CLI engine spec。
+candidate、instance 和 evidence 是未来 CLI lint step 的实现细节，不是 contexta 核心对象。
