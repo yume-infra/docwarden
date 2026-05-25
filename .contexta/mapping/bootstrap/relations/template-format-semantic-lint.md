@@ -66,7 +66,9 @@ To:
 
 Reading:
 
-沿 `emits` 读取时，semantic-lint 的结果是 signal，不是 review judgment。
+沿 `emits` 读取时，semantic-lint 的结果包含 signal，并应尽可能把 signal 命中组织成 review-ready lint result。
+
+review-ready lint result 不是 review judgment。它只是尽量贴近 review surface 的 `lead + backing`，让 docwarden review surface 可以在足够清晰时走短路径。
 
 Read next:
 

@@ -43,9 +43,11 @@ To:
 
 Reading:
 
-沿 `pipeline-realizes` 读取时，semantic-lint pipeline 表达 semantic-lint 如何从 formatted md 产生 signal。
+沿 `pipeline-realizes` 读取时，semantic-lint pipeline 表达 semantic-lint 如何从 formatted md 产生 signal，并尽可能把 signal 命中组织成 review-ready lint result。
 
 pipeline 不重新定义 semantic-lint，也不拥有 signal definitions。
+
+review-ready lint result 复用 docwarden review surface 的 `lead + backing` 口径；如果它已经足够清晰，review surface 可以走短路径。
 
 Read next:
 

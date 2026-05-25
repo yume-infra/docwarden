@@ -23,11 +23,21 @@ kind: pipeline
 2. [[mapping/bootstrap/modules/concept/signal|signal]] definition 命名语义偏移风险，并产生 signal。
 3. [[mapping/bootstrap/modules/concept/confidence|confidence]] 可以根据命中来源标记 signal 的识别强度。
 4. [[mapping/bootstrap/modules/concept/locator|locator]] 可以在 signal 指向具体 assertion 时提供 assertion marker。
-5. signal 进入 review 后才形成判断。
+5. semantic-lint 尽可能把 signal 命中组织成 review-ready lint result。
+6. signal 进入 review 后才形成判断。
 
 ## Output
 
-- signal：semantic-lint 的输出，进入 review。
+- review-ready lint result：semantic-lint 的输出，尽可能贴近 review surface 的 `lead + backing`。
+
+review-ready lint result 至少围绕 signal 命中组织：
+
+- lead：一次 signal 命中的最小审核问题。
+- backing：signal name、locator 或 context、trigger hit、confidence，以及可通过 signal definition 回读的 Basis。
+
+如果 review-ready lint result 已经足够清晰，docwarden review surface 可以走短路径。
+
+如果它不足以支撑 user review，docwarden review surface 仍然负责重新组织 `lead + backing`。
 
 Implementation detail:
 
@@ -42,3 +52,5 @@ Implementation detail:
 semantic-lint 相关 concept 仍由 `modules/concept` 维护；本 pipeline 只编排这些 concept 如何共同形成检测链路。
 
 candidate、instance 和 evidence 是未来 CLI lint step 的实现细节，不是 contexta 核心对象。
+
+review-ready lint result 不是完整 CLI schema；它只说明 semantic-lint 的结果应尽量成为好的 review material。

@@ -24,7 +24,11 @@ semantic-lint 是语义偏移检测语言。
 
 它直接消费 formatted md，通过 signal definition 描述可审查的语义偏移风险，并产生 signal。
 
+semantic-lint 的结果应尽可能组织成 review-ready lint result，让 signal 命中接近 docwarden review surface 的 `lead + backing`。
+
 semantic-lint 的最小链路是 `formatted md -> semantic-lint -> signal -> review`。
+
+这里的 `review` 由 docwarden review surface 承接；semantic-lint 不直接产生 review judgment。
 
 semantic-lint 作为 concept 不承载完整执行结构。
 
