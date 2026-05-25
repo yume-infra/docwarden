@@ -107,7 +107,24 @@ owner: sayori
 - 已确认目录只表达少数稳定主类型和维护分区，不无限表达 concept network。
 - 已新增 `minimal-concept-surface-adr.md`。
 
-## Loop 4：relation 同步
+## Loop 4：clean concept surface migration
+
+状态：in review。
+
+目标：按最新 ADR 直接清空旧 concept surface，让后续重建在干净路径上进行。
+
+当前结果：
+
+- 已从 concept template 移除默认 `Delimitation` / `Examples`。
+- 已从 bootstrap concept modules 移除现有 `Delimitation` / `Examples`。
+- 已从 docwarden mapping 的 `user-context` concept module 移除现有 `Delimitation` / `Examples`。
+- 已清理残留的额外 `Rules`、重复 `Definition` 和旧 example 片段，确保 concept modules 回到三段 surface。
+- 已清理 relation files 中指向 `#Delimitation` 的旧 OFM 链接。
+- 已修订 relation policy，把旧 `Delimitation` 承接口径改为 signal / relation / policy / example / Definition 分工。
+
+本轮不重建被删除内容，只保留干净 surface，等待下一步讨论哪些关键点值得以 signal、relation、policy 或 example 形式重建模。
+
+## Loop 5：relation 同步
 
 状态：pending。
 
@@ -128,4 +145,4 @@ owner: sayori
 - 自动生成 signal instance。
 - 自动补 assertion marker。
 - 新增 metadata subtype tree。
-- 直接机械删除现有 Delimitation / Examples。
+- 机械删除 policy / relation / signal 等非 concept module 的教学样本。

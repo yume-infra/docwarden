@@ -198,3 +198,22 @@ All other hierarchy belongs to relation, not path.
 - 先处理 concept template，移除默认 `Delimitation` / `Examples`。
 - 再做 Delimitation / Examples migration inventory。
 - 不直接机械删除现有内容。
+
+## [2026-05-25] loop-4-clean-surface | 清空 concept 旧 surface
+
+sayori 要求进入新迭代：先直接全量删除旧 concept surface，把结构一步到位维护干净，再讨论哪些关键点适合留下和重建模。
+
+已落地：
+
+- 从 concept template 删除默认 `Delimitation` / `Examples`。
+- 从 bootstrap concept modules 删除现有 `Delimitation` / `Examples`。
+- 从 docwarden mapping 的 `user-context` concept module 删除现有 `Delimitation` / `Examples`。
+- 清理残留的额外 `Rules`、重复 `Definition` 和旧 example 片段，确保 concept modules 回到三段 surface。
+- 清理 relation files 中指向 `#Delimitation` 的旧 OFM 链接。
+- 修订 relation policy，避免继续把边界口径交给已废弃的 `Delimitation`。
+
+当前状态：
+
+- concept surface 收窄为 `Designation / Naming Need / Definition`。
+- 被删除内容暂不迁移，后续按具体价值重建到 signal、relation、policy 或 example。
+- 不修改 `docs/`。

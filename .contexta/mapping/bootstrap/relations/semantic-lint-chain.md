@@ -30,7 +30,6 @@ Read next:
 
 - Definition: [[mapping/bootstrap/modules/concept/semantic-lint#Definition|semantic-lint#Definition]], [[mapping/bootstrap/modules/concept/signal#Definition|signal#Definition]], [[mapping/bootstrap/modules/concept/trigger#Definition|trigger#Definition]], [[mapping/bootstrap/modules/concept/confidence#Definition|confidence#Definition]]
 - Constraint: [[mapping/bootstrap/modules/policy/semantic-lint-boundary|semantic-lint-boundary]], [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
-- Boundary: [[mapping/bootstrap/modules/concept/signal#Delimitation|signal#Delimitation]], [[mapping/bootstrap/modules/concept/semantic-lint#Delimitation|semantic-lint#Delimitation]]
 
 ## `pipeline-realizes`
 

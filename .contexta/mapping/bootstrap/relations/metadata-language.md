@@ -30,4 +30,3 @@ Read next:
 
 - Definition: [[mapping/bootstrap/modules/concept/metadata#Definition|metadata#Definition]], [[mapping/bootstrap/modules/concept/metadata/kind#Definition|kind#Definition]]
 - Constraint: [[mapping/bootstrap/modules/policy/kind-boundary|kind-boundary]]
-- Boundary: [[mapping/bootstrap/modules/concept/metadata/kind#Delimitation|kind#Delimitation]]
