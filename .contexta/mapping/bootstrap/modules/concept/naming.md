@@ -30,12 +30,16 @@ contexta 需要一个名字表示内容系统中的语义定位机制。
 
 naming 的核心是让 agent 能通过名称找到正确内容，并避免把相邻语义对象混淆。
 
+naming 为 semantic-lint 提供可消费的命名来源，但不定义完整 token 分层。
+
+primary magic word、fallback token 和 negative token 的消费角色由 [[mapping/bootstrap/modules/concept/magic-word|magic-word]] 定义。
+
 ## Delimitation
 
-| Neighbor | Difference |
-| --- | --- |
-| [[mapping/bootstrap/modules/concept/concept|concept]] | concept 稳定一个名字指向的语义对象；naming 关注名称如何形成并保持可定位。 |
-| style | style 关注表现一致；naming 关注语义定位和消歧。 |
+- [[mapping/bootstrap/modules/concept/concept|concept]]：concept 稳定一个名字指向的语义对象；naming 关注名称如何形成并保持可定位。
+- [[mapping/bootstrap/modules/concept/magic-word|magic-word]]：magic-word 定义名称在 semantic-lint 消费中的 token 角色；naming 只负责名称如何形成和保持稳定。
+- style：style 关注表现一致；naming 关注语义定位和消歧。
+- alias：alias 是 fallback token，可以辅助定位，但置信度低于 canonical。
 
 ## Examples
 
@@ -75,3 +79,25 @@ language
 ```
 
 `language` 可以指自然语言、规则语言或编程语言。作为 policy 主题时，它需要通过 intent 和 scope 消歧；如果后续出现多个 language 主题，再考虑更具体名称。
+
+### Consumption
+
+```md
+Canonical: `locator`
+
+Aliases:
+
+- semantic locator
+
+Avoid:
+
+- location
+```
+
+`locator` 是 primary magic word。
+
+`semantic locator` 是 fallback token。
+
+`location` 是 negative token。
+
+这些消费角色由 [[mapping/bootstrap/modules/concept/magic-word|magic-word]] 维护。

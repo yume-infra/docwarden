@@ -40,6 +40,10 @@ Applies to:
 - 当目录和 frontmatter 已经表达 kind 时，contexta module filename MUST NOT 再编码 module kind。
 - contexta module title MUST 与 module filename stem 一致。
 - concept canonical designation MUST 与 concept module filename stem 一致。
+- concept canonical designation MUST be treated as the primary magic word in semantic-lint consumption.
+- aliases MAY be treated as fallback tokens with lower confidence than canonical.
+- aliases MUST NOT be treated as primary magic words.
+- avoid entries MUST be treated as negative tokens, not aliases.
 - policy module filename MUST 表达约束主题，而不是重复 `policy`。
 - template filename MUST 表达它提供骨架的 kind 或 content role。
 - structure module filename SHOULD 表达关系形态或被组织的语义对象。
@@ -55,6 +59,8 @@ Applies to:
 agent 会把名称当作查询入口。若名称混入 kind、规则文本、生命周期状态或含糊标签，agent 就必须额外推断内容落点，也更容易混淆相邻层级。
 
 目录和 frontmatter 已经承载 kind 信息。文件名重复 kind 会增加名称长度，却不能提升语义定位能力。
+
+semantic-lint 可以直接消费命名 token。canonical designation 是强锚点；alias 只能作为低置信度 fallback；avoid 只能作为误称压力。
 
 ## Examples
 
@@ -98,3 +104,23 @@ Canonical: `language`
 ```
 
 `language` 可能指自然语言、规则语言或编程语言。当前可通过 policy 的 intent 和 scope 消歧；只有当多个 language 主题并存且无法消歧时，才需要更具体名称。
+
+### Consumption
+
+```md
+Canonical: `locator`
+
+Aliases:
+
+- semantic locator
+
+Avoid:
+
+- location
+```
+
+semantic-lint 可以把 `locator` 作为 primary magic word。
+
+`semantic locator` 只能作为 fallback token。
+
+`location` 只能作为 negative token。

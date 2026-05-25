@@ -22,12 +22,17 @@ contexta 需要一个名字表示被稳定命名和界定的语义对象。
 
 命名与界定单元，用于稳定一个语义对象在 contexta 中的名称、含义、区分特征和概念关系。
 
+concept 的 `Canonical` 是 semantic-lint 可直接消费的 primary magic word。
+
+concept 的 `Aliases` 只是 fallback token，不能替代 canonical 的判断强度。
+
+primary magic word 和 fallback token 的消费角色由 [[mapping/bootstrap/modules/concept/magic-word|magic-word]] 维护。
+
 ## Delimitation
 
-| Neighbor | Difference |
-| --- | --- |
-| [[mapping/bootstrap/modules/concept/policy|policy]] | policy 表达约束；concept 表达命名和界定。 |
-| glossary entry | glossary entry 偏词表；concept 还需要表达命名需要、区分特征和概念关系。 |
+- [[mapping/bootstrap/modules/concept/policy|policy]]：policy 表达约束；concept 表达命名和界定。
+- glossary entry：glossary entry 偏词表；concept 还需要表达命名需要、区分特征和概念关系。
+- [[mapping/bootstrap/modules/concept/magic-word|magic-word]]：magic-word 定义 concept canonical naming 被 semantic-lint 消费时的 token 角色；concept 负责 semantic object 本身。
 
 ## Examples
 
