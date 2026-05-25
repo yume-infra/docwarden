@@ -121,3 +121,80 @@ kind = metadata 中负责选择 content language 的字段
 下一步：
 
 - 进入 Loop 2：signal module 质量审查。
+
+## [2026-05-25] loop-2-started | 审查 signal module 质量
+
+进入 Loop 2。
+
+本轮审查当前 6 个 signal module：
+
+- `concept-as-policy`
+- `workflow-as-policy`
+- `architecture-as-responsibility-card`
+- `template-owns-lifecycle`
+- `example-as-kind`
+- `composition-as-list`
+
+当前候选判断：
+
+- 6 个 signal module 可以作为第一版保留。
+- 当前 schema `Trigger / Why / Source / Inspection` 足够第一版。
+- 不新增 signal schema。
+- 不扩 signal 数量。
+- 不实现 CLI lint engine。
+- 弱 Trigger 先保留为 warning trigger，后续用真实 lint dry run 校准。
+
+已生成：
+
+- `signal-module-quality-review.md`
+
+## [2026-05-25] loop-2-accepted | 收口 signal module 质量判断
+
+sayori 确认本轮决策可以收口。
+
+当前结论：
+
+- 当前 6 个 signal module 作为第一版保留。
+- 不扩 signal 数量。
+- 不新增 schema。
+- 弱 Trigger 作为 warning trigger 保留，后续通过真实 lint dry run 校准。
+
+## [2026-05-25] loop-3-accepted | 收口 minimal concept surface ADR
+
+sayori 确认：这轮决策可以收口，准备进入下一轮大迭代。
+
+已收口 ADR：
+
+- `minimal-concept-surface-adr.md`
+
+ADR 决策：
+
+```text
+concept = Designation / Naming Need / Definition
+Delimitation = 不再作为 concept 标准章节
+Examples = 不再作为 concept 默认章节
+example = 独立样本语言
+```
+
+职责拆分：
+
+```text
+concept = 命名与定义
+relation = 稳定概念连接 / 阅读路径
+signal = 可复用误用检测 warning type
+policy = 约束规则
+example = 样本教学
+```
+
+目录组织边界：
+
+```text
+Only stable primary type families get directories.
+All other hierarchy belongs to relation, not path.
+```
+
+下一轮大迭代建议：
+
+- 先处理 concept template，移除默认 `Delimitation` / `Examples`。
+- 再做 Delimitation / Examples migration inventory。
+- 不直接机械删除现有内容。

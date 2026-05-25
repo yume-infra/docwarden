@@ -53,7 +53,9 @@ owner: sayori
 - `plan.md`：本任务 loop 计划。
 - `log.md`：任务时间线记录。
 - `kind-signal-landing-review.md`：Loop 1 kind / signal 落点复核审查材料。
+- `signal-module-quality-review.md`：Loop 2 signal module 质量审查材料。
+- `minimal-concept-surface-adr.md`：Loop 3 concept 最小职责 ADR。
 
 ## 下一步
 
-Loop 1 已收口。下一步进入 Loop 2：审查当前 6 个 signal module 的内容质量。
+当前决策已收口。下一轮大迭代应从 minimal concept surface 的迁移执行开始：先处理 concept template，再做 Delimitation / Examples migration inventory。

@@ -59,7 +59,7 @@ owner: sayori
 
 ## Loop 2：signal module 质量审查
 
-状态：next。
+状态：accepted。
 
 目标：逐个审查当前 6 个 signal module 的内容质量。
 
@@ -71,7 +71,43 @@ owner: sayori
 - Inspection 是否能指导 review。
 - 是否需要占位缺失真实例子。
 
-## Loop 3：relation 同步
+当前产物：
+
+- `signal-module-quality-review.md`
+
+当前候选：
+
+- 当前 6 个 signal module 可以作为第一版保留。
+- 当前 schema `Trigger / Why / Source / Inspection` 足够第一版。
+- 不新增 `Evidence`、`Severity`、`Target Scope` 或 CLI parser 字段。
+- 不扩 signal 数量。
+- 弱 Trigger 先保留为 warning trigger，后续通过真实 lint dry run 校准。
+- 当前更适合记录质量审查结论，不直接修改 signal module。
+
+当前结果：
+
+- 已通过 sayori 审核。
+- 已确认当前 6 个 signal module 作为第一版保留。
+- 已确认本轮不改 signal schema。
+- 已确认不新增 signal 数量。
+- 已确认弱 Trigger 后续通过真实 lint dry run 校准。
+
+## Loop 3：minimal concept surface ADR
+
+状态：accepted。
+
+目标：收口 concept 最小职责、Delimitation deprecation、example 独立和 concept 目录组织边界。
+
+当前结果：
+
+- 已确认 `concept` 的标准职责收窄为 `Designation / Naming Need / Definition`。
+- 已确认 `Delimitation` 不再作为 concept 标准章节。
+- 已确认 `Examples` 不再作为 concept 默认章节。
+- 已确认 `example` 是独立样本语言。
+- 已确认目录只表达少数稳定主类型和维护分区，不无限表达 concept network。
+- 已新增 `minimal-concept-surface-adr.md`。
+
+## Loop 4：relation 同步
 
 状态：pending。
 
@@ -92,3 +128,4 @@ owner: sayori
 - 自动生成 signal instance。
 - 自动补 assertion marker。
 - 新增 metadata subtype tree。
+- 直接机械删除现有 Delimitation / Examples。
