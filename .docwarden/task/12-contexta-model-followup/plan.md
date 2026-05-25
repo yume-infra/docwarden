@@ -39,7 +39,7 @@ owner: sayori
 - `composition-module-assertion-landing.md`
 - 修订 `.contexta/mapping/bootstrap/modules/concept/module.md`。
 - 修订 `.contexta/mapping/bootstrap/modules/concept/assertion.md`。
-- 修订 `.contexta/mapping/bootstrap/modules/concept/composition.md`。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/structure/composition.md`。
 - 同步 `.contexta/mapping/bootstrap/modules/concept/concept.md`、`.contexta/mapping/bootstrap/modules/concept/example.md`、`.contexta/mapping/bootstrap/modules/concept/structure.md` 中对 module 的旧描述。
 - 修订或替代 archived task 11 中 `module-assertion-landing.md` 的旧口径。
 
@@ -48,7 +48,7 @@ owner: sayori
 - 已通过 sayori 审核。
 - 已落地 `.contexta/mapping/bootstrap/modules/concept/module.md`。
 - 已落地 `.contexta/mapping/bootstrap/modules/concept/assertion.md`。
-- 已落地 `.contexta/mapping/bootstrap/modules/concept/composition.md`。
+- 已落地 `.contexta/mapping/bootstrap/modules/concept/structure/composition.md`。
 - 已同步当前层中对 module 的旧描述。
 - 暂不新增 assertion 文件、独立资产、ID、frontmatter 或完整 locator 机制。
 - 下一步进入 Loop 2：kind 与 metadata 边界。
@@ -85,7 +85,7 @@ owner: sayori
 当前结果：
 
 - 已通过 sayori 审核。
-- 已落地 `.contexta/mapping/bootstrap/modules/concept/kind.md`。
+- 已落地 `.contexta/mapping/bootstrap/modules/concept/metadata/kind.md`。
 - 已落地 `.contexta/mapping/bootstrap/modules/policy/kind-boundary.md`。
 - 已落地 `.contexta/mapping/bootstrap/modules/concept/relation.md`。
 - 已落地 `.contexta/mapping/bootstrap/modules/policy/relation.md`。

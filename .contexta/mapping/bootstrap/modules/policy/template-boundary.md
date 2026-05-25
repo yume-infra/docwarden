@@ -17,7 +17,7 @@ Applies to:
 - [[mapping/bootstrap/modules/concept/template|template]]
 - [[mapping/bootstrap/modules/concept/module|module]]
 - [[mapping/bootstrap/modules/concept/assertion|assertion]]
-- [[mapping/bootstrap/modules/concept/kind|kind]]
+- [[mapping/bootstrap/modules/concept/metadata/kind|kind]]
 
 适用条件：
 

@@ -32,6 +32,8 @@ semantic-lint 作为 concept 不承载完整执行结构。
 
 当前第一批 signal definitions 放在 `.contexta/mapping/bootstrap/modules/signal/`。
 
+这些 signal definitions 是 `kind: signal` 的长期 module；signal instance 是未来 CLI lint step 的运行输出。
+
 semantic-lint 不等待额外 reading layer 或 facts layer。format 保持 md 形态，semantic-lint 直接检查这个 md。
 
 ## Delimitation
@@ -42,7 +44,7 @@ semantic-lint 不等待额外 reading layer 或 facts layer。format 保持 md �
 - [[mapping/bootstrap/modules/concept/trigger|trigger]]：trigger 是可观察触发条件；semantic-lint 组织 trigger 如何生成 signal。
 - [[mapping/bootstrap/modules/concept/locator|locator]]：locator 指向 assertion marker；semantic-lint 使用 locator 把 signal instance 指回具体 assertion。
 - [[mapping/bootstrap/modules/concept/confidence|confidence]]：confidence 标记 candidate / instance 的识别强度；semantic-lint 产生 warning 本身。
-- [[mapping/bootstrap/modules/concept/pipeline|pipeline]]：pipeline 表达检测链路如何从 formatted md 转换出 candidate / instance；semantic-lint 是检测语言本身。
+- [[mapping/bootstrap/modules/concept/structure/pipeline|pipeline]]：pipeline 表达检测链路如何从 formatted md 转换出 candidate / instance；semantic-lint 是检测语言本身。
 - docwarden workflow：docwarden workflow 处理 task / review / promote / pick / cleanup；semantic-lint 只产生语义偏移信号。
 
 ## Examples

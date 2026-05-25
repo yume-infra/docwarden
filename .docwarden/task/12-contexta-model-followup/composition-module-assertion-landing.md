@@ -45,7 +45,7 @@ sayori 明确纠正：
 
 当前 `.contexta` 已有：
 
-- `.contexta/mapping/bootstrap/modules/concept/composition.md`
+- `.contexta/mapping/bootstrap/modules/concept/structure/composition.md`
 - `.contexta/mapping/bootstrap/modules/concept/module.md`
 - `.contexta/mapping/bootstrap/modules/concept/assertion.md`
 - `.contexta/mapping/bootstrap/templates/composition.md`
@@ -162,7 +162,7 @@ module path + heading path + assertion text
 
 - 修订 `.contexta/mapping/bootstrap/modules/concept/module.md`：把 module 明确为 md file scope。
 - 修订 `.contexta/mapping/bootstrap/modules/concept/assertion.md`：强调 assertion 是 module 内部最小语义判断，并保留后续成为 locator target 的需求。
-- 修订 `.contexta/mapping/bootstrap/modules/concept/composition.md`：说明 composition 是 structure subtype，并定义 module / assertion 的 part-whole 关系，但不定义 module 的成立条件。
+- 修订 `.contexta/mapping/bootstrap/modules/concept/structure/composition.md`：说明 composition 是 structure subtype，并定义 module / assertion 的 part-whole 关系，但不定义 module 的成立条件。
 - 同步 `.contexta/mapping/bootstrap/modules/concept/concept.md`、`.contexta/mapping/bootstrap/modules/concept/example.md`、`.contexta/mapping/bootstrap/modules/concept/structure.md` 中对 module 的旧描述。
 - 暂不新增 assertion 文件、独立资产、ID、frontmatter 或完整 locator 机制。
 - 暂不修改 `.contexta/mapping/bootstrap/templates/` 的 `kind` 设计，留给 Loop 2 / Loop 3。

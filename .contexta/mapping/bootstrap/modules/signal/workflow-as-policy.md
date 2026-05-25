@@ -18,7 +18,7 @@ workflow 写成 policy 会丢失推进关系。
 
 ## Source
 
-- [[mapping/bootstrap/modules/concept/workflow|workflow]]
+- [[mapping/bootstrap/modules/concept/structure/workflow|workflow]]
 - [[mapping/bootstrap/modules/concept/policy|policy]]
 - [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
 

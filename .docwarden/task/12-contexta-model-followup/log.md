@@ -98,7 +98,7 @@ sayori 审核通过 Loop 1 方案。
 
 - `.contexta/mapping/bootstrap/modules/concept/module.md`
 - `.contexta/mapping/bootstrap/modules/concept/assertion.md`
-- `.contexta/mapping/bootstrap/modules/concept/composition.md`
+- `.contexta/mapping/bootstrap/modules/concept/structure/composition.md`
 
 同步修正：
 
@@ -161,7 +161,7 @@ sayori 审核通过 Loop 2 口径。
 
 已落地：
 
-- `.contexta/mapping/bootstrap/modules/concept/kind.md`
+- `.contexta/mapping/bootstrap/modules/concept/metadata/kind.md`
 - `.contexta/mapping/bootstrap/modules/policy/kind-boundary.md`
 - `.contexta/mapping/bootstrap/modules/concept/relation.md`
 - `.contexta/mapping/bootstrap/modules/policy/relation.md`

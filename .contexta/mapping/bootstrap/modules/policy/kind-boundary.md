@@ -8,13 +8,14 @@ kind: policy
 
 约束 `kind` 只作为 content language entry 使用。
 
-本 policy 用于避免把 `kind` 写成 primitive 层级、subtype metadata、module file scope、assertion locator 或 docwarden workflow 状态字段。
+本 policy 用于避免把 `kind` 写成 primitive 层级、metadata subtype tree、module file scope、assertion locator 或 docwarden workflow 状态字段。
 
 ## Scope
 
 Applies to:
 
-- [[mapping/bootstrap/modules/concept/kind|kind]]
+- [[mapping/bootstrap/modules/concept/metadata/kind|kind]]
+- [[mapping/bootstrap/modules/concept/metadata|metadata]]
 - [[mapping/bootstrap/modules/concept/module|module]]
 - [[mapping/bootstrap/modules/concept/template|template]]
 - [[mapping/bootstrap/modules/concept/relation|relation]]
@@ -36,10 +37,11 @@ Applies to:
 ## Rules
 
 - `kind` MUST 表达 md module 的内容语言入口。
+- `kind` MUST be treated as a metadata field.
 - `kind` MUST NOT 表达 primitive 层级。
 - `kind` MUST NOT 表达 concept network 上位关系。
 - `kind` MUST NOT 被用作 `module`、`assertion`、`example` 或 `role` 的伪分类字段。
-- contexta MUST NOT 用 `sub_type`、`structure_type` 或等价 frontmatter 字段表达 structure 关系。
+- contexta MUST NOT 用 `sub_type`、`structure_type` 或等价 metadata field 表达 structure 关系。
 - structure language 之间的上位关系 SHOULD 由 [[mapping/bootstrap/modules/concept/relation|relation]] 承接。
 - template 文件中的 `kind` MAY 指向复制后目标 module 的 content kind。
 - template 文件中的 `kind` MUST NOT 被解释为 template artifact 自身的 kind。
@@ -49,7 +51,7 @@ Applies to:
 
 `kind` 的价值是让 agent 快速选择正文读取方式。
 
-如果 `kind` 同时表达层级、subtype、生命周期或 locator，它会退化成混合 metadata，导致 agent 无法判断一个 md module 到底应按哪种内容语言读取。
+如果 `kind` 同时表达层级、subtype、生命周期或 locator，它会退化成混合 metadata field，导致 agent 无法判断一个 md module 到底应按哪种内容语言读取。
 
 contexta 的理论关系应通过 concept、relation、policy 和 example 维护，不应塞进 frontmatter subtype 树。
 

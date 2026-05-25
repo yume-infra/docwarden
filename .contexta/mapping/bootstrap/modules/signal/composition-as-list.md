@@ -18,7 +18,7 @@ composition 是组合结构，list 只是语言形式。
 
 ## Source
 
-- [[mapping/bootstrap/modules/concept/composition|composition]]
+- [[mapping/bootstrap/modules/concept/structure/composition|composition]]
 - [[mapping/bootstrap/modules/concept/structure|structure]]
 - [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
 

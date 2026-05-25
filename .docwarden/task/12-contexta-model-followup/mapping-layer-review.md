@@ -85,7 +85,7 @@ bootstrap mapping 承接 contexta 自己定义自己的内容。
 
 例如：
 
-- `.contexta/mapping/bootstrap/modules/concept/kind.md`
+- `.contexta/mapping/bootstrap/modules/concept/metadata/kind.md`
 - `.contexta/mapping/bootstrap/modules/concept/relation.md`
 - `.contexta/mapping/bootstrap/modules/concept/template.md`
 - `.contexta/mapping/bootstrap/modules/policy/template-boundary.md`

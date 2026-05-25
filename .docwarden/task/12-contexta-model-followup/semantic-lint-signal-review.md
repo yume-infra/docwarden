@@ -212,7 +212,7 @@ Why:
 
 Source:
 
-- [[mapping/bootstrap/modules/concept/workflow|workflow]]
+- [[mapping/bootstrap/modules/concept/structure/workflow|workflow]]
 - [[mapping/bootstrap/modules/concept/policy|policy]]
 
 Inspection:
@@ -236,7 +236,7 @@ Why:
 
 Source:
 
-- [[mapping/bootstrap/modules/concept/architecture|architecture]]
+- [[mapping/bootstrap/modules/concept/structure/architecture|architecture]]
 - [[mapping/bootstrap/modules/concept/structure|structure]]
 
 Inspection:
@@ -287,7 +287,7 @@ Why:
 Source:
 
 - [[mapping/bootstrap/modules/concept/example|example]]
-- [[mapping/bootstrap/modules/concept/kind|kind]]
+- [[mapping/bootstrap/modules/concept/metadata/kind|kind]]
 - [[mapping/bootstrap/modules/policy/kind-boundary|kind-boundary]]
 
 Inspection:
@@ -311,7 +311,7 @@ Why:
 
 Source:
 
-- [[mapping/bootstrap/modules/concept/composition|composition]]
+- [[mapping/bootstrap/modules/concept/structure/composition|composition]]
 - [[mapping/bootstrap/modules/concept/structure|structure]]
 
 Inspection:

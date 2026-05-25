@@ -22,11 +22,11 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 
 当前已验证的 structure subtype 是：
 
-- [[mapping/bootstrap/modules/concept/pipeline|pipeline]]：input、transform、output 共同成立的转换结构。
-- [[mapping/bootstrap/modules/concept/workflow|workflow]]：state、move、transition 共同成立的推进结构。
-- [[mapping/bootstrap/modules/concept/architecture|architecture]]：layer、relation、boundary 共同成立的层级结构。
-- [[mapping/bootstrap/modules/concept/branch|branch]]：condition、route、target 共同成立的分流结构。
-- [[mapping/bootstrap/modules/concept/composition|composition]]：whole、part、stable semantic boundary 共同成立的组合结构。
+- [[mapping/bootstrap/modules/concept/structure/pipeline|pipeline]]：input、transform、output 共同成立的转换结构。
+- [[mapping/bootstrap/modules/concept/structure/workflow|workflow]]：state、move、transition 共同成立的推进结构。
+- [[mapping/bootstrap/modules/concept/structure/architecture|architecture]]：layer、relation、boundary 共同成立的层级结构。
+- [[mapping/bootstrap/modules/concept/structure/branch|branch]]：condition、route、target 共同成立的分流结构。
+- [[mapping/bootstrap/modules/concept/structure/composition|composition]]：whole、part、stable semantic boundary 共同成立的组合结构。
 
 具体 structure instance 放在 `.contexta/mapping/bootstrap/structures/` 下，并按 subtype 分层。
 

@@ -29,6 +29,8 @@ signal 是 warning，不是最终判罚。
 
 具体 signal definition 以 `kind: signal` 的 module 存在于 `.contexta/mapping/bootstrap/modules/signal/`。
 
+`kind: signal` 表示 signal definition language，不表示 signal instance。
+
 未来 CLI lint step 输出的是 signal instance，而不是抽象 signal definition。
 
 signal candidate 可以只有上下文；signal instance 需要 locator 指向 assertion marker。
@@ -36,6 +38,7 @@ signal candidate 可以只有上下文；signal instance 需要 locator 指向 a
 ## Delimitation
 
 - [[mapping/bootstrap/modules/concept/semantic-lint|semantic-lint]]：semantic-lint 是检测语言；signal 是其中被命名的 warning。
+- [[mapping/bootstrap/modules/concept/metadata/kind|kind]]：`kind: signal` 选择 signal definition language；signal instance 不作为长期 module kind。
 - [[mapping/bootstrap/modules/concept/trigger|trigger]]：trigger 是可观察条件；signal 是对该条件的语义风险命名。
 - [[mapping/bootstrap/modules/concept/assertion|assertion]]：assertion 是被审查的语义判断；signal 是指向其可能偏移的 warning。
 - [[mapping/bootstrap/modules/concept/locator|locator]]：locator 让 signal instance 指向具体 assertion marker；signal 本身不定义定位机制。

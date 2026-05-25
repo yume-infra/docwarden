@@ -15,7 +15,7 @@ kind: policy
 Applies to:
 
 - [[mapping/bootstrap/modules/concept/mapping|mapping]]
-- [[mapping/bootstrap/modules/concept/kind|kind]]
+- [[mapping/bootstrap/modules/concept/metadata/kind|kind]]
 - [[mapping/bootstrap/modules/concept/template|template]]
 - [[mapping/bootstrap/modules/concept/module|module]]
 

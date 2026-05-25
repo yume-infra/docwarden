@@ -63,12 +63,12 @@ relation file 需要指向 concept pipeline。
 
 ### Judgment Material
 
-目标落点是 `mapping/bootstrap/modules/concept/pipeline.md`。
+目标落点是 `mapping/bootstrap/modules/concept/structure/pipeline.md`。
 
 ### Positive
 
 ```md
-[[mapping/bootstrap/modules/concept/pipeline|pipeline]]
+[[mapping/bootstrap/modules/concept/structure/pipeline|pipeline]]
 ```
 
 这个 link 同时给出稳定 target 和可读 display。
@@ -84,7 +84,7 @@ relation file 需要指向 concept pipeline。
 ### Borderline
 
 ```md
-[[mapping/bootstrap/modules/concept/pipeline#Definition|pipeline#Definition]]
+[[mapping/bootstrap/modules/concept/structure/pipeline#Definition|pipeline#Definition]]
 ```
 
 这是 section link，可以用于 Read next。它稳定到 heading，但还不是 assertion locator。

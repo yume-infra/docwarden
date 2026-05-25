@@ -196,7 +196,7 @@ Signal:
 
 Locator:
 
-`[[mapping/bootstrap/modules/concept/composition#Definition|composition#Definition]]`
+`[[mapping/bootstrap/modules/concept/structure/composition#Definition|composition#Definition]]`
 
 Trigger observed:
 

@@ -20,7 +20,7 @@ example 不能反向证明一个 content kind 成立。
 ## Source
 
 - [[mapping/bootstrap/modules/concept/example|example]]
-- [[mapping/bootstrap/modules/concept/kind|kind]]
+- [[mapping/bootstrap/modules/concept/metadata/kind|kind]]
 - [[mapping/bootstrap/modules/policy/kind-boundary|kind-boundary]]
 - [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
 

@@ -33,7 +33,7 @@ sayori 明确偏好：
 
 以 `pipeline` 为例，短 link 在人工阅读上很干净，但 `.contexta` 中已经同时存在：
 
-- `mapping/bootstrap/modules/concept/pipeline.md`
+- `mapping/bootstrap/modules/concept/structure/pipeline.md`
 - `mapping/bootstrap/templates/pipeline.md`
 
 如果 relation、semantic lint 或 locator 后续需要稳定指向 concept pipeline，短 link 不够可靠。
@@ -52,7 +52,7 @@ contexta 的 link 应区分：
 使用 OFM alias 让两者同时成立：
 
 ```md
-[[mapping/bootstrap/modules/concept/pipeline|pipeline]]
+[[mapping/bootstrap/modules/concept/structure/pipeline|pipeline]]
 ```
 
 读取效果：
@@ -76,7 +76,7 @@ contexta 的 link 应区分：
 contexta 内部连接应使用 path alias：
 
 ```md
-[[mapping/bootstrap/modules/concept/workflow|workflow]]
+[[mapping/bootstrap/modules/concept/structure/workflow|workflow]]
 [[mapping/bootstrap/modules/policy/kind-boundary|kind-boundary]]
 [[mapping/bootstrap/relations/structure-language|structure-language]]
 ```
@@ -89,7 +89,7 @@ contexta 内部连接应使用 path alias：
 
 ```md
 [[mapping/bootstrap/modules/concept/structure#Definition|structure#Definition]]
-[[mapping/bootstrap/modules/concept/workflow#Delimitation|workflow#Delimitation]]
+[[mapping/bootstrap/modules/concept/structure/workflow#Delimitation|workflow#Delimitation]]
 ```
 
 这适合 relation file 的 `Read next`。
@@ -113,17 +113,17 @@ OFM 支持 block reference，但本轮不引入：
 `structure-language.md` 的 From 应写为：
 
 ```md
-- [[mapping/bootstrap/modules/concept/pipeline|pipeline]]
-- [[mapping/bootstrap/modules/concept/workflow|workflow]]
-- [[mapping/bootstrap/modules/concept/architecture|architecture]]
-- [[mapping/bootstrap/modules/concept/branch|branch]]
-- [[mapping/bootstrap/modules/concept/composition|composition]]
+- [[mapping/bootstrap/modules/concept/structure/pipeline|pipeline]]
+- [[mapping/bootstrap/modules/concept/structure/workflow|workflow]]
+- [[mapping/bootstrap/modules/concept/structure/architecture|architecture]]
+- [[mapping/bootstrap/modules/concept/structure/branch|branch]]
+- [[mapping/bootstrap/modules/concept/structure/composition|composition]]
 ```
 
 `Read next` 应写为：
 
 ```md
-- Definition: [[mapping/bootstrap/modules/concept/structure#Definition|structure#Definition]], [[mapping/bootstrap/modules/concept/pipeline#Definition|pipeline#Definition]]
+- Definition: [[mapping/bootstrap/modules/concept/structure#Definition|structure#Definition]], [[mapping/bootstrap/modules/concept/structure/pipeline#Definition|pipeline#Definition]]
 ```
 
 ## 已落地

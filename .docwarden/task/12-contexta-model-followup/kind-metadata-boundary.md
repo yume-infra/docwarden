@@ -221,14 +221,14 @@ target_kind: policy
 
 本轮已落地：
 
-- `.contexta/mapping/bootstrap/modules/concept/kind.md`
+- `.contexta/mapping/bootstrap/modules/concept/metadata/kind.md`
 - `.contexta/mapping/bootstrap/modules/policy/kind-boundary.md`
 - `.contexta/mapping/bootstrap/modules/concept/relation.md`
 - `.contexta/mapping/bootstrap/modules/policy/relation.md`
 - `.contexta/mapping/bootstrap/templates/concept.md`
 - 移除当前 concept modules 中默认的 `Concept Relations` 章节。
 - 将 `.contexta/mapping/bootstrap/modules/concept/module.md` 和 `.contexta/mapping/bootstrap/modules/concept/assertion.md` 中误导性的 `entity` 表述改为独立资产或 docwarden workflow 对象表述。
-- 将 `.contexta/mapping/bootstrap/modules/concept/workflow.md` 和 `.contexta/mapping/bootstrap/modules/concept/architecture.md` 中的“实体落点”改为“具体资产落点”。
+- 将 `.contexta/mapping/bootstrap/modules/concept/structure/workflow.md` 和 `.contexta/mapping/bootstrap/modules/concept/structure/architecture.md` 中的“实体落点”改为“具体资产落点”。
 
 当前仍不做：
 

@@ -6,17 +6,17 @@ kind: relation
 
 ## Network
 
-本 relation file 维护 [[mapping/bootstrap/modules/concept/pipeline|pipeline]]、[[mapping/bootstrap/modules/concept/workflow|workflow]]、[[mapping/bootstrap/modules/concept/architecture|architecture]]、[[mapping/bootstrap/modules/concept/branch|branch]]、[[mapping/bootstrap/modules/concept/composition|composition]] 与 [[mapping/bootstrap/modules/concept/structure|structure]] 之间的 structure language 连接。
+本 relation file 维护 [[mapping/bootstrap/modules/concept/structure/pipeline|pipeline]]、[[mapping/bootstrap/modules/concept/structure/workflow|workflow]]、[[mapping/bootstrap/modules/concept/structure/architecture|architecture]]、[[mapping/bootstrap/modules/concept/structure/branch|branch]]、[[mapping/bootstrap/modules/concept/structure/composition|composition]] 与 [[mapping/bootstrap/modules/concept/structure|structure]] 之间的 structure language 连接。
 
 ## `structure-language-of`
 
 From:
 
-- [[mapping/bootstrap/modules/concept/pipeline|pipeline]]
-- [[mapping/bootstrap/modules/concept/workflow|workflow]]
-- [[mapping/bootstrap/modules/concept/architecture|architecture]]
-- [[mapping/bootstrap/modules/concept/branch|branch]]
-- [[mapping/bootstrap/modules/concept/composition|composition]]
+- [[mapping/bootstrap/modules/concept/structure/pipeline|pipeline]]
+- [[mapping/bootstrap/modules/concept/structure/workflow|workflow]]
+- [[mapping/bootstrap/modules/concept/structure/architecture|architecture]]
+- [[mapping/bootstrap/modules/concept/structure/branch|branch]]
+- [[mapping/bootstrap/modules/concept/structure/composition|composition]]
 
 To:
 
@@ -30,6 +30,6 @@ Reading:
 
 Read next:
 
-- Definition: [[mapping/bootstrap/modules/concept/structure#Definition|structure#Definition]], [[mapping/bootstrap/modules/concept/pipeline#Definition|pipeline#Definition]], [[mapping/bootstrap/modules/concept/workflow#Definition|workflow#Definition]], [[mapping/bootstrap/modules/concept/architecture#Definition|architecture#Definition]], [[mapping/bootstrap/modules/concept/branch#Definition|branch#Definition]], [[mapping/bootstrap/modules/concept/composition#Definition|composition#Definition]]
+- Definition: [[mapping/bootstrap/modules/concept/structure#Definition|structure#Definition]], [[mapping/bootstrap/modules/concept/structure/pipeline#Definition|pipeline#Definition]], [[mapping/bootstrap/modules/concept/structure/workflow#Definition|workflow#Definition]], [[mapping/bootstrap/modules/concept/structure/architecture#Definition|architecture#Definition]], [[mapping/bootstrap/modules/concept/structure/branch#Definition|branch#Definition]], [[mapping/bootstrap/modules/concept/structure/composition#Definition|composition#Definition]]
 - Constraint: [[mapping/bootstrap/modules/concept/relation|relation]], [[mapping/bootstrap/modules/policy/kind-boundary|kind-boundary]]
-- Boundary: [[mapping/bootstrap/modules/concept/pipeline#Delimitation|pipeline#Delimitation]], [[mapping/bootstrap/modules/concept/workflow#Delimitation|workflow#Delimitation]], [[mapping/bootstrap/modules/concept/architecture#Delimitation|architecture#Delimitation]], [[mapping/bootstrap/modules/concept/branch#Delimitation|branch#Delimitation]], [[mapping/bootstrap/modules/concept/composition#Delimitation|composition#Delimitation]]
+- Boundary: [[mapping/bootstrap/modules/concept/structure/pipeline#Delimitation|pipeline#Delimitation]], [[mapping/bootstrap/modules/concept/structure/workflow#Delimitation|workflow#Delimitation]], [[mapping/bootstrap/modules/concept/structure/architecture#Delimitation|architecture#Delimitation]], [[mapping/bootstrap/modules/concept/structure/branch#Delimitation|branch#Delimitation]], [[mapping/bootstrap/modules/concept/structure/composition#Delimitation|composition#Delimitation]]

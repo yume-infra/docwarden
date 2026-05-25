@@ -36,7 +36,7 @@ stable semantic boundary 是 module 组织 assertion 的质量边界，不是 mo
 | --- | --- |
 | file | file 是存储对象；module 是 md 文件在当前文档系统中的作用域。非 md file 不自动成为 module。 |
 | [[mapping/bootstrap/modules/concept/assertion|assertion]] | assertion 是 module 内部的最小可审查语义单元；module 是 assertion 所在的 md file scope。 |
-| kind | `kind` 表达 module 的内容类型或内容语言；module 不等于 `kind: module`。 |
+| [[mapping/bootstrap/modules/concept/metadata/kind|kind]] | `kind` 表达 module 的内容类型或内容语言；module 不等于 `kind: module`。 |
 | [[mapping/bootstrap/modules/concept/template|template]] | template 是复制骨架这一内容角色；template 文件本身也可以是 md module，但 template 角色不等于 module 定义。 |
 | task | task 是 docwarden 的短命过程工作面；task 中的 md 文件可以是 module，但 task 生命周期不属于 module 定义。 |
 

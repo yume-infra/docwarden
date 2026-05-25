@@ -28,7 +28,7 @@ template 的语义重点是生成初始形状，而不是承接内容本体、�
 | --- | --- |
 | [[mapping/bootstrap/modules/concept/module|module]] | module 是实际语义组合单位；template 是创建 module 时可复制的骨架。 |
 | [[mapping/bootstrap/modules/concept/policy|policy]] | policy 承载规则本体；template 只提供结构槽位。 |
-| [[mapping/bootstrap/modules/concept/kind|kind]] | kind 是内容语言入口；template 文件中的 kind 指向复制后目标 module 的内容语言。 |
+| [[mapping/bootstrap/modules/concept/metadata/kind|kind]] | kind 是内容语言入口；template 文件中的 kind 指向复制后目标 module 的内容语言。 |
 | docwarden workflow | docwarden workflow 处理操作流程；template 不表达流程过程。 |
 
 ## Examples

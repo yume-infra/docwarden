@@ -18,7 +18,7 @@ architecture 是层级结构。
 
 ## Source
 
-- [[mapping/bootstrap/modules/concept/architecture|architecture]]
+- [[mapping/bootstrap/modules/concept/structure/architecture|architecture]]
 - [[mapping/bootstrap/modules/concept/structure|structure]]
 - [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
 

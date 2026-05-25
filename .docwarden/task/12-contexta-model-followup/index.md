@@ -22,7 +22,7 @@ owner: sayori
 - `.docwarden/archive/task/11-contexta-content-type-constraints/`
 - `.docwarden/archive/task/11-contexta-content-type-constraints/contexta-architecture-baseline.md`
 - `.docwarden/archive/task/09-promote-pick-entity-landing/frontmatter-field-boundary.md`
-- `.contexta/mapping/bootstrap/modules/concept/composition.md`
+- `.contexta/mapping/bootstrap/modules/concept/structure/composition.md`
 - `.contexta/mapping/bootstrap/templates/composition.md`
 
 ## 当前判断

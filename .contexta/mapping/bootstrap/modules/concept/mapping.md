@@ -38,7 +38,7 @@ mapping 是理论到实体的映射关系。
 | Neighbor | Difference |
 | --- | --- |
 | [[mapping/bootstrap/modules/concept/relation|relation]] | relation 表达 concept network 中的稳定连接；mapping 表达理论对象到实体层的落成关系。 |
-| [[mapping/bootstrap/modules/concept/kind|kind]] | kind 是 module frontmatter 中的内容语言入口；mapping 是目录层表达的理论到实体关系。 |
+| [[mapping/bootstrap/modules/concept/metadata/kind|kind]] | kind 是 module frontmatter 中的内容语言入口；mapping 是目录层表达的理论到实体关系。 |
 | docwarden workflow | docwarden workflow 负责 task / review / promote / pick / cleanup；mapping 只说明 contexta 理论如何对应到实体层。 |
 
 ## Examples
@@ -50,7 +50,7 @@ agent 需要判断 `user-context` 应该和 `kind`、`relation` 放在同一组 
 ### Judgment Material
 
 ```text
-.contexta/mapping/bootstrap/modules/concept/kind.md
+.contexta/mapping/bootstrap/modules/concept/metadata/kind.md
 .contexta/mapping/docwarden/modules/concept/user-context.md
 .docwarden/user/profile.md
 ```
