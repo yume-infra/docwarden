@@ -21,7 +21,8 @@ owner: sayori
 ## 工作面索引
 
 - `12-contexta-model-followup/`：contexta 模型后续补全工作面，已完成当前阶段。
-- `13-kind-signal-landing/`：kind / signal 落点复核工作面，当前 active。
+- `13-kind-signal-landing/`：kind / signal 落点复核工作面，已完成当前阶段。
+- `14-magic-word-registry-expansion/`：magic-word registry 扩充工作面，当前 active。
 
 ## 归档工作面
 
@@ -41,4 +42,4 @@ owner: sayori
 
 ## 当前入口
 
-当前 active task：`13-kind-signal-landing/`。
+当前 active task：`14-magic-word-registry-expansion/`。
