@@ -56,7 +56,8 @@ owner: sayori
 - `signal-module-quality-review.md`：Loop 2 signal module 质量审查材料。
 - `minimal-concept-surface-adr.md`：Loop 3 concept 最小职责 ADR。
 - `module-assertion-composition-review.md`：Loop 5 module / assertion / composition 重建审查材料。
+- `template-format-semantic-lint-review.md`：Loop 6 template / format / semantic-lint 关系审查材料。
 
 ## 下一步
 
-当前正在进行 module / assertion / composition 三角关系重建审查。
+当前已落地 template / format / semantic-lint 关系审查。下一轮进入 kind / module / content language 关系检查。

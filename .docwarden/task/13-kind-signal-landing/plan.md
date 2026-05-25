@@ -124,9 +124,9 @@ owner: sayori
 
 本轮不重建被删除内容，只保留干净 surface，等待下一步讨论哪些关键点值得以 signal、relation 或 policy 形式重建模。
 
-## Loop 5：relation 同步
+## Loop 5：module / assertion / composition relation
 
-状态：in review。
+状态：accepted。
 
 目标：把 clean surface 后需要保留的稳定概念连接同步到 relation layer。
 
@@ -146,6 +146,32 @@ owner: sayori
 - 已新增 `.contexta/mapping/bootstrap/relations/module-assertion-composition.md`。
 - 已在 `semantic-granularity` policy 中连接该 relation。
 - 已确认当前不保留抽象 example；真实案例后续出现后再补。
+
+## Loop 6：template / format / semantic-lint 关系审查
+
+状态：accepted。
+
+目标：确认 `template / format / semantic-lint` 应作为 relation 承接，而不是新增 pipeline 或把职责塞回 concept definition。
+
+当前候选：
+
+- `template` 负责 0->1 初始骨架。
+- `format` 负责 1->2 时保持 md 可消费形态。
+- `semantic-lint` 消费 formatted md，产生 warning signal；未来 CLI 可再区分 candidate / instance。
+- `template / format / semantic-lint` 本身不是 pipeline；真正的执行转换仍由 semantic-lint pipeline 表达。
+- 当前不新增抽象 example；真实案例后续出现后再补。
+
+当前产物：
+
+- `template-format-semantic-lint-review.md`
+
+当前结果：
+
+- 已新增 `.contexta/mapping/bootstrap/relations/template-format-semantic-lint.md`。
+- 已将 `format` 收紧为 1->2 的形态保持。
+- 已将 `semantic-lint` 的结果收紧为 warning signal；未来 CLI 可再区分 candidate / instance。
+- 已在 `semantic-lint-chain` 中连接该 relation。
+- 已确认 `0->1` 和 `1->2` 是 transition magic words，不新增 `phase` concept。
 
 ## 当前不做
 

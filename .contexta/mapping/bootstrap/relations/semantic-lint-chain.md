@@ -51,6 +51,7 @@ Read next:
 
 - Pipeline: [[mapping/bootstrap/structures/pipeline/semantic-lint|semantic-lint pipeline]]
 - Concept: [[mapping/bootstrap/modules/concept/structure/pipeline#Definition|pipeline#Definition]], [[mapping/bootstrap/modules/concept/semantic-lint#Definition|semantic-lint#Definition]]
+- Relation: [[mapping/bootstrap/relations/template-format-semantic-lint|template-format-semantic-lint]]
 - Signal modules: [[mapping/bootstrap/modules/signal/concept-as-policy|concept-as-policy]], [[mapping/bootstrap/modules/signal/workflow-as-policy|workflow-as-policy]], [[mapping/bootstrap/modules/signal/architecture-as-responsibility-card|architecture-as-responsibility-card]], [[mapping/bootstrap/modules/signal/template-owns-lifecycle|template-owns-lifecycle]], [[mapping/bootstrap/modules/signal/example-as-kind|example-as-kind]], [[mapping/bootstrap/modules/signal/composition-as-list|composition-as-list]]
 
 ## `instance-target`

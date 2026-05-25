@@ -249,3 +249,45 @@ sayori 确认当前方向，并指出当前应直接去掉抽象 example，后�
 - 不新增 concept section。
 - 不新增抽象 example。
 - 不修改 `docs/`。
+
+## [2026-05-25] loop-6-started | 组织 template / format / semantic-lint 关系审查
+
+进入 clean surface 后的第二组重建审查。
+
+当前判断：
+
+- `template / format / semantic-lint` 不应建模成同一个 pipeline。
+- `template` 负责 0->1 的初始骨架。
+- `format` 负责 1->2 时保持 md 可消费形态。
+- `semantic-lint` 消费 formatted md 并产生 warning signal；未来 CLI 可再区分 candidate / instance。
+- 真正的执行转换仍由 semantic-lint pipeline 表达。
+- 当前不新增抽象 example；真实案例后续出现后再补。
+
+已生成：
+
+- `template-format-semantic-lint-review.md`
+
+## [2026-05-25] loop-6-accepted | 落地 template / format / semantic-lint relation
+
+sayori 确认本轮落地，并纠正两个口径：
+
+- `format` 只表达 1->2 的形态保持。
+- `semantic-lint` 的结果是 warning signal；未来 CLI 可再区分 candidate / instance。
+- `0->1` 和 `1->2` 应作为 transition magic words，不新增 `phase` concept。
+
+已落地：
+
+- 新增 `.contexta/mapping/bootstrap/relations/template-format-semantic-lint.md`。
+- 修订 `format` concept，移除 `1->2、2->3` 的冗余表达。
+- 修订 `semantic-lint` concept，把结果收紧为 warning signal。
+- 修订 `magic-word` concept，记录 `0->1` / `1->2` 的 token 角色。
+- 在 `semantic-lint-chain` 中连接该 relation。
+- 将 `template-format-semantic-lint-review.md` 标记为 accepted。
+
+本轮不做：
+
+- 不新增 concept。
+- 不新增 pipeline。
+- 不扩 CLI spec。
+- 不新增抽象 example。
+- 不修改 `docs/`。
