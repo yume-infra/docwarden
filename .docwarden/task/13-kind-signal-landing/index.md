@@ -55,7 +55,8 @@ owner: sayori
 - `kind-signal-landing-review.md`：Loop 1 kind / signal 落点复核审查材料。
 - `signal-module-quality-review.md`：Loop 2 signal module 质量审查材料。
 - `minimal-concept-surface-adr.md`：Loop 3 concept 最小职责 ADR。
+- `module-assertion-composition-review.md`：Loop 5 module / assertion / composition 重建审查材料。
 
 ## 下一步
 
-当前决策已收口。下一轮大迭代应从 minimal concept surface 的迁移执行开始：先处理 concept template，再做 Delimitation / Examples migration inventory。
+当前正在进行 module / assertion / composition 三角关系重建审查。

@@ -49,6 +49,8 @@ Applies to:
 
 这里不重新定义这两个 concept，只解释为什么需要约束它们的粒度关系。
 
+module / assertion 的 part-whole structure 连接由 [[mapping/bootstrap/relations/module-assertion-composition|module-assertion-composition]] 维护。
+
 如果每条断言都升级为 module，组合会变得过碎，review 和使用成本都会上升。如果一个 module 混入多个 stable semantic boundary，规则边界会变得模糊，后续复用和修改也会困难。
 
 当一个 module 内部存在多个断言组时，需要稳定的局部结构。`## Rules` 下的三级标题可以表达断言组，列表项可以表达具体断言。这样既不需要把断言拆成独立文件，也能让 review、diff 和后续提取有稳定锚点。

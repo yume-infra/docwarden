@@ -109,7 +109,7 @@ owner: sayori
 
 ## Loop 4：clean concept surface migration
 
-状态：in review。
+状态：accepted。
 
 目标：按最新 ADR 直接清空旧 concept surface，让后续重建在干净路径上进行。
 
@@ -122,20 +122,30 @@ owner: sayori
 - 已清理 relation files 中指向 `#Delimitation` 的旧 OFM 链接。
 - 已修订 relation policy，把旧 `Delimitation` 承接口径改为 signal / relation / policy / example / Definition 分工。
 
-本轮不重建被删除内容，只保留干净 surface，等待下一步讨论哪些关键点值得以 signal、relation、policy 或 example 形式重建模。
+本轮不重建被删除内容，只保留干净 surface，等待下一步讨论哪些关键点值得以 signal、relation 或 policy 形式重建模。
 
 ## Loop 5：relation 同步
 
-状态：pending。
+状态：in review。
 
-目标：把 task 12 和 task 13 新增概念与结构同步到 relation layer。
+目标：把 clean surface 后需要保留的稳定概念连接同步到 relation layer。
 
-候选内容：
+当前第一组 review：
 
-- `signal` 与 `semantic-lint` 的关系。
-- `signal definition` 与 `signal instance` 的关系。
-- `magic-word`、`confidence`、`locator` 如何共同服务 semantic-lint pipeline。
-- `modules/signal` 与 `structures/pipeline` 的连接。
+- `module / assertion / composition` 三角关系。
+- 候选 relation：`module-assertion-composition`。
+- 候选判断：`assertion` 是 `module` 的 part，`module` 是 `assertion` 的 whole，`composition` 命名这组 part-whole structure。
+- 当前不保留抽象 example；真实案例后续出现后再补。
+
+当前产物：
+
+- `module-assertion-composition-review.md`
+
+当前结果：
+
+- 已新增 `.contexta/mapping/bootstrap/relations/module-assertion-composition.md`。
+- 已在 `semantic-granularity` policy 中连接该 relation。
+- 已确认当前不保留抽象 example；真实案例后续出现后再补。
 
 ## 当前不做
 

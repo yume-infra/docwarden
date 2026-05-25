@@ -215,5 +215,37 @@ sayori 要求进入新迭代：先直接全量删除旧 concept surface，把结
 当前状态：
 
 - concept surface 收窄为 `Designation / Naming Need / Definition`。
-- 被删除内容暂不迁移，后续按具体价值重建到 signal、relation、policy 或 example。
+- 被删除内容暂不迁移，后续按具体价值重建到 signal、relation 或 policy；example 只在有真实案例后补。
+- 不修改 `docs/`。
+
+## [2026-05-25] loop-5-started | 组织 module / assertion / composition 重建审查
+
+进入 clean surface 后的第一组重建审查。
+
+当前判断：
+
+- `module / assertion / composition` 的关系不应补回 concept 的 `Delimitation`。
+- `semantic-granularity` policy 已经承接粒度约束。
+- 仍缺一个 relation 说明 `assertion` 如何作为 `module` 的 part，以及这组三角关系如何由 `composition` 命名。
+- 当前不保留抽象 example；真实案例后续出现后再补。
+
+已生成：
+
+- `module-assertion-composition-review.md`
+
+## [2026-05-25] loop-5-accepted | 落地 module / assertion / composition relation
+
+sayori 确认当前方向，并指出当前应直接去掉抽象 example，后续用真实案例补充。
+
+已落地：
+
+- 新增 `.contexta/mapping/bootstrap/relations/module-assertion-composition.md`。
+- 在 `semantic-granularity` policy 的 Rationale 中指向该 relation。
+- 将 `module-assertion-composition-review.md` 标记为 accepted。
+
+本轮不做：
+
+- 不恢复 `Delimitation`。
+- 不新增 concept section。
+- 不新增抽象 example。
 - 不修改 `docs/`。
