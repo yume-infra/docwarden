@@ -35,4 +35,6 @@ kind 是 metadata 中负责选择 content language 的字段。
 
 `kind: signal` 不表示 signal instance。
 
+当 `kind: magic-word` 出现在 `.contexta/mapping/bootstrap/modules/magic-word/*.md` 中时，它表示当前 module 使用 magic-word registry language。
+
 它不表达 primitive 层级，不表达 concept network 关系，也不表达 docwarden workflow 状态。

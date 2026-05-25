@@ -173,6 +173,31 @@ owner: sayori
 - 已在 `semantic-lint-chain` 中连接该 relation。
 - 已确认 `0->1` 和 `1->2` 是 transition magic words，不新增 `phase` concept。
 
+## Loop 7：magic-word registry 分层
+
+状态：accepted。
+
+目标：把具体 magic words 从 concept definition 中拆出，进入独立 registry 层。
+
+当前候选：
+
+- `concept/magic-word.md` 只定义 magic-word 和准入边界。
+- `modules/magic-word/*.md` 维护具体 magic-word family。
+- 第一版只新增 `modules/magic-word/transition.md`。
+- `0->1` 和 `1->2` 进入 transition registry。
+- 不为每个 magic word 单独创建 concept。
+- 不新增 `phase` concept。
+
+当前产物：
+
+- `.contexta/mapping/bootstrap/modules/magic-word/transition.md`
+
+当前结果：
+
+- 已确认保留 `magic-word` 命名。
+- 已确认保留 `modules/magic-word/` 层级。
+- 已确认保留 `transition.md` 命名，不替换为 `transition-marker.md` 或 `phase`。
+
 ## 当前不做
 
 - 修改 `docs/`。

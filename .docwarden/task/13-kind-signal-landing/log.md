@@ -291,3 +291,39 @@ sayori 确认本轮落地，并纠正两个口径：
 - 不扩 CLI spec。
 - 不新增抽象 example。
 - 不修改 `docs/`。
+
+## [2026-05-25] loop-7-started | 拆出 magic-word registry 层
+
+sayori 确认：`0->1` / `1->2` 应当作为 magic words，而不是新增 `phase` concept。同时，magic words 后续会持续扩张，需要单独层级。
+
+当前判断：
+
+- `concept/magic-word.md` 只定义 magic-word 和准入边界。
+- 具体 magic-word family 进入 `modules/magic-word/*.md`。
+- 第一版只建立 transition registry。
+- 不为每个 magic word 单独创建 concept。
+
+已落地：
+
+- 新增 `.contexta/mapping/bootstrap/modules/magic-word/transition.md`。
+- 将 `0->1` / `1->2` 从 `concept/magic-word.md` 的定义正文中移出。
+- 在 `kind` concept 中说明 `kind: magic-word` 表示 magic-word registry language。
+- 在 `template-format-semantic-lint` relation 中指向 transition registry。
+
+## [2026-05-25] loop-7-accepted | 收口 magic-word registry 命名
+
+sayori 确认当前命名不替代。
+
+最终命名：
+
+- `magic-word`
+- `modules/magic-word/`
+- `transition.md`
+
+不采用：
+
+- `token`
+- `keyword`
+- `marker`
+- `phase`
+- `transition-marker`

@@ -33,12 +33,8 @@ concept `Canonical` 是 primary magic word。
 
 `Avoid` 是 negative token，不是 alias，也不是 magic word。
 
-confirmed `kind` value、semantic-lint signal id、policy modal operator 和 locator marker prefix 是各自机制中的 control magic words。
+confirmed `kind` value、semantic-lint signal id、policy modal operator、locator marker prefix 和 transition marker 是各自机制中的 control magic words。
 
-`0->1` 和 `1->2` 是 transition magic words。
-
-`0->1` 标记从没有长期 module 到初始 module skeleton 的生成位置。
-
-`1->2` 标记已有 module 在下一轮编辑中保持可消费形态的位置。
+具体 magic-word family 由 `kind: magic-word` registry module 维护。
 
 magic-word 不创建新的语义对象。它只定义已有命名和控制词在 semantic-lint 消费中的 token 角色。

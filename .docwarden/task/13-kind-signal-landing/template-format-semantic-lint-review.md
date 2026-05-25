@@ -60,6 +60,8 @@ semantic-lint emits warning signal
 
 `0->1` 和 `1->2` 在这里是 transition magic words，不新增 `phase` concept。
 
+transition magic words 应进入 `modules/magic-word/transition.md` registry，不继续堆进 `concept/magic-word.md`。
+
 ## Layer Split
 
 ### Relation
@@ -99,7 +101,7 @@ semantic-lint emits warning signal
 
 1. 新增 `template-format-semantic-lint` relation file。
 2. 在 `semantic-lint-chain` 的 Read next 中补充该 relation，避免重复定义 lint pipeline。
-3. 在 `magic-word` concept 中记录 `0->1` / `1->2` 的 token 角色。
+3. 在 `modules/magic-word/transition.md` registry 中记录 `0->1` / `1->2` 的 token 角色。
 4. 在 task 13 记录本轮决策。
 
 本轮不做：

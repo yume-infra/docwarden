@@ -47,6 +47,9 @@ owner: sayori
 - signal 必要性当前评估约 8/10：保留，但压低建设强度。
 - 当前不新增 `signal-definition` kind，不继续扩 signal 数量，不设计 CLI schema。
 - concept 目录当前按主类型分层：`structure.md` / `metadata.md` 放在 `concept/` 根下；下级概念进入 `concept/structure/` 和 `concept/metadata/`。
+- `magic-word` 的具体词表进入 `modules/magic-word/*.md` registry。
+- `kind: magic-word` 表示 magic-word registry language。
+- `0->1` 和 `1->2` 是 transition magic words，不新增 `phase` concept。
 
 ## 内容
 
@@ -60,4 +63,4 @@ owner: sayori
 
 ## 下一步
 
-当前已落地 template / format / semantic-lint 关系审查。下一轮进入 kind / module / content language 关系检查。
+当前正在进行 magic-word registry 分层。下一轮再进入 kind / module / content language 关系检查。

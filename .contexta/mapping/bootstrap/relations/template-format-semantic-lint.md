@@ -22,7 +22,7 @@ Reading:
 
 沿 `initializes` 读取时，template 只负责 0->1 的初始 module 骨架。
 
-`0->1` 在这里作为 transition magic word 读取，不作为独立 phase concept。
+`0->1` 在这里按 [[mapping/bootstrap/modules/magic-word/transition|transition]] registry 读取，不作为独立 phase concept。
 
 ## `preserves`
 
@@ -38,7 +38,7 @@ Reading:
 
 沿 `preserves` 读取时，format 只负责 1->2 时保持 md 可消费形态。
 
-`1->2` 在这里作为 transition magic word 读取，不作为独立 phase concept。
+`1->2` 在这里按 [[mapping/bootstrap/modules/magic-word/transition|transition]] registry 读取，不作为独立 phase concept。
 
 ## `consumes`
 
@@ -71,5 +71,6 @@ Reading:
 Read next:
 
 - Definition: [[mapping/bootstrap/modules/concept/template#Definition|template#Definition]], [[mapping/bootstrap/modules/concept/format#Definition|format#Definition]], [[mapping/bootstrap/modules/concept/semantic-lint#Definition|semantic-lint#Definition]], [[mapping/bootstrap/modules/concept/module#Definition|module#Definition]], [[mapping/bootstrap/modules/concept/signal#Definition|signal#Definition]], [[mapping/bootstrap/modules/concept/magic-word#Definition|magic-word#Definition]]
+- Magic words: [[mapping/bootstrap/modules/magic-word/transition|transition]]
 - Pipeline: [[mapping/bootstrap/structures/pipeline/semantic-lint|semantic-lint pipeline]]
 - Constraint: [[mapping/bootstrap/modules/policy/template-boundary|template-boundary]], [[mapping/bootstrap/modules/policy/semantic-lint-boundary|semantic-lint-boundary]]
