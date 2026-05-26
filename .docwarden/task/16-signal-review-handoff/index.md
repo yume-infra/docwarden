@@ -34,6 +34,11 @@ owner: sayori
 - review-ready lint result 应贴近 `lead + backing`。
 - 如果 lint result 已经足够好，docwarden review surface 走短路径。
 - 如果 lint result 不足以支撑 user review，docwarden review surface 仍负责重新组织 `lead + backing`。
+- 没有真实 target 时，不做 lint dry run，不伪造 fixture。
+- 可用 target 复用既有 locator / assertion 设计：真正可 review 的 target 是带 assertion marker 的 assertion。
+- semantic-lint 的前置推导是：md 中必须存在可被单独审查的 assertion。
+- assertion 保留原命名，但定义为 module 内最小可审查 semantic commitment；它不表示内容已经正确。
+- assertion 不保存 correctness marker；review/promote 只改变 assertion 是否进入 accepted scope。
 
 ## 内容
 
@@ -41,7 +46,8 @@ owner: sayori
 - `log.md`：任务时间线记录。
 - `handoff-boundary-review.md`：Loop 1 最小交接边界审查材料。
 - `mechanism-completion-notes.md`：Loop 2 review-ready lint result 机制记录。
+- `target-availability-review.md`：Loop 3 可用 target 与 dry run 前置条件。
 
 ## 下一步
 
-当前机制已落地到 semantic-lint pipeline 与相关 relation。
+当前阶段已收口。后续等真实 target 或 CLI 实现参照物出现，再推进 lint dry run。
