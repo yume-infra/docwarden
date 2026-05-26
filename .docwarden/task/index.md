@@ -20,7 +20,8 @@ owner: sayori
 
 ## 工作面索引
 
-- `17-real-content-dry-run-target/`：真实内容 dry run 靶子准备工作面，当前 active。
+- `17-real-content-dry-run-target/`：真实内容 dry run 靶子准备工作面，当前 draft。
+- `18-contexta-runtime-handoff/`：contexta runtime 第一版实现 handoff 工作面，当前 active。
 
 ## 归档工作面
 
@@ -45,4 +46,4 @@ owner: sayori
 
 ## 当前入口
 
-当前 active task：`17-real-content-dry-run-target/`。
+当前 active task：`18-contexta-runtime-handoff/`。
