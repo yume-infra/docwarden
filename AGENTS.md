@@ -10,6 +10,16 @@ Agents MUST load and apply the project user context when working in this reposit
 
 The user context is not a project policy or workflow rule. Current user instructions and project rules take priority over it.
 
+## Effect Reference
+
+- Effect work in this repository uses the v4 beta toolchain, following the same baseline shape as `symphony-ts`.
+- Active package baseline: `effect@4.0.0-beta.70`, `@effect/platform-node@4.0.0-beta.70`, `@effect/tsgo@0.11.0`, and `@typescript/native-preview@7.0.0-dev.20260526.1`.
+- Upstream source reference: `repos/effect/`, a read-only git submodule for `https://github.com/Effect-TS/effect-smol.git`.
+- The submodule is pinned to commit `440505f845a7c207b8e98e3260f0bdf1690ac1c7`, the commit behind the `effect@4.0.0-beta.70` tag.
+- Application and tests MUST import Effect APIs from installed dependencies only. Never import from `repos/effect/`.
+- Use `repos/effect/` for source, tests, examples, API design reference, and agent context discovery.
+- Use `tsgo` diagnostics as the primary Effect feedback loop. `tsc` is only the conservative fallback check.
+
 ## Document Authority
 
 - Agents MUST NOT directly edit files under `docs/`.

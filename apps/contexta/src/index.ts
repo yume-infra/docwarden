@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 
-import { createGreetingCommand, runCli } from '@docwarden/cli-kit'
+import * as NodeRuntime from '@effect/platform-node/NodeRuntime'
+import * as NodeServices from '@effect/platform-node/NodeServices'
+import * as Console from 'effect/Console'
+import * as Effect from 'effect/Effect'
+import * as Command from 'effect/unstable/cli/Command'
 
-export { renderGreeting } from '@docwarden/cli-kit'
+const command = Command.make('contexta', {}, () =>
+  Console.log('contexta CLI'))
 
-const metadata = {
-  name: 'contexta',
+const main = Command.run(command, {
   version: '0.0.0',
-} as const
+}).pipe(
+  Effect.provide(NodeServices.layer),
+)
 
-const command = createGreetingCommand({
-  commandName: metadata.name,
-})
-
-runCli(command, metadata)
+NodeRuntime.runMain(main)

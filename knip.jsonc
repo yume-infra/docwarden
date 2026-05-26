@@ -6,6 +6,12 @@
   "ignoreBinaries": [
     "dist/index.js"
   ],
+  "ignore": [
+    "repos/**"
+  ],
+  "ignoreDependencies": [
+    "@effect/language-service"
+  ],
   "workspaces": {
     ".": {
       "project": [
@@ -23,17 +29,6 @@
       "project": [
         "*.config.ts",
         "src/**/*.ts"
-      ]
-    },
-    "packages/cli-kit": {
-      "entry": [
-        "src/index.ts",
-        "tests/**/*.ts"
-      ],
-      "project": [
-        "*.config.ts",
-        "src/**/*.ts",
-        "tests/**/*.ts"
       ]
     },
     "packages/tsdown-config": {

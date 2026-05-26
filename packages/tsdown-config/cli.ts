@@ -1,11 +1,7 @@
 import { defineConfig } from 'tsdown'
 
 const effectExternals = [
-  '@effect/cli',
-  '@effect/platform',
   '@effect/platform-node',
-  '@effect/printer',
-  '@effect/printer-ansi',
   'effect',
 ] as const
 
