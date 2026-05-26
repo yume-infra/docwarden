@@ -1,0 +1,12 @@
+{
+  "name": "@docwarden/vitest-config",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./workspace.config.ts": "./workspace.config.ts"
+  },
+  "files": [
+    "workspace.config.ts"
+  ]
+}

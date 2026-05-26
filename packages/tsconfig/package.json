@@ -1,0 +1,14 @@
+{
+  "name": "@docwarden/tsconfig",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./base.json": "./base.json",
+    "./build.json": "./build.json",
+    "./runtime.json": "./runtime.json"
+  },
+  "files": [
+    "*.json"
+  ]
+}

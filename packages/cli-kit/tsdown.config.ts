@@ -1,20 +1,5 @@
-import { defineConfig } from 'tsdown'
+import { defineCliTsdownConfig } from '@docwarden/tsdown-config/cli'
 
-export default defineConfig({
-  entry: 'src/index.ts',
-  outDir: 'dist',
-  format: 'esm',
-  fixedExtension: false,
-  dts: true,
-  deps: {
-    neverBundle: [
-      '@effect/cli',
-      '@effect/platform',
-      '@effect/platform-node',
-      '@effect/printer',
-      '@effect/printer-ansi',
-      'effect',
-    ],
-  },
-  tsconfig: 'tsconfig.json',
+export default defineCliTsdownConfig({
+  tsconfig: '../tsconfig/build.json',
 })

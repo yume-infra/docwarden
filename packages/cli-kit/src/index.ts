@@ -14,10 +14,12 @@ export interface GreetingCommandOptions {
   readonly optionDescription?: string
 }
 
+export const CliPlatformLayer: typeof NodeContext.layer = NodeContext.layer
+
 export function createNameOption(
   defaultName = 'world',
   description = 'Name to greet',
-) {
+): Options.Options<string> {
   return Options.text('name').pipe(
     Options.withDefault(defaultName),
     Options.withDescription(description),
@@ -28,7 +30,9 @@ export function renderGreeting(name: string): string {
   return `Hello, ${name}!`
 }
 
-export function createGreetingCommand(options: GreetingCommandOptions) {
+export function createGreetingCommand(
+  options: GreetingCommandOptions,
+): Command.Command<string, never, never, { readonly name: string }> {
   const name = createNameOption(
     options.defaultName,
     options.optionDescription,
@@ -52,6 +56,6 @@ export function runCli<Name extends string, E, A>(
   })
 
   NodeRuntime.runMain(
-    cli(argv).pipe(Effect.provide(NodeContext.layer)),
+    cli(argv).pipe(Effect.provide(CliPlatformLayer)),
   )
 }

@@ -1,0 +1,12 @@
+{
+  "name": "@docwarden/tsdown-config",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./cli": "./cli.ts"
+  },
+  "files": [
+    "cli.ts"
+  ]
+}

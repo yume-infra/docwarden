@@ -18,27 +18,34 @@
     "deps:check:all": "taze -r --all",
     "deps:fresh": "taze minor -r -w -i --maturity-period 7",
     "dev": "turbo run dev",
+    "effect:patch": "effect-language-service patch --dir node_modules/typescript",
     "husky:install": "husky",
     "knip": "knip",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "outdated": "pnpm outdated -r",
-    "prepare": "node -e \"if (require('node:fs').existsSync('.git')) require('node:child_process').execFileSync('husky', { stdio: 'inherit', shell: true })\"",
+    "prepare": "node -e \"if (require('node:fs').existsSync('.git')) require('node:child_process').execFileSync('husky', { stdio: 'inherit', shell: true })\" && effect-language-service patch --dir node_modules/typescript",
     "smoke:bin": "pnpm --filter docwarden smoke:bin && pnpm --filter contexta smoke:bin",
+    "test": "vitest run --config packages/vitest-config/workspace.config.ts",
     "typecheck": "turbo run typecheck",
-    "verify": "pnpm build && pnpm typecheck && pnpm lint && pnpm knip"
+    "verify": "pnpm build && pnpm typecheck && pnpm test && pnpm lint && pnpm knip",
+    "verify:code": "pnpm build && pnpm typecheck && pnpm test && pnpm lint && pnpm knip"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
     "@commitlint/cli": "catalog:",
     "@commitlint/config-conventional": "catalog:",
+    "@docwarden/tsdown-config": "workspace:*",
+    "@effect/language-service": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "husky": "catalog:",
     "knip": "catalog:",
     "lint-staged": "catalog:",
     "taze": "catalog:",
+    "tsdown": "catalog:",
     "turbo": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

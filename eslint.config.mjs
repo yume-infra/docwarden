@@ -4,8 +4,12 @@ export default antfu({
   ignores: [
     '**/.turbo/**',
     '**/dist/**',
+    '**/node_modules/**',
+    '.antigravitycli/**',
     '.contexta/**',
     '.docwarden/**',
     'docs/**',
   ],
+  lib: true,
+  typescript: true,
 })

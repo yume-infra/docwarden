@@ -27,14 +27,9 @@
     "dev": "tsdown --config tsdown.config.ts --watch",
     "prepack": "pnpm build",
     "smoke:bin": "pnpm build && dist/index.js --help",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@docwarden/cli-kit": "workspace:*"
-  },
-  "devDependencies": {
-    "@types/node": "catalog:",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
   }
 }

@@ -26,9 +26,30 @@
       ]
     },
     "packages/cli-kit": {
+      "entry": [
+        "src/index.ts",
+        "tests/**/*.ts"
+      ],
       "project": [
         "*.config.ts",
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "tests/**/*.ts"
+      ]
+    },
+    "packages/tsdown-config": {
+      "entry": [
+        "*.ts"
+      ],
+      "project": [
+        "*.ts"
+      ]
+    },
+    "packages/vitest-config": {
+      "entry": [
+        "*.ts"
+      ],
+      "project": [
+        "*.ts"
       ]
     }
   }
