@@ -1,3 +1,3 @@
 {
-  "**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,json,jsonc,yml,yaml}": "eslint --fix"
+  "**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx,json,jsonc,yml,yaml}": "eslint --fix --ignore-pattern repos/** --no-warn-ignored"
 }

@@ -9,6 +9,7 @@ export default antfu({
     '.contexta/**',
     '.docwarden/**',
     'docs/**',
+    'repos/**',
   ],
   lib: true,
   typescript: true,

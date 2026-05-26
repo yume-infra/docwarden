@@ -1,4 +1,7 @@
 {
+  "file_scan_exclusions": [
+    "repos/effect/**"
+  ],
   "languages": {
     "JavaScript": {
       "format_on_save": "on",

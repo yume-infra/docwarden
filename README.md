@@ -29,6 +29,6 @@ Effect runtime work uses the latest v4 beta baseline currently pinned in this wo
 - `@effect/tsgo@0.11.0`
 - `@typescript/native-preview@7.0.0-dev.20260526.1`
 
-The upstream Effect v4 source reference lives at `repos/effect` as a git submodule pointing to `Effect-TS/effect-smol` commit `440505f845a7c207b8e98e3260f0bdf1690ac1c7`, the commit behind the `effect@4.0.0-beta.70` tag.
+The upstream Effect v4 source reference lives at `repos/effect` as a squashed git subtree from `Effect-TS/effect-smol` commit `440505f845a7c207b8e98e3260f0bdf1690ac1c7`, the commit behind the `effect@4.0.0-beta.70` tag. The pin is recorded in `repos/effect-source.json` and checked by `pnpm effect:source:verify`.
 
-Application code must import Effect APIs from package dependencies, never from the reference submodule.
+Application code must import Effect APIs from package dependencies, never from the reference subtree.
