@@ -68,7 +68,7 @@ To:
 
 Reading:
 
-沿 `locator-target` 读取时，locator 让 signal 可以指向 assertion marker。
+沿 `locator-target` 读取时，locator 让 signal 可以指向 locator marker。
 
 locator 提供定位，不判断 assertion 是否正确。
 

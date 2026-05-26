@@ -15,14 +15,14 @@ kind: pipeline
   - [[mapping/bootstrap/modules/signal/example-as-kind|example-as-kind]]
   - [[mapping/bootstrap/modules/signal/composition-as-list|composition-as-list]]
 - token roles：[[mapping/bootstrap/modules/concept/magic-word|magic-word]]。
-- locator target：带有 `^a-*` marker 的 [[mapping/bootstrap/modules/concept/assertion|assertion]]。
+- locator target：带有 `^<prefix>-<number>` marker 的 [[mapping/bootstrap/modules/concept/assertion|assertion]]。
 
 ## Transform
 
 1. [[mapping/bootstrap/modules/concept/trigger|trigger]] 直接检查 formatted md 中稳定存在的 path、frontmatter、heading、section、OFM link、marker 和 magic word。
 2. [[mapping/bootstrap/modules/concept/signal|signal]] definition 命名语义偏移风险，并产生 signal。
 3. [[mapping/bootstrap/modules/concept/confidence|confidence]] 可以根据命中来源标记 signal 的识别强度。
-4. [[mapping/bootstrap/modules/concept/locator|locator]] 可以在 signal 指向具体 assertion 时提供 assertion marker。
+4. [[mapping/bootstrap/modules/concept/locator|locator]] 可以在 signal 指向具体 assertion 时提供 locator marker。
 5. semantic-lint 尽可能把 signal 命中组织成 review-ready lint result。
 6. signal 进入 review 后才形成判断。
 

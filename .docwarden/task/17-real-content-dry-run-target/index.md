@@ -36,6 +36,9 @@ owner: sayori
 ## 内容
 
 - `plan.md`：本任务 loop 计划。
+- `stage-plan.md`：后续阶段规划草案。
+- `assertion-locator-proposal.md`：`assertion.md` 的 locator-ready assertion 候选方案。
+- `locator-family-boundary.md`：已被后续 locator prefix / address token 纠偏收口的历史设计草案。
 - `log.md`：任务时间线记录。
 
 ## 下一步

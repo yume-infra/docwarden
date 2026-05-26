@@ -41,7 +41,7 @@ Applies to:
 - contexta section link MUST include both target path and display alias.
 - relation file From / To / Read next MUST use path alias.
 - block reference MUST NOT be used as a general internal link form.
-- block reference MAY be used as an assertion marker target when locator requires assertion-level reference.
+- block reference MAY be used as a locator marker target when locator requires assertion-level reference.
 
 ## Rationale
 
@@ -90,7 +90,7 @@ relation file 需要指向 concept pipeline。
 这是 section link，可以用于 Read next。它稳定到 heading，但还不是 assertion locator。
 
 ```md
-[[mapping/bootstrap/modules/concept/locator#^a-def|locator definition]]
+[[mapping/bootstrap/modules/concept/locator#^def-1|locator definition]]
 ```
 
-这是 assertion-level reference。只有当目标位置存在 assertion marker 时才成立。
+这是 assertion-level reference。只有当目标位置存在 locator marker 时才成立。

@@ -37,4 +37,6 @@ kind 是 metadata 中负责选择 content language 的字段。
 
 当 `kind: magic-word` 出现在 `.contexta/mapping/bootstrap/modules/magic-word/*.md` 中时，它表示当前 module 使用 magic-word registry language。
 
+当 `kind: locator` 出现在 `.contexta/mapping/bootstrap/modules/locator/*.md` 中时，它表示当前 module 使用 locator instance language。
+
 它不表达 primitive 层级，不表达 concept network 关系，也不表达 docwarden workflow 状态。

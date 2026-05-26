@@ -25,11 +25,11 @@ contexta 需要一个名字表示 module 内部可以被单独审查的最小语
 
 ## Definition
 
-assertion 是 module 内部的最小可审查 semantic commitment。
+assertion 是 module 内部的最小可审查 semantic commitment。 ^def-1
 
 assertion 表示 module 对某个对象作出一条可以被 review 和 semantic-lint 判断的语义承诺。
 
-assertion 不表示内容已经正确。错误、越界、重复或模糊的承诺仍然可以成为 assertion，因为它们正是 review 和 semantic-lint 要处理的对象。
+assertion 不表示内容已经正确。错误、越界、重复或模糊的承诺仍然可以成为 assertion，因为它们正是 review 和 semantic-lint 要处理的对象。 ^def-2
 
 assertion 本身不保存 correctness marker。
 
@@ -41,7 +41,7 @@ assertion 的核心不是句子长度、列表形态或标题层级，而是语�
 
 assertion 应尽量原子：一个 assertion 只承担一个可以被单独接受、拒绝、修改、引用、检查或迁移的语义承诺。
 
-没有 locator marker 的内容仍可能是 assertion。locator marker 和 locator 只提高 assertion 被稳定定位、引用、迁移或进入 review-ready lint result 的能力。
+没有 locator marker 的内容仍可能是 assertion。locator marker 和 locator 只提高 assertion 被稳定定位、引用、迁移或进入 review-ready lint result 的能力。 ^def-3
 
 ## Qualification
 

@@ -23,11 +23,11 @@ template 可以生成 0->1 的初始 md。format 负责让 1->2 的编辑不破�
 
 ## Definition
 
-format 是 md module 在 1->2 编辑中的形态保持契约。 ^a-def
+format 是 md module 在 1->2 编辑中的形态保持契约。 ^def-1
 
 format 关心文档从 template 生成之后，进入下一轮编辑时如何保持 semantic-lint 可以直接消费的 md 形态。
 
-format 保护的表面包括 frontmatter、H1、heading、section body、OFM wikilink、relation block heading 和 assertion marker。
+format 保护的表面包括 frontmatter、H1、heading、section body、OFM wikilink、relation block heading 和 locator marker。
 
 format 不生成初始骨架。
 

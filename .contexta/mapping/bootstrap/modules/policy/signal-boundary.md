@@ -38,14 +38,14 @@ semantic-lint 检查到 concept module 的 Definition 中出现 `MUST`。
 ```md
 ## Definition
 
-agent MUST use OFM path alias. ^a-def
+agent MUST use OFM path alias. ^def-1
 ```
 
 ### Positive
 
 ```md
 signal: concept-as-policy
-locator: [[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
+locator: [[mapping/bootstrap/modules/concept/assertion#^def-1|assertion definition]]
 ```
 
 这是带有 locator 的 signal：signal 命名语义偏移 warning，locator 指向 assertion。

@@ -24,7 +24,7 @@ Applies to:
 
 - contexta 需要定义 semantic-lint signal。
 - contexta 需要判断 trigger 是否可以作为 lint 条件。
-- contexta 需要让 lint signal 指向 assertion marker。
+- contexta 需要让 lint signal 指向 locator marker。
 - contexta 需要区分 signal 与 review judgment。
 
 不适用条件：
@@ -45,7 +45,7 @@ Applies to:
 - signal definition SHOULD link to Basis concept / policy / relation.
 - emitted signal MAY include locator when it points to a concrete assertion.
 - trigger MUST inspect formatted md directly.
-- locator MUST point to assertion marker without judging correctness.
+- locator MUST point to locator marker without judging correctness.
 - module path and heading MAY be used as signal context, not final assertion locator.
 
 ## Rationale
@@ -56,7 +56,7 @@ semantic-lint 是检测语言，不是约束语言。
 
 未来 CLI lint step 可以携带 candidate、instance 或 evidence 这类实现细节。
 
-trigger 直接检查 formatted md。locator 只负责让 signal 指向 assertion marker。
+trigger 直接检查 formatted md。locator 只负责让 signal 指向 locator marker。
 
 当前阶段先稳定 signal definition，不提前设计完整引擎。
 
@@ -78,7 +78,7 @@ section contains MUST
 
 ```md
 signal: concept-as-policy
-locator: [[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
+locator: [[mapping/bootstrap/modules/concept/assertion#^def-1|assertion definition]]
 ```
 
 这是 semantic-lint 产生的 signal，需要进入 review 后再形成判断。
@@ -96,7 +96,7 @@ error: concept module MUST NOT contain MUST
 ```md
 CLI detail:
   signal: concept-as-policy
-  locator: [[mapping/bootstrap/modules/concept/example#^a-def|example definition]]
+  locator: [[mapping/bootstrap/modules/concept/assertion#^def-1|assertion definition]]
   evidence: "agent MUST ..."
 ```
 
