@@ -1,13 +1,16 @@
 ---
-status: draft
+status: accepted
+workspace_status: archived
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-05-26
 owner: sayori
 ---
 
 # magic word registry expansion
 
 本 task 处理 magic-word registry 的扩充与分层。
+
+当前 task 已归档。后续真实内容 dry run 靶子准备进入 `.docwarden/task/17-real-content-dry-run-target/`。
 
 ## 边界
 
@@ -29,7 +32,7 @@ owner: sayori
 - `.contexta/mapping/bootstrap/relations/template-format-semantic-lint.md`
 - `.docwarden/task/13-kind-signal-landing/`
 
-## 当前判断
+## 归档判断
 
 - `magic-word` 是 formatted md 中可被 semantic-lint 直接消费的控制性 token 或短表达。
 - `concept/magic-word.md` 只定义 magic-word 和准入边界。
@@ -51,4 +54,4 @@ owner: sayori
 
 ## 下一步
 
-当前已落地 section-heading 与 frontmatter-field。下一轮应设计 semantic output 与 signal / candidate / instance / judgment 的关系。
+本 task 已完成当前阶段并归档。

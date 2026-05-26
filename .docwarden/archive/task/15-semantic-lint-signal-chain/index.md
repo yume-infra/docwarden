@@ -1,5 +1,6 @@
 ---
-status: draft
+status: accepted
+workspace_status: archived
 created: 2026-05-26
 updated: 2026-05-26
 owner: sayori
@@ -8,6 +9,8 @@ owner: sayori
 # semantic lint signal chain
 
 本 task 处理 semantic-lint 与 signal 的 pure chain 建模。
+
+当前 task 已归档。后续真实内容 dry run 靶子准备进入 `.docwarden/task/17-real-content-dry-run-target/`。
 
 ## 边界
 
@@ -29,7 +32,7 @@ owner: sayori
 - `.contexta/mapping/bootstrap/modules/policy/semantic-lint-boundary.md`
 - `.contexta/mapping/bootstrap/modules/policy/signal-boundary.md`
 
-## 当前判断
+## 归档判断
 
 - semantic-lint 的 pure chain 是 `formatted md -> semantic-lint -> signal -> review`。
 - semantic-lint 的产物是 signal。
@@ -46,6 +49,4 @@ owner: sayori
 
 ## 下一步
 
-signal definition surface 已收窄为 `Definition / Trigger / Basis`。
-
-下一轮应讨论 signal 进入 review 的交接边界。
+本 task 已完成当前阶段并归档。

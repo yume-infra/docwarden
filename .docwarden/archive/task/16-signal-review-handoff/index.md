@@ -1,5 +1,6 @@
 ---
-status: draft
+status: accepted
+workspace_status: archived
 created: 2026-05-26
 updated: 2026-05-26
 owner: sayori
@@ -8,6 +9,8 @@ owner: sayori
 # signal review handoff
 
 本 task 处理 semantic-lint result 如何复用 docwarden review surface。
+
+当前 task 已归档。后续真实内容 dry run 靶子准备进入 `.docwarden/task/17-real-content-dry-run-target/`。
 
 ## 边界
 
@@ -27,7 +30,7 @@ owner: sayori
 - `.docwarden/archive/task/05-review-input-design/lead-rules.md`
 - `.docwarden/archive/task/06-review-surface-design/surface-generation-rules.md`
 
-## 当前判断
+## 归档判断
 
 - signal definition 不直接生成 lead。
 - semantic-lint 的具体结果应尽可能组织成 review-ready lint result。
@@ -50,4 +53,4 @@ owner: sayori
 
 ## 下一步
 
-当前阶段已收口。后续等真实 target 或 CLI 实现参照物出现，再推进 lint dry run。
+本 task 已完成当前阶段并归档。

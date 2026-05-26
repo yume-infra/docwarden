@@ -1,13 +1,16 @@
 ---
-status: draft
+status: accepted
+workspace_status: archived
 created: 2026-05-25
-updated: 2026-05-25
+updated: 2026-05-26
 owner: sayori
 ---
 
 # kind signal landing
 
 本 task 处理 `kind: signal` 引入后的落点复核。
+
+当前 task 已归档。后续真实内容 dry run 靶子准备进入 `.docwarden/task/17-real-content-dry-run-target/`。
 
 ## 边界
 
@@ -32,7 +35,7 @@ owner: sayori
 - `.contexta/mapping/bootstrap/modules/signal/`
 - `.contexta/mapping/bootstrap/structures/pipeline/semantic-lint.md`
 
-## 当前判断
+## 归档判断
 
 - `module` 是 md file scope，不是 `kind: module`。
 - `metadata` 是 md module frontmatter 中的结构化说明字段。
@@ -40,7 +43,7 @@ owner: sayori
 - `signal` 是 semantic-lint 中被命名的 warning 类型。
 - `modules/signal/*.md` 当前表示每个具体 signal definition 是一个 module。
 - `kind: signal` 当前表示该 module 的正文应按 signal definition 语言读取。
-- `assertion` 是 module 内最小可审查语义判断。
+- `assertion` 是 module 内最小可审查 semantic commitment。
 - `locator` 是让 assertion 可被稳定找到的定位机制。
 - `signal instance` 是未来 CLI lint engine 的运行产物，必须能通过 locator 指向 assertion。
 - `signal definition` 不是 `signal instance`。
@@ -63,4 +66,4 @@ owner: sayori
 
 ## 下一步
 
-当前正在进行 magic-word registry 分层。下一轮再进入 kind / module / content language 关系检查。
+本 task 已完成当前阶段并归档。

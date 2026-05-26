@@ -1,13 +1,16 @@
 ---
-status: draft
+status: accepted
+workspace_status: archived
 created: 2026-05-20
-updated: 2026-05-25
+updated: 2026-05-26
 owner: sayori
 ---
 
 # contexta model followup
 
 本 task 目录承接 task 11 归档后仍需继续推进的 contexta 模型缺口。
+
+当前 task 已归档。后续真实内容 dry run 靶子准备进入 `.docwarden/task/17-real-content-dry-run-target/`。
 
 ## 边界
 
@@ -25,12 +28,12 @@ owner: sayori
 - `.contexta/mapping/bootstrap/modules/concept/structure/composition.md`
 - `.contexta/mapping/bootstrap/templates/composition.md`
 
-## 当前判断
+## 归档判断
 
-- task 11 已归档，当前 active task 切换到本目录。
+- task 11 已归档，本 task 曾承接 contexta 模型后续补全。
 - composition 已作为 structure subtype 落地，且已用于定义当前 module / assertion 的 part-whole 关系。
 - module 已明确为 md file scope。
-- assertion 已明确为 module 内部最小可审查语义判断，并保留后续成为 locator target 的需求。
+- assertion 已明确为 module 内部最小可审查 semantic commitment，并保留后续成为 locator target 的需求。
 - `kind` 应表达内容类型；docwarden operation metadata 应表达 workflow 维护状态。
 - template 只应服务已成立的内容语言骨架，不应制造伪 kind。
 - contexta 目录第一层应表达 mapping 关系，区分 bootstrap mapping 和 docwarden mapping。
@@ -75,4 +78,4 @@ owner: sayori
 
 ## 下一步
 
-Loop 15 已落地初版：等待确认 `modules/signal` 与 `structures/pipeline` 拆分口径，并继续区分后续 structure instance。
+本 task 已完成当前阶段并归档。

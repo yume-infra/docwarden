@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-13
-updated: 2026-05-25
+updated: 2026-05-26
 owner: sayori
 ---
 
@@ -20,11 +20,7 @@ owner: sayori
 
 ## 工作面索引
 
-- `12-contexta-model-followup/`：contexta 模型后续补全工作面，已完成当前阶段。
-- `13-kind-signal-landing/`：kind / signal 落点复核工作面，已完成当前阶段。
-- `14-magic-word-registry-expansion/`：magic-word registry 扩充工作面，已完成当前阶段。
-- `15-semantic-lint-signal-chain/`：semantic-lint / signal pure chain 工作面，已完成当前阶段。
-- `16-signal-review-handoff/`：signal 进入 review 的交接边界工作面，当前 active。
+- `17-real-content-dry-run-target/`：真实内容 dry run 靶子准备工作面，当前 active。
 
 ## 归档工作面
 
@@ -41,7 +37,12 @@ owner: sayori
 - `.docwarden/archive/task/09-promote-pick-entity-landing/`：promote / pick 实体落点设计工作面，已完成并关闭。
 - `.docwarden/archive/task/10-promote-output-content-format/`：promote 后内容格式实例设计工作面，已完成并关闭。
 - `.docwarden/archive/task/11-contexta-content-type-constraints/`：contexta 内容类型约束设计工作面，已归档。
+- `.docwarden/archive/task/12-contexta-model-followup/`：contexta 模型后续补全工作面，已完成并归档。
+- `.docwarden/archive/task/13-kind-signal-landing/`：kind / signal 落点复核工作面，已完成并归档。
+- `.docwarden/archive/task/14-magic-word-registry-expansion/`：magic-word registry 扩充工作面，已完成并归档。
+- `.docwarden/archive/task/15-semantic-lint-signal-chain/`：semantic-lint / signal pure chain 工作面，已完成并归档。
+- `.docwarden/archive/task/16-signal-review-handoff/`：signal 进入 review 的交接边界工作面，已完成并归档。
 
 ## 当前入口
 
-当前 active task：`16-signal-review-handoff/`。
+当前 active task：`17-real-content-dry-run-target/`。
