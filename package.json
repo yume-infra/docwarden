@@ -6,6 +6,9 @@
   "packageManager": "pnpm@10.33.4",
   "description": "Workspace for the docwarden and contexta CLIs",
   "license": "MIT",
+  "bin": {
+    "contexta": "apps/contexta/dist/index.js"
+  },
   "engines": {
     "node": ">=22.22.1"
   },
@@ -23,6 +26,7 @@
     "effect:unpatch": "effect-tsgo unpatch",
     "husky:install": "husky",
     "knip": "knip",
+    "link": "pnpm build:contexta && pnpm link",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "outdated": "pnpm outdated -r",
@@ -31,6 +35,7 @@
     "test": "vitest run --config packages/vitest-config/workspace.config.ts",
     "typecheck": "turbo run typecheck",
     "typecheck:tsc": "turbo run typecheck:tsc",
+    "unlink": "pnpm rm -g docwarden-workspace",
     "verify": "pnpm build && pnpm typecheck && pnpm test && pnpm lint && pnpm knip && pnpm effect:source:verify",
     "verify:code": "pnpm build && pnpm typecheck && pnpm test && pnpm lint && pnpm knip && pnpm effect:source:verify"
   },

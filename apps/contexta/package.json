@@ -25,10 +25,12 @@
     "build": "tsdown --config tsdown.config.ts && node ../../scripts/ensure-shebang.mjs dist/index.js",
     "clean": "rm -rf dist",
     "dev": "tsdown --config tsdown.config.ts --watch",
+    "link:global": "pnpm build && pnpm link",
     "prepack": "pnpm build",
     "smoke:bin": "pnpm build && dist/index.js --help",
     "typecheck": "tsgo -p tsconfig.json --noEmit",
-    "typecheck:tsc": "tsc -p tsconfig.json --noEmit"
+    "typecheck:tsc": "tsc -p tsconfig.json --noEmit",
+    "unlink:global": "pnpm rm -g contexta"
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",
