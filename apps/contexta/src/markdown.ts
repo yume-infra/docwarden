@@ -1,43 +1,4 @@
-export interface Frontmatter {
-  readonly [key: string]: string
-}
-
-export interface Heading {
-  readonly level: number
-  readonly text: string
-  readonly line: number
-}
-
-export interface LocatorMarker {
-  readonly marker: string
-  readonly line: number
-  readonly text: string
-}
-
-export interface OfmLink {
-  readonly raw: string
-  readonly target: string
-  readonly label: string | undefined
-}
-
-export interface Section {
-  readonly heading: Heading
-  readonly text: string
-  readonly startLine: number
-  readonly endLine: number
-  readonly locatorMarkers: readonly LocatorMarker[]
-}
-
-export interface MarkdownSurface {
-  readonly path: string
-  readonly content: string
-  readonly frontmatter: Frontmatter
-  readonly body: string
-  readonly headings: readonly Heading[]
-  readonly sections: readonly Section[]
-  readonly locatorMarkers: readonly LocatorMarker[]
-  readonly ofmLinks: readonly OfmLink[]
-}
+import type { Frontmatter, Heading, LocatorMarker, MarkdownSurface, OfmLink, Section } from './domain.js'
 
 interface HeadingWithBodyIndex extends Heading {
   readonly bodyIndex: number

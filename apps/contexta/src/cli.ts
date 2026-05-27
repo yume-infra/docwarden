@@ -1,11 +1,11 @@
-import type { ContextaError, ContextaRuntimeServices, InitResult, LintResult, PrimitiveSkillResult, RecognitionRunResult, UpgradeStatusResult } from './runtime.js'
+import type { ContextaError, ContextaRuntimeServices, DoctorInspectResult, DoctorRepairResult, InitResult, LintResult, PrimitiveSkillResult, RecognitionRunResult, UpgradeStatusResult } from './runtime.js'
 
 import process from 'node:process'
-import { Effect } from 'effect'
+import { Effect, Option } from 'effect'
 import * as Argument from 'effect/unstable/cli/Argument'
 import * as Command from 'effect/unstable/cli/Command'
 import * as Flag from 'effect/unstable/cli/Flag'
-import { contextaLiveLayer, runInitEffect, runLintEffect, runPrimitiveSkillEffect, runRecognitionEffect, runUpgradeStatusEffect, toContextaError } from './runtime.js'
+import { ContextaConfigError, contextaLiveLayer, runDoctorInspectEffect, runDoctorRepairEffect, runInitEffect, runLintEffect, runPrimitiveSkillEffect, runRecognitionEffect, runUpgradeStatusEffect, toContextaError } from './runtime.js'
 
 export const version = '0.0.0'
 
@@ -21,6 +21,11 @@ const rootFlag = Flag.string('root').pipe(
 
 const jsonFlag = Flag.boolean('json').pipe(
   Flag.withDescription('Print machine-readable JSON'),
+)
+
+const targetArgument = Argument.string('target').pipe(
+  Argument.withDescription('Markdown target'),
+  Argument.optional,
 )
 
 const contexta = Command.make('contexta').pipe(
@@ -47,15 +52,16 @@ const init = Command.make('init', {
 )
 
 const recognize = Command.make('recognize', {
-  target: Argument.file('target', { mustExist: true }).pipe(
-    Argument.withDescription('Markdown target to recognize'),
-  ),
+  target: targetArgument,
   json: jsonFlag,
 }, ({ target, json }) =>
   Effect.gen(function* () {
     const root = yield* contexta
+    const targetPath = targetFromOption(target)
     yield* runCli(
-      runRecognitionEffect({ root: root.root, target }),
+      targetPath === undefined
+        ? missingTargetEffect('recognize')
+        : runRecognitionEffect({ root: root.root, target: targetPath }),
       result => ({
         output: json ? formatJson(trimRecognitionRun(result)) : formatRecognition(result),
         exitCode: 0,
@@ -66,15 +72,16 @@ const recognize = Command.make('recognize', {
 )
 
 const lint = Command.make('lint', {
-  target: Argument.file('target', { mustExist: true }).pipe(
-    Argument.withDescription('Markdown target to lint after recognition'),
-  ),
+  target: targetArgument,
   json: jsonFlag,
 }, ({ target, json }) =>
   Effect.gen(function* () {
     const root = yield* contexta
+    const targetPath = targetFromOption(target)
     yield* runCli(
-      runLintEffect({ root: root.root, target }),
+      targetPath === undefined
+        ? missingTargetEffect('lint')
+        : runLintEffect({ root: root.root, target: targetPath }),
       result => ({
         output: json ? formatJson(result) : formatLint(result),
         exitCode: result.signals.length > 0 ? 1 : 0,
@@ -85,15 +92,16 @@ const lint = Command.make('lint', {
 )
 
 const primitiveSkill = Command.make('skill', {
-  target: Argument.file('target', { mustExist: true }).pipe(
-    Argument.withDescription('Skill primitive markdown target'),
-  ),
+  target: targetArgument,
   json: jsonFlag,
 }, ({ target, json }) =>
   Effect.gen(function* () {
     const root = yield* contexta
+    const targetPath = targetFromOption(target)
     yield* runCli(
-      runPrimitiveSkillEffect({ root: root.root, target }),
+      targetPath === undefined
+        ? missingTargetEffect('primitive skill')
+        : runPrimitiveSkillEffect({ root: root.root, target: targetPath }),
       result => ({
         output: json ? formatJson(result) : formatPrimitiveSkill(result),
         exitCode: result.status === 'ready' ? 0 : 1,
@@ -124,8 +132,63 @@ const upgrade = Command.make('upgrade', {
   Command.withDescription('Report the pinned vendor baseline; merge engine is not implemented in v0'),
 )
 
+const doctorInspect = Command.make('inspect', {
+  json: jsonFlag,
+}, ({ json }) =>
+  Effect.gen(function* () {
+    const root = yield* contexta
+    yield* runCli(
+      runDoctorInspectEffect({ root: root.root }),
+      result => ({
+        output: json ? formatJson(result) : formatDoctorInspect(result),
+        exitCode: result.issues.some(issue => issue.severity === 'error') ? 2 : 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('Inspect local .contexta issues and repair plans'),
+)
+
+const doctorRepair = Command.make('repair', {
+  plan: Flag.string('plan').pipe(
+    Flag.withDescription('Repair plan id'),
+    Flag.withDefault(''),
+  ),
+  json: jsonFlag,
+}, ({ json, plan }) =>
+  Effect.gen(function* () {
+    const root = yield* contexta
+    yield* runCli(
+      plan.trim().length === 0
+        ? Effect.fail(new ContextaConfigError({ message: 'missing doctor repair plan: --plan <id>' }))
+        : runDoctorRepairEffect({ root: root.root, plan }),
+      result => ({
+        output: json ? formatJson(result) : formatDoctorRepair(result),
+        exitCode: 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('Apply an explicit doctor repair plan'),
+)
+
+const doctor = Command.make('doctor', {
+  json: jsonFlag,
+}, ({ json }) =>
+  Effect.gen(function* () {
+    const root = yield* contexta
+    yield* runCli(
+      runDoctorInspectEffect({ root: root.root }),
+      result => ({
+        output: json ? formatJson(result) : formatDoctorInspect(result),
+        exitCode: result.issues.some(issue => issue.severity === 'error') ? 2 : 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('Inspect and repair local .contexta runtime readiness'),
+  Command.withSubcommands([doctorInspect, doctorRepair]),
+)
+
 const command = contexta.pipe(
-  Command.withSubcommands([init, recognize, lint, primitive, upgrade]),
+  Command.withSubcommands([init, recognize, lint, primitive, upgrade, doctor]),
 )
 
 export const main: Effect.Effect<void, unknown> = Command.run(command, {
@@ -140,7 +203,7 @@ function runCli<A>(run: Effect.Effect<A, ContextaError, ContextaRuntimeServices>
       onFailure: (error) => {
         const contextaError = toContextaError(error)
         return writeStderr(`contexta ${contextaError.kind} error: ${contextaError.message}`).pipe(
-          Effect.andThen(setExitCode(contextaError.exitCode)),
+          Effect.andThen(setExitCode(exitCodeForErrorKind(contextaError.kind))),
         )
       },
       onSuccess: (result) => {
@@ -151,6 +214,14 @@ function runCli<A>(run: Effect.Effect<A, ContextaError, ContextaRuntimeServices>
       },
     }),
   )
+}
+
+function targetFromOption(target: Option.Option<string>): string | undefined {
+  return Option.isSome(target) ? target.value : undefined
+}
+
+function missingTargetEffect(commandName: string): Effect.Effect<never, ContextaError, ContextaRuntimeServices> {
+  return Effect.fail(new ContextaConfigError({ message: `missing target argument for ${commandName}` }))
 }
 
 function writeStdout(message: string): Effect.Effect<void> {
@@ -169,6 +240,10 @@ function setExitCode(exitCode: number): Effect.Effect<void> {
   return Effect.sync(() => {
     process.exitCode = exitCode
   })
+}
+
+function exitCodeForErrorKind(_kind: ContextaError['kind']): number {
+  return 2
 }
 
 function formatJson(value: unknown): string {
@@ -200,8 +275,13 @@ function formatRecognition(result: RecognitionRunResult): string {
     `target: ${result.recognition.target}`,
     `root: ${result.root.contextaRoot}`,
     `recognized: ${result.recognition.recognizedRole} (${result.recognition.confidence.toFixed(2)})`,
+    `features: frontmatter=${Object.keys(result.recognition.features.frontmatter).length}, headings=${result.recognition.features.headings.length}, locators=${result.recognition.features.locatorMarkers.length}, links=${result.recognition.features.ofmLinks.length}`,
     'basis:',
     ...result.recognition.basis.map(basis => `- ${basis}`),
+    'diagnostics:',
+    ...(result.recognition.diagnostics.length === 0
+      ? ['- none']
+      : result.recognition.diagnostics.map(diagnostic => `- ${diagnostic.severity}: ${diagnostic.code}: ${diagnostic.message}`)),
     'candidate signal scope:',
     ...(scope.length === 0 ? ['- none'] : scope),
   ].join('\n')
@@ -227,6 +307,10 @@ function formatLint(result: LintResult): string {
     `target: ${result.recognition.target}`,
     `recognized: ${result.recognition.recognizedRole} (${result.recognition.confidence.toFixed(2)})`,
     `signals: ${result.signals.length}`,
+    'diagnostics:',
+    ...(result.diagnostics.length === 0
+      ? ['- none']
+      : result.diagnostics.map(diagnostic => `- ${diagnostic.severity}: ${diagnostic.code}: ${diagnostic.message}${diagnostic.evidence === undefined ? '' : ` (${diagnostic.evidence})`}`)),
   ]
 
   if (result.signals.length === 0) {
@@ -283,25 +367,16 @@ function formatPrimitiveSkill(result: PrimitiveSkillResult): string {
 }
 
 function formatUpgrade(result: UpgradeStatusResult): string {
-  const pinLines = result.pinStatus.status === 'pinned-v0'
-    ? [
-        'pinned vendor baseline:',
-        `  schemaVersion: ${result.pinStatus.pin.schemaVersion}`,
-        `  vendor: ${result.pinStatus.pin.vendor}`,
-        `  ref: ${result.pinStatus.pin.ref}`,
-        `  digest: ${result.pinStatus.pin.digest}`,
-        `  createdAt: ${result.pinStatus.pin.createdAt}`,
-      ]
-    : [
-        'pin status: pre-v0 local instance without pin',
-        `pin path: ${result.pinStatus.pinPath}`,
-      ]
-
   return [
     'contexta upgrade',
     `root: ${result.root.contextaRoot}`,
     `local instance: ${result.localInstance.status}`,
-    ...pinLines,
+    'pinned vendor baseline:',
+    `  schemaVersion: ${result.pinStatus.pin.schemaVersion}`,
+    `  vendor: ${result.pinStatus.pin.vendor}`,
+    `  ref: ${result.pinStatus.pin.ref}`,
+    `  digest: ${result.pinStatus.pin.digest}`,
+    `  createdAt: ${result.pinStatus.pin.createdAt}`,
     'new vendor baseline:',
     `  schemaVersion: ${result.newBaseline.schemaVersion}`,
     `  vendor: ${result.newBaseline.vendor}`,
@@ -309,6 +384,39 @@ function formatUpgrade(result: UpgradeStatusResult): string {
     `  digest: ${result.newBaseline.digest}`,
     'merge engine: not implemented in v0',
     'local customization: not overwritten',
+  ].join('\n')
+}
+
+function formatDoctorInspect(result: DoctorInspectResult): string {
+  return [
+    'contexta doctor',
+    `root: ${result.root.contextaRoot}`,
+    `status: ${result.status}`,
+    'issues:',
+    ...(result.issues.length === 0
+      ? ['- none']
+      : result.issues.map(issue => `- ${issue.severity}: ${issue.code}: ${issue.summary} [${issue.repairability}${issue.repair === undefined ? '' : `, repair=${issue.repair}`}]`)),
+    'repair plans:',
+    ...(result.repairPlans.length === 0
+      ? ['- none']
+      : result.repairPlans.map(plan => `- ${plan.id}: ${plan.strategy}`)),
+  ].join('\n')
+}
+
+function formatDoctorRepair(result: DoctorRepairResult): string {
+  return [
+    'contexta doctor repair',
+    `root: ${result.root.contextaRoot}`,
+    `plan: ${result.plan.id}`,
+    `applied: ${result.applied ? 'yes' : 'no'}`,
+    'actions:',
+    ...(result.actions.length === 0 ? ['- none'] : result.actions.map(action => `- ${action}`)),
+    'verification:',
+    ...result.verification.map(item => `- ${item}`),
+    'remaining issues:',
+    ...(result.issuesAfter.length === 0
+      ? ['- none']
+      : result.issuesAfter.map(issue => `- ${issue.severity}: ${issue.code}: ${issue.summary}`)),
   ].join('\n')
 }
 

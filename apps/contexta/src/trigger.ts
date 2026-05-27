@@ -1,5 +1,4 @@
-import type { TriggerHit } from './domain.js'
-import type { MarkdownSurface, Section } from './markdown.js'
+import type { MarkdownSurface, Section, TriggerHit } from './domain.js'
 import { normalizeToken, splitTerms, stripCode } from './markdown-helpers.js'
 
 export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSurface, sectionScope: readonly string[] | undefined): TriggerHit {
@@ -17,6 +16,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
         ? `frontmatter.${key} == ${expected}`
         : `frontmatter.${key} is ${actual ?? 'missing'}`,
       context: undefined,
+      source: 'surface',
     }
   }
 
@@ -34,6 +34,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
         ? `heading matched ${matchedHeadings.join(', ')}`
         : `heading missing ${expected.join(', ')}`,
       context: matchedHeadings[0],
+      source: 'surface',
     }
   }
 
@@ -50,6 +51,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
         ? `section missing terms ${terms.join(', ')}`
         : `section ${hit.heading.text} contains ${hit.term}`,
       context: hit?.heading.text,
+      source: 'surface',
     }
   }
 
@@ -64,6 +66,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
         matched,
         evidence: matched ? 'body contains list items' : 'body has no list items',
         context: undefined,
+        source: 'surface',
       }
     }
     const terms = splitTerms(bodyExpression)
@@ -74,6 +77,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
       matched: hit !== undefined,
       evidence: hit === undefined ? `body missing terms ${terms.join(', ')}` : `body contains ${hit}`,
       context: undefined,
+      source: 'surface',
     }
   }
 
@@ -87,6 +91,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
       matched: hit === undefined,
       evidence: hit === undefined ? `body missing ${terms.join(', ')}` : `body contains ${hit}`,
       context: undefined,
+      source: 'surface',
     }
   }
 
@@ -100,6 +105,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
       matched,
       evidence: matched ? `path matches ${glob}` : `path does not match ${glob}`,
       context: undefined,
+      source: 'surface',
     }
   }
 
@@ -113,6 +119,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
       matched,
       evidence: matched ? `path contains ${fragment}` : `path does not contain ${fragment}`,
       context: undefined,
+      source: 'surface',
     }
   }
 
@@ -127,6 +134,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
       matched,
       evidence: matched ? `directory name == ${expected}` : `directory name is not ${expected}`,
       context: undefined,
+      source: 'surface',
     }
   }
 
@@ -141,6 +149,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
         ? 'text states example proves kind or content type'
         : 'text does not state example proves kind or content type',
       context: undefined,
+      source: 'surface',
     }
   }
 
@@ -150,6 +159,7 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
     matched: false,
     evidence: `unparsed trigger: ${raw}`,
     context: undefined,
+    source: 'surface',
   }
 }
 

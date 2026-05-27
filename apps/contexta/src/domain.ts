@@ -1,4 +1,43 @@
-import type { MarkdownSurface } from './markdown.js'
+export interface Frontmatter {
+  readonly [key: string]: string
+}
+
+export interface Heading {
+  readonly level: number
+  readonly text: string
+  readonly line: number
+}
+
+export interface LocatorMarker {
+  readonly marker: string
+  readonly line: number
+  readonly text: string
+}
+
+export interface OfmLink {
+  readonly raw: string
+  readonly target: string
+  readonly label: string | undefined
+}
+
+export interface Section {
+  readonly heading: Heading
+  readonly text: string
+  readonly startLine: number
+  readonly endLine: number
+  readonly locatorMarkers: readonly LocatorMarker[]
+}
+
+export interface MarkdownSurface {
+  readonly path: string
+  readonly content: string
+  readonly frontmatter: Frontmatter
+  readonly body: string
+  readonly headings: readonly Heading[]
+  readonly sections: readonly Section[]
+  readonly locatorMarkers: readonly LocatorMarker[]
+  readonly ofmLinks: readonly OfmLink[]
+}
 
 export interface PinMetadata {
   readonly schemaVersion: number
@@ -74,6 +113,23 @@ export interface TriggerHit {
   readonly matched: boolean
   readonly evidence: string
   readonly context: string | undefined
+  readonly source: 'recognition' | 'surface'
+}
+
+export interface ContextaDiagnostic {
+  readonly severity: 'info' | 'warning' | 'error'
+  readonly code: string
+  readonly message: string
+  readonly target: string | undefined
+  readonly evidence: string | undefined
+}
+
+export interface RecognitionFeatures {
+  readonly path: string
+  readonly frontmatter: Readonly<Record<string, string>>
+  readonly headings: readonly string[]
+  readonly locatorMarkers: readonly string[]
+  readonly ofmLinks: readonly string[]
 }
 
 export interface SignalCandidate {
@@ -86,6 +142,8 @@ export interface SignalCandidate {
   readonly basis: readonly string[]
   readonly lossModel: string
   readonly confidence: number
+  readonly applicabilityBasis: 'recognition-role' | 'surface-feature' | 'mixed' | 'none'
+  readonly diagnostics: readonly ContextaDiagnostic[]
 }
 
 export interface RecognitionResult {
@@ -93,6 +151,8 @@ export interface RecognitionResult {
   readonly recognizedRole: string
   readonly basis: readonly string[]
   readonly confidence: number
+  readonly features: RecognitionFeatures
+  readonly diagnostics: readonly ContextaDiagnostic[]
   readonly candidateSignalScope: readonly SignalCandidate[]
 }
 
@@ -118,6 +178,7 @@ export interface LintResult {
   readonly root: ContextaRoot
   readonly recognition: RecognitionResult
   readonly signals: readonly LintSignal[]
+  readonly diagnostics: readonly ContextaDiagnostic[]
 }
 
 export interface PrimitiveDiagnostic {
@@ -160,10 +221,6 @@ export type PinStatus
     readonly status: 'pinned-v0'
     readonly pin: PinMetadata
   }
-  | {
-    readonly status: 'pre-v0-without-pin'
-    readonly pinPath: string
-  }
 
 export interface BaselineStatus {
   readonly vendor: string
@@ -175,7 +232,7 @@ export interface BaselineStatus {
 export interface UpgradeStatusResult {
   readonly root: ContextaRoot
   readonly localInstance: {
-    readonly status: 'pinned-v0' | 'pre-v0-without-pin'
+    readonly status: 'pinned-v0'
     readonly root: string
   }
   readonly pinStatus: PinStatus
@@ -189,4 +246,62 @@ export interface RoleCandidate {
   readonly role: string
   readonly basis: readonly string[]
   readonly confidence: number
+}
+
+export type DoctorIssueCode
+  = | 'missing-recognition-authority'
+    | 'invalid-recognition-trigger'
+    | 'missing-pin-metadata'
+    | 'invalid-pin-metadata'
+    | 'unknown-pin-baseline'
+    | 'baseline-material-conflict'
+    | 'missing-baseline-material'
+    | 'missing-signal-loss-model'
+    | 'unparsed-signal-trigger'
+    | 'broken-primitive-semantic-basis-link'
+    | 'empty-contexta-instance'
+    | 'nested-contexta-root'
+
+export interface DoctorIssue {
+  readonly code: DoctorIssueCode
+  readonly severity: 'error' | 'warning' | 'info'
+  readonly target: string
+  readonly summary: string
+  readonly evidence: string
+  readonly impact: string
+  readonly repairability: 'auto' | 'plan-only' | 'manual'
+  readonly repair: string | undefined
+}
+
+export interface DoctorRepairPlan {
+  readonly id: string
+  readonly issues: readonly DoctorIssueCode[]
+  readonly strategy: string
+  readonly preconditions: readonly string[]
+  readonly actions: readonly string[]
+  readonly postconditions: readonly string[]
+  readonly verification: readonly string[]
+  readonly rollback: string
+}
+
+export interface DoctorInspectResult {
+  readonly root: ContextaRoot
+  readonly status: 'clean' | 'issues'
+  readonly issues: readonly DoctorIssue[]
+  readonly repairPlans: readonly DoctorRepairPlan[]
+}
+
+export interface DoctorRepairOptions extends ResolveOptions {
+  readonly plan: string
+  readonly now?: Date | undefined
+}
+
+export interface DoctorRepairResult {
+  readonly root: ContextaRoot
+  readonly plan: DoctorRepairPlan
+  readonly applied: boolean
+  readonly actions: readonly string[]
+  readonly issuesBefore: readonly DoctorIssue[]
+  readonly issuesAfter: readonly DoctorIssue[]
+  readonly verification: readonly string[]
 }

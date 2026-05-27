@@ -6,7 +6,6 @@ import {
   extractListItems,
   extractListItemsAfterLabel,
   findSection,
-  firstNonEmptyLine,
   normalizeToken,
   readField,
 } from './markdown-helpers.js'
@@ -93,9 +92,6 @@ function listMarkdownFiles(root: string): Effect.Effect<readonly string[], Conte
 function collectLocalKinds(documents: readonly ContextaDocument[]): ReadonlySet<string> {
   const kinds = new Set<string>()
   for (const document of documents) {
-    if (document.kind !== undefined) {
-      kinds.add(normalizeToken(document.kind))
-    }
     if (document.kind === 'concept') {
       kinds.add(normalizeToken(document.title))
     }
@@ -137,7 +133,7 @@ function readSignalDefinition(document: ContextaDocument): readonly SignalDefini
     id: document.title,
     contextaPath: document.contextaPath,
     definition: findSection(document.surface, 'Definition')?.text ?? '',
-    lossModel: findSection(document.surface, 'Loss Model')?.text ?? firstNonEmptyLine(findSection(document.surface, 'Definition')?.text ?? '') ?? '',
+    lossModel: findSection(document.surface, 'Loss Model')?.text ?? '',
     triggerLines: extractListItems(findSection(document.surface, 'Trigger')?.text ?? ''),
     basis: extractListItems(findSection(document.surface, 'Basis')?.text ?? ''),
   }]

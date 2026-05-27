@@ -65,6 +65,7 @@ describe('contexta CLI contract', () => {
     const init = await runContexta(['--root', workspace, 'init', '--json'], repoRoot)
 
     expect(init.exitCode).toBe(0)
+    expect(init.stderr).toBe('')
     expect(JSON.parse(init.stdout)).toMatchObject({
       contextaRoot: path.join(workspace, '.contexta'),
       pin: {
@@ -76,6 +77,21 @@ describe('contexta CLI contract', () => {
     const duplicate = await runContexta(['--root', workspace, 'init'], repoRoot)
     expect(duplicate.exitCode).toBe(2)
     expect(duplicate.stderr).toContain('contexta config error:')
+
+    const nested = await runContexta(['--root', path.join(workspace, '.contexta'), 'init'], repoRoot)
+    expect(nested.exitCode).toBe(2)
+    expect(nested.stderr).toContain('contexta config error:')
+    expect(nested.stderr).toContain('workspace root')
+    await expect(fs.access(path.join(workspace, '.contexta', '.contexta'))).rejects.toThrow()
+  })
+
+  it('initializes in cwd when root is omitted', async () => {
+    const workspace = await makeWorkspace()
+    const result = await runContexta(['init'], workspace)
+
+    expect(result.exitCode).toBe(0)
+    expect(result.stderr).toBe('')
+    await expect(fs.access(path.join(workspace, '.contexta', '.contexta-pin.json'))).resolves.toBeUndefined()
   })
 
   it('recognizes a target with JSON output', async () => {
@@ -93,7 +109,23 @@ kind: concept
     const output = JSON.parse(result.stdout)
 
     expect(result.exitCode).toBe(0)
+    expect(result.stderr).toBe('')
     expect(output.recognition.recognizedRole).toBe('concept')
+    expect(output.recognition.features.frontmatter.kind).toBe('concept')
+  })
+
+  it('returns contexta errors for missing and unreadable targets', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(['--root', workspace, 'init'], repoRoot)
+    const missingArg = await runContexta(['--root', workspace, 'recognize'], repoRoot)
+    const missingFile = await runContexta(['--root', workspace, 'lint', path.join(workspace, 'missing.md')], repoRoot)
+
+    expect(missingArg.exitCode).toBe(2)
+    expect(missingArg.stderr).toContain('contexta config error:')
+    expect(missingArg.stderr).toContain('missing target argument')
+    expect(missingFile.exitCode).toBe(2)
+    expect(missingFile.stderr).toContain('contexta runtime error:')
+    expect(missingFile.stderr).toContain('failed to read target')
   })
 
   it('returns lint exit 0 with no signals and exit 1 with signals', async () => {
@@ -127,8 +159,11 @@ agent MUST treat this as a rule. ^def-1
     const driftJson = JSON.parse(driftResult.stdout)
 
     expect(cleanResult.exitCode).toBe(0)
+    expect(cleanResult.stderr).toBe('')
     expect(cleanResult.stdout).toContain('signals: 0')
+    expect(cleanResult.stdout).toContain('diagnostics:')
     expect(driftResult.exitCode).toBe(1)
+    expect(driftResult.stderr).toBe('')
     expect(driftJson.signals[0]).toMatchObject({
       signal: 'concept-as-policy',
       locator: '^def-1',
@@ -147,6 +182,18 @@ agent MUST treat this as a rule. ^def-1
     expect(result.exitCode).toBe(2)
     expect(result.stderr).toContain('contexta config error:')
     expect(result.stderr).toContain('outside resolved root')
+  })
+
+  it('returns exit 2 for invalid explicit roots', async () => {
+    const workspace = await makeWorkspace()
+    const target = path.join(workspace, 'target.md')
+    await fs.writeFile(target, '# target\n', 'utf8')
+
+    const result = await runContexta(['--root', path.join(workspace, 'missing'), 'lint', target], repoRoot)
+
+    expect(result.exitCode).toBe(2)
+    expect(result.stderr).toContain('contexta config error:')
+    expect(result.stderr).toContain('explicit root does not exist')
   })
 
   it('returns primitive skill exit 0 for ready and exit 1 for needs-work', async () => {
@@ -193,6 +240,7 @@ Create a local skill primitive.
     const needsWorkJson = JSON.parse(needsWorkResult.stdout)
 
     expect(readyResult.exitCode).toBe(0)
+    expect(readyResult.stderr).toBe('')
     expect(readyResult.stdout).toContain('status: ready')
     expect(needsWorkResult.exitCode).toBe(1)
     expect(needsWorkJson.status).toBe('needs-work')
@@ -204,11 +252,60 @@ Create a local skill primitive.
 
     const pinned = await runContexta(['--root', workspace, 'upgrade'], repoRoot)
     expect(pinned.exitCode).toBe(0)
+    expect(pinned.stderr).toBe('')
     expect(pinned.stdout).toContain('local instance: pinned-v0')
 
     await fs.writeFile(path.join(workspace, '.contexta', '.contexta-pin.json'), '{bad json', 'utf8')
     const malformed = await runContexta(['--root', workspace, 'upgrade'], repoRoot)
     expect(malformed.exitCode).toBe(2)
     expect(malformed.stderr).toContain('contexta parse error:')
+  })
+
+  it('fails upgrade for missing and unknown pins', async () => {
+    const missingPinWorkspace = await makeWorkspace()
+    await fs.mkdir(path.join(missingPinWorkspace, '.contexta'), { recursive: true })
+    await fs.writeFile(path.join(missingPinWorkspace, '.contexta', 'local.md'), '# local\n', 'utf8')
+
+    const missing = await runContexta(['--root', missingPinWorkspace, 'upgrade'], repoRoot)
+    expect(missing.exitCode).toBe(2)
+    expect(missing.stderr).toContain('contexta config error:')
+    expect(missing.stderr).toContain('missing pin metadata')
+
+    const unknownPinWorkspace = await makeWorkspace()
+    await runContexta(['--root', unknownPinWorkspace, 'init'], repoRoot)
+    await fs.writeFile(path.join(unknownPinWorkspace, '.contexta', '.contexta-pin.json'), `${JSON.stringify({
+      schemaVersion: 1,
+      vendor: 'contexta',
+      ref: 'unknown',
+      digest: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      createdAt: '2026-05-26T00:00:00.000Z',
+    })}\n`, 'utf8')
+
+    const unknown = await runContexta(['--root', unknownPinWorkspace, 'upgrade'], repoRoot)
+    expect(unknown.exitCode).toBe(2)
+    expect(unknown.stderr).toContain('unknown pinned baseline')
+  })
+
+  it('doctor inspects and repairs a pre-v0 local instance', async () => {
+    const workspace = await makeWorkspace()
+    await fs.mkdir(path.join(workspace, '.contexta'), { recursive: true })
+    await fs.writeFile(path.join(workspace, '.contexta', 'local.md'), '# local\n', 'utf8')
+
+    const inspect = await runContexta(['--root', workspace, 'doctor', '--json'], repoRoot)
+    const inspectJson = JSON.parse(inspect.stdout)
+
+    expect(inspect.exitCode).toBe(2)
+    expect(inspectJson.issues.map((issue: { code: string }) => issue.code)).toContain('missing-pin-metadata')
+    expect(inspectJson.repairPlans.map((plan: { id: string }) => plan.id)).toContain('adopt-packaged-baseline')
+
+    const repair = await runContexta(['--root', workspace, 'doctor', 'repair', '--plan', 'adopt-packaged-baseline', '--json'], repoRoot)
+    const repairJson = JSON.parse(repair.stdout)
+    expect(repair.exitCode).toBe(0)
+    expect(repair.stderr).toBe('')
+    expect(repairJson.applied).toBe(true)
+
+    const upgraded = await runContexta(['--root', workspace, 'upgrade'], repoRoot)
+    expect(upgraded.exitCode).toBe(0)
+    expect(upgraded.stdout).toContain('local instance: pinned-v0')
   })
 })

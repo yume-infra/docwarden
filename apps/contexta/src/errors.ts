@@ -3,7 +3,6 @@ export type RuntimeErrorKind = 'config' | 'parse' | 'runtime'
 export class ContextaConfigError extends Error {
   readonly _tag = 'ContextaConfigError' as const
   readonly kind = 'config' as const
-  readonly exitCode = 2 as const
 
   constructor(options: { readonly message: string }) {
     super(options.message)
@@ -14,7 +13,6 @@ export class ContextaConfigError extends Error {
 export class ContextaParseError extends Error {
   readonly _tag = 'ContextaParseError' as const
   readonly kind = 'parse' as const
-  readonly exitCode = 2 as const
 
   constructor(options: { readonly message: string }) {
     super(options.message)
@@ -25,7 +23,6 @@ export class ContextaParseError extends Error {
 export class ContextaRuntimeError extends Error {
   readonly _tag = 'ContextaRuntimeError' as const
   readonly kind = 'runtime' as const
-  readonly exitCode = 2 as const
 
   constructor(options: { readonly message: string }) {
     super(options.message)

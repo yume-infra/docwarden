@@ -15,6 +15,11 @@ export function runInitEffect(options: InitOptions = {}): Effect.Effect<InitResu
     const cwd = path.resolve(options.cwd ?? (yield* cwdService.current))
     const workspaceRoot = path.resolve(cwd, normalizeOptionalPath(options.root) ?? '.')
     yield* assertDirectory(workspaceRoot, `init root does not exist or is not a directory: ${workspaceRoot}`)
+    if (path.basename(workspaceRoot) === '.contexta') {
+      return yield* Effect.fail(new ContextaConfigError({
+        message: `init root must be a workspace root, not an existing .contexta root: ${workspaceRoot}`,
+      }))
+    }
 
     const contextaRoot = path.join(workspaceRoot, '.contexta')
     if (yield* pathExists(contextaRoot)) {

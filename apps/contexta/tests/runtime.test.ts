@@ -14,6 +14,8 @@ import {
 
   readPinEffect,
   resolveContextaRootEffect,
+  runDoctorInspectEffect,
+  runDoctorRepairEffect,
   runInitEffect,
   runLintEffect,
   runPrimitiveSkillEffect,
@@ -23,6 +25,25 @@ import {
 
 async function makeWorkspace(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'contexta-test-'))
+}
+
+async function treeSnapshot(root: string): Promise<readonly string[]> {
+  const result: string[] = []
+  async function walk(directory: string): Promise<void> {
+    const entries = await fs.readdir(directory, { withFileTypes: true })
+    for (const entry of entries) {
+      const absolute = path.join(directory, entry.name)
+      if (entry.isDirectory()) {
+        await walk(absolute)
+      }
+      else if (entry.isFile()) {
+        const content = await fs.readFile(absolute, 'utf8')
+        result.push(`${path.relative(root, absolute)}\0${content}`)
+      }
+    }
+  }
+  await walk(root)
+  return result.sort()
 }
 
 function runContexta<A, E>(effect: Effect.Effect<A, E, ContextaRuntimeServices>): Promise<A> {
@@ -84,7 +105,6 @@ describe('contexta runtime v0', () => {
 
     await expect(runContexta(runInitEffect({ root: workspace }))).rejects.toMatchObject({
       kind: 'config',
-      exitCode: 2,
     })
   })
 
@@ -156,6 +176,75 @@ kind: not-local
     expect(result.recognition.recognizedRole).toBe('unknown')
   })
 
+  it('does not let arbitrary local frontmatter.kind become recognition authority', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    const localFile = path.join(workspace, '.contexta', 'mapping/bootstrap/modules/local/foo.md')
+    await fs.mkdir(path.dirname(localFile), { recursive: true })
+    await fs.writeFile(localFile, `---
+kind: foo
+---
+
+# foo
+`, 'utf8')
+    const target = path.join(workspace, 'foo.md')
+    await fs.writeFile(target, `---
+kind: foo
+---
+
+# foo
+`, 'utf8')
+
+    const result = await runContexta(runRecognitionEffect({
+      root: workspace,
+      target,
+    }))
+
+    expect(result.recognition.recognizedRole).toBe('unknown')
+  })
+
+  it('fails recognition when local recognition authority is missing', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    await fs.rm(path.join(workspace, '.contexta', 'mapping/bootstrap/modules/recognition'), { recursive: true })
+    const target = path.join(workspace, 'concept.md')
+    await fs.writeFile(target, `---
+kind: concept
+---
+
+# concept
+`, 'utf8')
+
+    await expect(runContexta(runRecognitionEffect({
+      root: workspace,
+      target,
+    }))).rejects.toMatchObject({
+      kind: 'config',
+    })
+  })
+
+  it('fails recognition when local recognition trigger is unsupported', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    const recognitionFile = path.join(workspace, '.contexta', 'mapping/bootstrap/modules/recognition/default.md')
+    const original = await fs.readFile(recognitionFile, 'utf8')
+    await fs.writeFile(recognitionFile, original.replace('frontmatter.kind is local kind', 'unsupported trigger syntax'), 'utf8')
+    const target = path.join(workspace, 'concept.md')
+    await fs.writeFile(target, `---
+kind: concept
+---
+
+# concept
+`, 'utf8')
+
+    await expect(runContexta(runRecognitionEffect({
+      root: workspace,
+      target,
+    }))).rejects.toMatchObject({
+      kind: 'config',
+    })
+  })
+
   it('lets local recognition material change recognition output', async () => {
     const workspace = await makeWorkspace()
     await runContexta(runInitEffect({ root: workspace }))
@@ -176,6 +265,66 @@ kind: concept
     }))
 
     expect(result.recognition.recognizedRole).toBe('locally-overridden')
+  })
+
+  it('applies concept signals from recognized role instead of raw frontmatter.kind', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    const recognitionFile = path.join(workspace, '.contexta', 'mapping/bootstrap/modules/recognition/default.md')
+    const original = await fs.readFile(recognitionFile, 'utf8')
+    await fs.writeFile(recognitionFile, original.replace('Role: $frontmatter.kind', 'Role: locally-overridden'), 'utf8')
+    const target = path.join(workspace, 'concept.md')
+    await fs.writeFile(target, `---
+kind: concept
+---
+
+# drift
+
+## Definition
+
+agent MUST treat this as a rule.
+`, 'utf8')
+
+    const result = await runContexta(runLintEffect({
+      root: workspace,
+      target,
+    }))
+
+    expect(result.recognition.recognizedRole).toBe('locally-overridden')
+    expect(result.recognition.candidateSignalScope.find(candidate => candidate.signal === 'concept-as-policy')).toMatchObject({
+      applicable: false,
+      applicabilityBasis: 'mixed',
+    })
+    expect(result.signals).toHaveLength(0)
+  })
+
+  it('applies concept signals when recognition comes from a non-frontmatter rule', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    const recognitionFile = path.join(workspace, '.contexta', 'mapping/bootstrap/modules/recognition/default.md')
+    const original = await fs.readFile(recognitionFile, 'utf8')
+    await fs.writeFile(
+      recognitionFile,
+      original
+        .replace('Role: $frontmatter.kind', 'Role: concept')
+        .replace('frontmatter.kind is local kind', 'path contains concept.md'),
+      'utf8',
+    )
+    const target = path.join(workspace, 'concept.md')
+    await fs.writeFile(target, `# drift
+
+## Definition
+
+agent MUST treat this as a rule.
+`, 'utf8')
+
+    const result = await runContexta(runLintEffect({
+      root: workspace,
+      target,
+    }))
+
+    expect(result.recognition.recognizedRole).toBe('concept')
+    expect(result.signals.find(signal => signal.signal === 'concept-as-policy')).toBeDefined()
   })
 
   it('lets local kind material add a recognized role without changing TypeScript', async () => {
@@ -235,6 +384,56 @@ agent MUST treat this as a rule.
     expect(result.recognition.candidateSignalScope.find(candidate => candidate.signal === 'concept-as-policy')).toMatchObject({
       applicable: false,
     })
+  })
+
+  it('surfaces missing signal loss model as a lint diagnostic', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    const signalFile = path.join(workspace, '.contexta', 'mapping/bootstrap/modules/signal/concept-as-policy.md')
+    const original = await fs.readFile(signalFile, 'utf8')
+    await fs.writeFile(signalFile, original.replace(/## Loss Model\n\n[\s\S]*?\n## Trigger/, '## Trigger'), 'utf8')
+    const target = path.join(workspace, 'concept.md')
+    await fs.writeFile(target, `---
+kind: concept
+---
+
+# concept
+`, 'utf8')
+
+    const result = await runContexta(runLintEffect({
+      root: workspace,
+      target,
+    }))
+
+    expect(result.diagnostics).toContainEqual(expect.objectContaining({
+      code: 'missing-signal-loss-model',
+      target: 'mapping/bootstrap/modules/signal/concept-as-policy.md',
+    }))
+  })
+
+  it('surfaces unsupported signal triggers as lint diagnostics', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    const signalFile = path.join(workspace, '.contexta', 'mapping/bootstrap/modules/signal/concept-as-policy.md')
+    const original = await fs.readFile(signalFile, 'utf8')
+    await fs.writeFile(signalFile, original.replace('section contains MUST / SHOULD / MUST NOT', 'unsupported signal trigger'), 'utf8')
+    const target = path.join(workspace, 'concept.md')
+    await fs.writeFile(target, `---
+kind: concept
+---
+
+# concept
+`, 'utf8')
+
+    const result = await runContexta(runLintEffect({
+      root: workspace,
+      target,
+    }))
+
+    expect(result.diagnostics).toContainEqual(expect.objectContaining({
+      code: 'unparsed-signal-trigger',
+      evidence: 'unsupported signal trigger',
+    }))
   })
 
   it.each([
@@ -474,6 +673,47 @@ Future SKILL.md export must preserve model material.
     })
   })
 
+  it('reports broken skill primitive semantic basis links as needs-work', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    const target = path.join(workspace, 'custom-skill.md')
+    await fs.writeFile(target, `---
+kind: skill-primitive
+---
+
+# custom-skill-creator
+
+## Capability
+
+Create a local skill primitive.
+
+## Trigger
+
+Use when needed.
+
+## Semantic Basis
+
+- [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
+- [[mapping/bootstrap/modules/concept/primitive-creator|primitive-creator]]
+- [[mapping/bootstrap/modules/concept/missing|missing]]
+
+## Export Position
+
+Future SKILL.md export must preserve model material.
+`, 'utf8')
+
+    const result = await runContexta(runPrimitiveSkillEffect({
+      root: workspace,
+      target,
+    }))
+
+    expect(result.status).toBe('needs-work')
+    expect(result.diagnostics).toContainEqual({
+      severity: 'warning',
+      message: 'broken semantic basis link: mapping/bootstrap/modules/concept/missing',
+    })
+  })
+
   it('reports pinned vendor baseline for upgrade without running a merge engine', async () => {
     const workspace = await makeWorkspace()
     await runContexta(runInitEffect({
@@ -486,19 +726,77 @@ Future SKILL.md export must preserve model material.
     expect(result.localInstance.status).toBe('pinned-v0')
     expect(result.pinStatus.status).toBe('pinned-v0')
     expect(result.pinnedBaseline?.ref).toBe('contexta-seed-v0')
+    expect(result.pinnedBaseline?.digest).toBe(result.newBaseline.digest)
     expect(result.mergeEngine).toBe('not-implemented-v0')
   })
 
-  it('reports a pre-v0 local instance when .contexta exists without pin metadata', async () => {
+  it('keeps upgrade status read-only over the local tree', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    const before = await treeSnapshot(path.join(workspace, '.contexta'))
+
+    await runContexta(runUpgradeStatusEffect({ root: workspace }))
+
+    await expect(treeSnapshot(path.join(workspace, '.contexta'))).resolves.toEqual(before)
+  })
+
+  it('fails upgrade for a shape-valid unknown pin baseline', async () => {
+    const workspace = await makeWorkspace()
+    await runContexta(runInitEffect({ root: workspace }))
+    const pinPath = path.join(workspace, '.contexta', '.contexta-pin.json')
+    await fs.writeFile(pinPath, `${JSON.stringify({
+      schemaVersion: 1,
+      vendor: 'contexta',
+      ref: 'unknown',
+      digest: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      createdAt: '2026-05-26T00:00:00.000Z',
+    })}\n`, 'utf8')
+
+    await expect(runContexta(runUpgradeStatusEffect({ root: workspace }))).rejects.toMatchObject({
+      kind: 'config',
+    })
+  })
+
+  it('fails ordinary upgrade when .contexta exists without pin metadata', async () => {
     const workspace = await makeWorkspace()
     await fs.mkdir(path.join(workspace, '.contexta'), { recursive: true })
     await fs.writeFile(path.join(workspace, '.contexta', 'local.md'), '# local\n', 'utf8')
 
-    const result = await runContexta(runUpgradeStatusEffect({ root: workspace }))
+    await expect(runContexta(runUpgradeStatusEffect({ root: workspace }))).rejects.toMatchObject({
+      kind: 'config',
+    })
+  })
 
-    expect(result.localInstance.status).toBe('pre-v0-without-pin')
-    expect(result.pinStatus.status).toBe('pre-v0-without-pin')
-    expect(result.pinnedBaseline).toBeUndefined()
+  it('lets doctor inspect and repair a pre-v0 local instance without relaxing ordinary upgrade', async () => {
+    const workspace = await makeWorkspace()
+    await fs.mkdir(path.join(workspace, '.contexta'), { recursive: true })
+    await fs.writeFile(path.join(workspace, '.contexta', 'local.md'), '# local\n', 'utf8')
+
+    const inspect = await runContexta(runDoctorInspectEffect({ root: workspace }))
+    expect(inspect.issues.map(issue => issue.code)).toContain('missing-pin-metadata')
+    expect(inspect.issues.map(issue => issue.code)).toContain('missing-recognition-authority')
+    expect(inspect.repairPlans.map(plan => plan.id)).toContain('adopt-packaged-baseline')
+
+    const repair = await runContexta(runDoctorRepairEffect({
+      root: workspace,
+      plan: 'adopt-packaged-baseline',
+      now: new Date('2026-05-26T00:00:00.000Z'),
+    }))
+    expect(repair.applied).toBe(true)
+    expect(repair.actions).toContain('write pin metadata: .contexta-pin.json')
+
+    const upgraded = await runContexta(runUpgradeStatusEffect({ root: workspace }))
+    expect(upgraded.localInstance.status).toBe('pinned-v0')
+
+    const target = path.join(workspace, 'concept.md')
+    await fs.writeFile(target, `---
+kind: concept
+---
+
+# concept
+`, 'utf8')
+    const recognized = await runContexta(runRecognitionEffect({ root: workspace, target }))
+    expect(recognized.recognition.basis[0]).toBe('local recognition rule: local-kind-frontmatter')
   })
 
   it('decodes malformed pin JSON as a parse error', async () => {

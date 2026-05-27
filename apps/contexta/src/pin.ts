@@ -4,17 +4,11 @@ import { Effect, FileSystem, Path } from 'effect'
 import { ContextaConfigError, ContextaParseError, ContextaRuntimeError, formatUnknownCause } from './errors.js'
 import { pathExists } from './root.js'
 
-export const supportedPinSchemaVersion = 1
+const supportedPinSchemaVersion = 1
 
 export function pinMetadataPath(contextaRoot: string): Effect.Effect<string, never, Path.Path> {
   return Path.Path.pipe(
     Effect.map(path => path.join(contextaRoot, '.contexta-pin.json')),
-  )
-}
-
-export function hasPinMetadata(contextaRoot: string): Effect.Effect<boolean, ContextaRuntimeError, FileSystem.FileSystem | Path.Path> {
-  return pinMetadataPath(contextaRoot).pipe(
-    Effect.flatMap(pathExists),
   )
 }
 
@@ -35,7 +29,7 @@ export function readPinEffect(contextaRoot: string): Effect.Effect<PinMetadata, 
   })
 }
 
-export function decodePinMetadata(raw: string, pinPath: string): Effect.Effect<PinMetadata, ContextaConfigError | ContextaParseError> {
+function decodePinMetadata(raw: string, pinPath: string): Effect.Effect<PinMetadata, ContextaConfigError | ContextaParseError> {
   return Effect.gen(function* () {
     const parsed = yield* Effect.try({
       try: () => JSON.parse(raw) as unknown,

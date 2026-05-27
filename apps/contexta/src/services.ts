@@ -30,14 +30,14 @@ export const CurrentWorkingDirectory: Context.Service<CurrentWorkingDirectorySer
 
 export const VendorSnapshotProvider: Context.Service<VendorSnapshotProviderService, VendorSnapshotProviderService> = Context.Service<VendorSnapshotProviderService, VendorSnapshotProviderService>('contexta/services/VendorSnapshotProvider')
 
-export const CurrentWorkingDirectoryLive: Layer.Layer<CurrentWorkingDirectoryService> = Layer.succeed(
+const CurrentWorkingDirectoryLive: Layer.Layer<CurrentWorkingDirectoryService> = Layer.succeed(
   CurrentWorkingDirectory,
   CurrentWorkingDirectory.of({
     current: Effect.sync(() => process.cwd()),
   }),
 )
 
-export const VendorSnapshotProviderLive: Layer.Layer<VendorSnapshotProviderService> = Layer.succeed(
+const VendorSnapshotProviderLive: Layer.Layer<VendorSnapshotProviderService> = Layer.succeed(
   VendorSnapshotProvider,
   VendorSnapshotProvider.of({
     current: Effect.succeed({

@@ -1,31 +1,55 @@
-import type { ContextaModel, RecognitionResult, RecognitionRule, RoleCandidate, TriggerHit } from './domain.js'
-import type { MarkdownSurface } from './markdown.js'
+import type { ContextaModel, MarkdownSurface, RecognitionResult, RecognitionRule, RoleCandidate, TriggerHit } from './domain.js'
+import { Effect } from 'effect'
+import { ContextaConfigError } from './errors.js'
 import { normalizeToken, roundConfidence } from './markdown-helpers.js'
-import { evaluateSignal } from './signal.js'
 import { evaluateSurfaceTriggerLine, readHeadingScope } from './trigger.js'
 
-export function recognizeSurface(model: ContextaModel, surface: MarkdownSurface): RecognitionResult {
-  const ruleCandidates = model.recognitionRules
-    .map(rule => recognitionRuleCandidate(model, surface, rule))
-    .filter((candidate): candidate is RoleCandidate => candidate !== undefined)
-  const candidates = ruleCandidates.length > 0 ? ruleCandidates : defaultRecognitionCandidates(model, surface)
-  const best = [...candidates].sort((a, b) => b.confidence - a.confidence)[0] ?? {
-    role: 'unknown',
-    basis: ['md surface parsed; no local recognition rule matched'],
-    confidence: 0.2,
-  }
-  const candidateSignalScope = model.signals.map(signal => evaluateSignal(signal, surface))
+export function recognizeSurfaceEffect(model: ContextaModel, surface: MarkdownSurface): Effect.Effect<Omit<RecognitionResult, 'candidateSignalScope'>, ContextaConfigError> {
+  return Effect.gen(function* () {
+    if (model.recognitionRules.length === 0) {
+      return yield* Effect.fail(new ContextaConfigError({
+        message: 'missing local recognition authority: no recognition primitive rule found in .contexta',
+      }))
+    }
 
-  return {
-    target: surface.path,
-    recognizedRole: best.role,
-    basis: best.basis,
-    confidence: roundConfidence(best.confidence),
-    candidateSignalScope,
-  }
+    const evaluatedRules = model.recognitionRules.map(rule => recognitionRuleCandidate(model, surface, rule))
+    const invalidHits = evaluatedRules.flatMap(rule => rule.triggerHits.filter(hit => !hit.known).map(hit => ({
+      rule,
+      hit,
+    })))
+    if (invalidHits.length > 0) {
+      const first = invalidHits[0]
+      return yield* Effect.fail(new ContextaConfigError({
+        message: `invalid recognition trigger in ${first?.rule.rule.contextaPath}#${first?.rule.rule.id}: ${first?.hit.raw}`,
+      }))
+    }
+
+    const candidates = evaluatedRules
+      .map(rule => rule.candidate)
+      .filter((candidate): candidate is RoleCandidate => candidate !== undefined)
+
+    const best = [...candidates].sort((a, b) => b.confidence - a.confidence)[0] ?? {
+      role: 'unknown',
+      basis: ['md surface parsed; local recognition authority found no matching role'],
+      confidence: 0.2,
+    }
+
+    return {
+      target: surface.path,
+      recognizedRole: best.role,
+      basis: best.basis,
+      confidence: roundConfidence(best.confidence),
+      features: recognitionFeatures(surface),
+      diagnostics: [],
+    }
+  })
 }
 
-function recognitionRuleCandidate(model: ContextaModel, surface: MarkdownSurface, rule: RecognitionRule): RoleCandidate | undefined {
+function recognitionRuleCandidate(model: ContextaModel, surface: MarkdownSurface, rule: RecognitionRule): {
+  readonly rule: RecognitionRule
+  readonly triggerHits: readonly TriggerHit[]
+  readonly candidate: RoleCandidate | undefined
+} {
   const triggerHits: TriggerHit[] = []
   let sectionScope: readonly string[] | undefined
 
@@ -44,21 +68,29 @@ function recognitionRuleCandidate(model: ContextaModel, surface: MarkdownSurface
   const role = resolveRuleRole(rule.role, surface)
 
   if (!applicable || role === undefined) {
-    return undefined
+    return {
+      rule,
+      triggerHits,
+      candidate: undefined,
+    }
   }
 
   return {
-    role,
-    basis: [
-      `local recognition rule: ${rule.id}`,
-      ...triggerHits.map(hit => hit.evidence),
-      ...rule.basis,
-    ],
-    confidence: rule.confidence,
+    rule,
+    triggerHits,
+    candidate: {
+      role,
+      basis: [
+        `local recognition rule: ${rule.id}`,
+        ...triggerHits.map(hit => hit.evidence),
+        ...rule.basis,
+      ],
+      confidence: rule.confidence,
+    },
   }
 }
 
-function evaluateRecognitionTriggerLine(model: ContextaModel, surface: MarkdownSurface, rawLine: string, sectionScope: readonly string[] | undefined): TriggerHit {
+export function evaluateRecognitionTriggerLine(model: ContextaModel, surface: MarkdownSurface, rawLine: string, sectionScope: readonly string[] | undefined): TriggerHit {
   const raw = rawLine.replace(/^-\s+/, '').replace(/^`(.+)`$/, '$1').trim()
   if (raw === 'frontmatter.kind is local kind') {
     const kind = surface.frontmatter.kind
@@ -71,6 +103,7 @@ function evaluateRecognitionTriggerLine(model: ContextaModel, surface: MarkdownS
         ? `frontmatter.kind ${kind} is defined by local .contexta`
         : `frontmatter.kind ${kind ?? 'missing'} is not defined by local .contexta`,
       context: undefined,
+      source: 'surface',
     }
   }
 
@@ -86,6 +119,7 @@ function evaluateRecognitionTriggerLine(model: ContextaModel, surface: MarkdownS
         ? `local .contexta defines kind ${expected}`
         : `local .contexta does not define kind ${expected}`,
       context: undefined,
+      source: 'surface',
     }
   }
 
@@ -99,17 +133,12 @@ function resolveRuleRole(role: string, surface: MarkdownSurface): string | undef
   return role
 }
 
-function defaultRecognitionCandidates(model: ContextaModel, surface: MarkdownSurface): readonly RoleCandidate[] {
-  const kind = surface.frontmatter.kind
-  if (kind === undefined || !model.localKinds.has(normalizeToken(kind))) {
-    return []
+function recognitionFeatures(surface: MarkdownSurface): RecognitionResult['features'] {
+  return {
+    path: surface.path,
+    frontmatter: surface.frontmatter,
+    headings: surface.headings.map(heading => heading.text),
+    locatorMarkers: surface.locatorMarkers.map(marker => marker.marker),
+    ofmLinks: surface.ofmLinks.map(link => link.target),
   }
-  return [{
-    role: kind,
-    basis: [
-      'fallback recognition interpreter',
-      `frontmatter.kind ${kind} is defined by local .contexta`,
-    ],
-    confidence: 0.65,
-  }]
 }

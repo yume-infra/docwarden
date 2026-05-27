@@ -26,6 +26,7 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
   const exportSection = findSection(run.surface, 'Export Position')
   const semanticBasisLinks = collectOfmLinksFromText(semanticBasisSection?.text ?? '').map(link => link.target)
   const diagnostics: PrimitiveDiagnostic[] = []
+  const localMaterialTargets = new Set(run.model.documents.map(document => stripMdExtension(document.contextaPath)))
 
   if (material.length === 0) {
     diagnostics.push({
@@ -56,6 +57,14 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
       diagnostics.push({
         severity: 'warning',
         message: `missing semantic basis link: ${target}`,
+      })
+    }
+  }
+  for (const target of semanticBasisLinks) {
+    if (!localMaterialTargets.has(stripMdExtension(target))) {
+      diagnostics.push({
+        severity: 'warning',
+        message: `broken semantic basis link: ${target}`,
       })
     }
   }
@@ -91,4 +100,8 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
     },
     diagnostics,
   }
+}
+
+function stripMdExtension(target: string): string {
+  return target.endsWith('.md') ? target.slice(0, -'.md'.length) : target
 }

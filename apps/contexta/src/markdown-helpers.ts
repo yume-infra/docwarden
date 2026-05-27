@@ -1,4 +1,4 @@
-import type { MarkdownSurface, OfmLink, Section } from './markdown.js'
+import type { MarkdownSurface, OfmLink, Section } from './domain.js'
 
 export function findSection(surface: MarkdownSurface, heading: string): Section | undefined {
   return surface.sections.find(section => normalizeToken(section.heading.text) === normalizeToken(heading))

@@ -3,7 +3,8 @@ import type { BaselineStatus, ResolveOptions, UpgradeStatusResult } from './doma
 import type { ContextaError } from './errors.js'
 import type { CurrentWorkingDirectoryService, VendorSnapshotProviderService } from './services.js'
 import { Effect } from 'effect'
-import { hasPinMetadata, pinMetadataPath, readPinEffect } from './pin.js'
+import { ContextaConfigError } from './errors.js'
+import { readPinEffect } from './pin.js'
 import { resolveContextaRootEffect } from './root.js'
 import { VendorSnapshotProvider } from './services.js'
 
@@ -18,28 +19,18 @@ export function runUpgradeStatusEffect(options: ResolveOptions = {}): Effect.Eff
       ref: snapshot.ref,
       digest: snapshot.digest,
     }
-    const pinPath = yield* pinMetadataPath(root.contextaRoot)
-    const hasPin = yield* hasPinMetadata(root.contextaRoot)
-
-    if (!hasPin) {
-      return {
-        root,
-        localInstance: {
-          status: 'pre-v0-without-pin',
-          root: root.contextaRoot,
-        },
-        pinStatus: {
-          status: 'pre-v0-without-pin',
-          pinPath,
-        },
-        pinnedBaseline: undefined,
-        newBaseline,
-        localCustomization: 'untouched',
-        mergeEngine: 'not-implemented-v0',
-      }
+    const pin = yield* readPinEffect(root.contextaRoot)
+    if (
+      pin.schemaVersion !== snapshot.schemaVersion
+      || pin.vendor !== snapshot.vendor
+      || pin.ref !== snapshot.ref
+      || pin.digest !== snapshot.digest
+    ) {
+      return yield* Effect.fail(new ContextaConfigError({
+        message: `unknown pinned baseline: vendor=${pin.vendor} ref=${pin.ref} digest=${pin.digest}`,
+      }))
     }
 
-    const pin = yield* readPinEffect(root.contextaRoot)
     return {
       root,
       localInstance: {

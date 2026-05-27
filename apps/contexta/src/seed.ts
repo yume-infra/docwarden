@@ -231,6 +231,74 @@ v0 keeps export position material visible but does not implement the final skill
 `,
   },
   {
+    path: 'mapping/bootstrap/modules/concept/workflow.md',
+    content: `---
+kind: concept
+---
+
+# workflow
+
+## Designation
+
+Canonical: \`workflow\`
+
+## Definition
+
+workflow is structured material that describes state, moves, transitions, and execution responsibility.
+`,
+  },
+  {
+    path: 'mapping/bootstrap/modules/concept/architecture.md',
+    content: `---
+kind: concept
+---
+
+# architecture
+
+## Designation
+
+Canonical: \`architecture\`
+
+## Definition
+
+architecture is structure material that describes layers, relations, boundaries, and responsibility distribution.
+`,
+  },
+  {
+    path: 'mapping/bootstrap/modules/concept/example.md',
+    content: `---
+kind: concept
+---
+
+# example
+
+## Designation
+
+Canonical: \`example\`
+
+## Definition
+
+example is concrete sample material. It illustrates behavior or surface shape but does not prove a kind by itself.
+`,
+  },
+  {
+    path: 'mapping/bootstrap/modules/concept/composition.md',
+    content: `---
+kind: concept
+---
+
+# composition
+
+## Designation
+
+Canonical: \`composition\`
+
+## Definition
+
+composition is structure material that names a stable whole, its parts, and the semantic boundary between them.
+`,
+  },
+  {
     path: 'mapping/bootstrap/modules/recognition/default.md',
     content: `---
 kind: recognition-primitive
@@ -420,7 +488,7 @@ This signal protects the boundary between naming a semantic object and imposing 
 
 ## Trigger
 
-- \`frontmatter.kind == concept\`
+- \`recognized role == concept\`
 - \`heading in [Definition, Naming Need]\`
 - \`section contains MUST / SHOULD / MUST NOT\`
 
@@ -449,7 +517,7 @@ This signal protects workflow material from losing state, move, and transition s
 
 ## Trigger
 
-- \`frontmatter.kind == workflow\`
+- \`recognized role == workflow\`
 - \`section contains MUST / SHOULD / MUST NOT\`
 - \`body missing state / move / transition terms or sections\`
 
@@ -506,7 +574,7 @@ This signal protects architecture material from collapsing into an ownership car
 
 ## Trigger
 
-- \`frontmatter.kind == architecture\`
+- \`recognized role == architecture\`
 - \`body contains responsibility / owner / function descriptions\`
 - \`body missing layer / relation / boundary terms or sections\`
 
@@ -534,7 +602,7 @@ This signal protects the distinction between a concrete example and the semantic
 
 ## Trigger
 
-- \`frontmatter.kind == example\`
+- \`recognized role == example\`
 - \`text states example proves kind or content type\`
 
 ## Basis
@@ -561,7 +629,7 @@ This signal protects composition material from losing its stable whole / part bo
 
 ## Trigger
 
-- \`frontmatter.kind == composition\`
+- \`recognized role == composition\`
 - \`body contains list items\`
 - \`body missing whole / part / stable semantic boundary terms or sections\`
 
