@@ -1,19 +1,11 @@
-import type { InitResult, LintResult, PrimitiveSkillResult, RecognitionRunResult, UpgradeStatusResult } from './runtime.js'
+import type { ContextaError, ContextaRuntimeServices, InitResult, LintResult, PrimitiveSkillResult, RecognitionRunResult, UpgradeStatusResult } from './runtime.js'
 
 import process from 'node:process'
-import * as NodeServices from '@effect/platform-node/NodeServices'
-import * as Effect from 'effect/Effect'
+import { Effect } from 'effect'
 import * as Argument from 'effect/unstable/cli/Argument'
 import * as Command from 'effect/unstable/cli/Command'
 import * as Flag from 'effect/unstable/cli/Flag'
-import {
-  runInit,
-  runLint,
-  runPrimitiveSkill,
-  runRecognition,
-  runUpgradeStatus,
-  toContextaError,
-} from './runtime.js'
+import { contextaLiveLayer, runInitEffect, runLintEffect, runPrimitiveSkillEffect, runRecognitionEffect, runUpgradeStatusEffect, toContextaError } from './runtime.js'
 
 export const version = '0.0.0'
 
@@ -44,7 +36,7 @@ const init = Command.make('init', {
   Effect.gen(function* () {
     const root = yield* contexta
     yield* runCli(
-      () => runInit({ root: root.root }),
+      runInitEffect({ root: root.root }),
       result => ({
         output: json ? formatJson(result) : formatInit(result),
         exitCode: 0,
@@ -63,7 +55,7 @@ const recognize = Command.make('recognize', {
   Effect.gen(function* () {
     const root = yield* contexta
     yield* runCli(
-      () => runRecognition({ root: root.root, target }),
+      runRecognitionEffect({ root: root.root, target }),
       result => ({
         output: json ? formatJson(trimRecognitionRun(result)) : formatRecognition(result),
         exitCode: 0,
@@ -82,7 +74,7 @@ const lint = Command.make('lint', {
   Effect.gen(function* () {
     const root = yield* contexta
     yield* runCli(
-      () => runLint({ root: root.root, target }),
+      runLintEffect({ root: root.root, target }),
       result => ({
         output: json ? formatJson(result) : formatLint(result),
         exitCode: result.signals.length > 0 ? 1 : 0,
@@ -101,7 +93,7 @@ const primitiveSkill = Command.make('skill', {
   Effect.gen(function* () {
     const root = yield* contexta
     yield* runCli(
-      () => runPrimitiveSkill({ root: root.root, target }),
+      runPrimitiveSkillEffect({ root: root.root, target }),
       result => ({
         output: json ? formatJson(result) : formatPrimitiveSkill(result),
         exitCode: result.status === 'ready' ? 0 : 1,
@@ -122,7 +114,7 @@ const upgrade = Command.make('upgrade', {
   Effect.gen(function* () {
     const root = yield* contexta
     yield* runCli(
-      () => runUpgradeStatus({ root: root.root }),
+      runUpgradeStatusEffect({ root: root.root }),
       result => ({
         output: json ? formatJson(result) : formatUpgrade(result),
         exitCode: 0,
@@ -132,21 +124,18 @@ const upgrade = Command.make('upgrade', {
   Command.withDescription('Report the pinned vendor baseline; merge engine is not implemented in v0'),
 )
 
-export const command = contexta.pipe(
+const command = contexta.pipe(
   Command.withSubcommands([init, recognize, lint, primitive, upgrade]),
 )
 
-export const main = Command.run(command, {
+export const main: Effect.Effect<void, unknown> = Command.run(command, {
   version,
 }).pipe(
-  Effect.provide(NodeServices.layer),
+  Effect.provide(contextaLiveLayer),
 )
 
-function runCli<A>(run: () => Promise<A>, onSuccess: (result: A) => CliSuccess): Effect.Effect<void> {
-  return Effect.tryPromise({
-    try: run,
-    catch: toContextaError,
-  }).pipe(
+function runCli<A>(run: Effect.Effect<A, ContextaError, ContextaRuntimeServices>, onSuccess: (result: A) => CliSuccess): Effect.Effect<void, never, ContextaRuntimeServices> {
+  return run.pipe(
     Effect.matchEffect({
       onFailure: (error) => {
         const contextaError = toContextaError(error)
@@ -249,6 +238,8 @@ function formatLint(result: LintResult): string {
     `[${signal.signal}] ${signal.context ?? 'target'}`,
     ...(signal.locator === undefined ? [] : [`locator: ${signal.locator}`]),
     `confidence: ${signal.confidence.toFixed(2)}`,
+    'loss model:',
+    `- ${firstLine(signal.lossModel)}`,
     'evidence:',
     ...signal.evidence.map(evidence => `- ${evidence}`),
     'basis:',
@@ -272,6 +263,18 @@ function formatPrimitiveSkill(result: PrimitiveSkillResult): string {
     ...(result.presentSections.length === 0 ? ['- none'] : result.presentSections.map(item => `- ${item}`)),
     `export position: ${result.exportPosition.present ? 'present' : 'missing'}`,
     ...(result.exportPosition.excerpt === undefined ? [] : [`export excerpt: ${result.exportPosition.excerpt}`]),
+    'model:',
+    ...(result.model.capability === undefined ? ['- capability: missing'] : [`- capability: ${result.model.capability}`]),
+    ...(result.model.trigger === undefined ? ['- trigger: missing'] : [`- trigger: ${result.model.trigger}`]),
+    ...(result.model.semanticBasisLinks.length === 0
+      ? ['- semantic basis links: none']
+      : result.model.semanticBasisLinks.map(link => `- semantic basis: ${link}`)),
+    ...(result.model.exportPosition === undefined ? ['- export position: missing'] : [`- export position: ${result.model.exportPosition}`]),
+    'plan:',
+    `- compiler: ${result.plan.compiler}`,
+    ...(result.plan.futureSkillExportRequirements.length === 0
+      ? ['- future skill export requirements: none']
+      : result.plan.futureSkillExportRequirements.map(item => `- future skill export requirement: ${item}`)),
     'diagnostics:',
     ...(result.diagnostics.length === 0
       ? ['- none']
@@ -280,16 +283,35 @@ function formatPrimitiveSkill(result: PrimitiveSkillResult): string {
 }
 
 function formatUpgrade(result: UpgradeStatusResult): string {
+  const pinLines = result.pinStatus.status === 'pinned-v0'
+    ? [
+        'pinned vendor baseline:',
+        `  schemaVersion: ${result.pinStatus.pin.schemaVersion}`,
+        `  vendor: ${result.pinStatus.pin.vendor}`,
+        `  ref: ${result.pinStatus.pin.ref}`,
+        `  digest: ${result.pinStatus.pin.digest}`,
+        `  createdAt: ${result.pinStatus.pin.createdAt}`,
+      ]
+    : [
+        'pin status: pre-v0 local instance without pin',
+        `pin path: ${result.pinStatus.pinPath}`,
+      ]
+
   return [
     'contexta upgrade',
     `root: ${result.root.contextaRoot}`,
-    'pinned vendor baseline:',
-    `  schemaVersion: ${result.pin.schemaVersion}`,
-    `  vendor: ${result.pin.vendor}`,
-    `  ref: ${result.pin.ref}`,
-    `  digest: ${result.pin.digest}`,
-    `  createdAt: ${result.pin.createdAt}`,
+    `local instance: ${result.localInstance.status}`,
+    ...pinLines,
+    'new vendor baseline:',
+    `  schemaVersion: ${result.newBaseline.schemaVersion}`,
+    `  vendor: ${result.newBaseline.vendor}`,
+    `  ref: ${result.newBaseline.ref}`,
+    `  digest: ${result.newBaseline.digest}`,
     'merge engine: not implemented in v0',
     'local customization: not overwritten',
   ].join('\n')
+}
+
+function firstLine(value: string): string {
+  return value.split('\n').map(line => line.trim()).find(line => line.length > 0) ?? 'not recorded'
 }

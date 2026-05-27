@@ -174,6 +174,25 @@ Mapping is an important input to recognition, but recognition is not only mappin
 `,
   },
   {
+    path: 'mapping/bootstrap/modules/concept/recognition-primitive.md',
+    content: `---
+kind: concept
+---
+
+# recognition-primitive
+
+## Designation
+
+Canonical: \`recognition-primitive\`
+
+## Definition
+
+recognition-primitive is local contexta material that interprets observable markdown surface into a candidate role.
+
+frontmatter, path, headings, sections, links, and locator markers are features. They are not recognition authority by themselves.
+`,
+  },
+  {
     path: 'mapping/bootstrap/modules/concept/primitive-creator.md',
     content: `---
 kind: concept
@@ -209,6 +228,27 @@ Aliases:
 skill-primitive is a local contexta primitive for modeling agent-consumable skill behavior before compiling a final SKILL.md artifact.
 
 v0 keeps export position material visible but does not implement the final skill compiler.
+`,
+  },
+  {
+    path: 'mapping/bootstrap/modules/recognition/default.md',
+    content: `---
+kind: recognition-primitive
+---
+
+# default-recognition
+
+## local-kind-frontmatter
+
+Role: $frontmatter.kind
+Confidence: 0.9
+
+When:
+- \`frontmatter.kind is local kind\`
+
+Basis:
+- [[mapping/bootstrap/modules/concept/recognition-primitive|recognition-primitive]]
+- [[mapping/bootstrap/modules/concept/mapping|mapping]]
 `,
   },
   {
@@ -374,6 +414,10 @@ kind: signal
 
 \`concept-as-policy\` means a concept module may be drifting into normative policy language.
 
+## Loss Model
+
+This signal protects the boundary between naming a semantic object and imposing normative policy constraints.
+
 ## Trigger
 
 - \`frontmatter.kind == concept\`
@@ -399,6 +443,10 @@ kind: signal
 
 \`workflow-as-policy\` means a workflow module may be drifting into policy constraint language.
 
+## Loss Model
+
+This signal protects workflow material from losing state, move, and transition structure by becoming policy prose.
+
 ## Trigger
 
 - \`frontmatter.kind == workflow\`
@@ -422,6 +470,10 @@ kind: signal
 ## Definition
 
 \`template-owns-lifecycle\` means a template module may be taking source, review, pick, update, write, or lifecycle responsibility.
+
+## Loss Model
+
+This signal protects the lifecycle authority boundary so templates stay formatted surfaces instead of owning workflow decisions.
 
 ## Trigger
 
@@ -448,6 +500,10 @@ kind: signal
 
 \`architecture-as-responsibility-card\` means an architecture module may only describe responsibility and not composition or boundary.
 
+## Loss Model
+
+This signal protects architecture material from collapsing into an ownership card without layer, relation, or boundary structure.
+
 ## Trigger
 
 - \`frontmatter.kind == architecture\`
@@ -472,6 +528,10 @@ kind: signal
 
 \`example-as-kind\` means example material may be used as proof of a kind instead of as a concrete sample.
 
+## Loss Model
+
+This signal protects the distinction between a concrete example and the semantic basis that defines a kind.
+
 ## Trigger
 
 - \`frontmatter.kind == example\`
@@ -494,6 +554,10 @@ kind: signal
 ## Definition
 
 \`composition-as-list\` means a composition module may be only a plain list and not a stable whole / part boundary.
+
+## Loss Model
+
+This signal protects composition material from losing its stable whole / part boundary.
 
 ## Trigger
 
