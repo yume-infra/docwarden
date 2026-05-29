@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "private": true,
   "packageManager": "pnpm@10.33.4",
-  "description": "Workspace for the docwarden and contexta CLIs",
+  "description": "Workspace for docwarden workflow, contexta infra, and isomorph semantic runtime CLIs",
   "license": "MIT",
   "bin": {
-    "contexta": "apps/contexta/dist/index.js"
+    "contexta": "apps/contexta/dist/index.js",
+    "isomorph": "apps/isomorph/dist/index.js"
   },
   "engines": {
     "node": ">=22.22.1"
@@ -15,6 +16,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:contexta": "pnpm --filter contexta build",
+    "build:isomorph": "pnpm --filter isomorph build",
     "build:docwarden": "pnpm --filter docwarden build",
     "clean": "turbo run clean",
     "deps:check": "taze -r",
@@ -26,12 +28,12 @@
     "effect:unpatch": "effect-tsgo unpatch",
     "husky:install": "husky",
     "knip": "knip",
-    "link": "pnpm build:contexta && pnpm link",
+    "link": "pnpm build:isomorph && pnpm build:contexta && pnpm link",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "outdated": "pnpm outdated -r",
     "prepare": "node -e \"if (require('node:fs').existsSync('.git')) require('node:child_process').execFileSync('husky', { stdio: 'inherit', shell: true })\" && effect-tsgo patch",
-    "smoke:bin": "pnpm --filter docwarden smoke:bin && pnpm --filter contexta smoke:bin",
+    "smoke:bin": "pnpm --filter docwarden smoke:bin && pnpm --filter contexta smoke:bin && pnpm --filter isomorph smoke:bin",
     "test": "vitest run --config packages/vitest-config/workspace.config.ts",
     "typecheck": "turbo run typecheck",
     "typecheck:tsc": "turbo run typecheck:tsc",

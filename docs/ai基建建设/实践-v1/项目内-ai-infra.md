@@ -126,6 +126,37 @@ task -> review system -> spec
 
 这个修正来自实际推进中的概念冲突，而不是预先设计出来的目录结构。
 
+## 实践 9：拆出 contexta / isomorph / docwarden
+
+后续实践中又暴露了新的层级错位。
+
+semantic-lint、recognition primitive 和 content language 的推进原本使用 `contexta` 名字。
+
+但项目真正缺少的是 prompt / context / capability 的基础设施：也就是 skills、agents、prompts、context files 的 catalog、install、sync 和 activation。
+
+当前修正为：
+
+```text
+docwarden = 文档维护 workflow
+contexta = context / prompt / capability infrastructure
+isomorph = semantic primitive engine
+```
+
+实现层对应为：
+
+```text
+apps/docwarden/
+apps/contexta/
+apps/isomorph/
+
+.docwarden/
+.isomorph/
+```
+
+`.contexta` 当前不保留占位文件。
+
+只有当 `contexta` 的本地配置被真实 runtime 消费时，才应落地 `.contexta`。
+
 ## 当前经验
 
 这轮实践得到的经验是：
@@ -136,16 +167,18 @@ task -> review system -> spec
 - task 材料必须短命，否则会变成新的知识垃圾。
 - review 是必要的，但 review surface 后续需要系统设计。
 - 脚本检查适合先覆盖结构规则，语义规则后置。
+- contexta 不能被 semantic-lint 抢占；semantic primitive engine 应由 isomorph 承接。
+- 没有 contexta 的 prompt / capability 分发闭环，docwarden 难以 dogfood。
 
 ## 下一步
 
-下一步 AI Infra 实践应该继续围绕 review system 展开。
+下一步 AI Infra 实践应该先围绕 contexta 的最小 dogfood 链路展开。
 
-重点不是马上做 CLI，而是先弄清楚：
+重点不是继续加深 semantic-lint，而是先弄清楚：
 
-- review surface 最小应该长什么样。
-- HTML review 是否真的比 Markdown 更轻松。
-- decision trace 放在哪里。
-- review 后如何分发到 spec / guide / wiki。
+- docwarden 第一批必须分发的 skills / prompts / agents 是什么。
+- contexta catalog 的最小可用形态是什么。
+- contexta install / activation 如何让新 agent 稳定进入 docwarden workflow。
+- isomorph 哪些能力是真正需要接入 contexta 的底层能力。
 
-这些问题解决后，再考虑把流程沉淀成 tooling。
+这些问题解决后，再继续推进 review surface、decision trace 和 promote / pick tooling。

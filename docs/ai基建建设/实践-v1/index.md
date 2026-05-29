@@ -25,6 +25,7 @@ docs/文档体系建设/
 
 - `.docwarden/task/03-ai-infra-min-schema/`
 - `.docwarden/task/04-task-review-spec-pipeline/`
+- `.docwarden/task/21-contexta-isomorph-layer-split/`
 
 这两轮实践已经验证了一个基本方向：
 
@@ -138,6 +139,31 @@ agent 默认只能读取 `docs/`，不能修改。
 
 这说明 AI Infra 不只是理论，也可以逐步沉淀成工具。
 
+### 8. 三层 monorepo 拆分
+
+2026-05-29 的实践确认，当前 monorepo 不应只被理解为 docwarden 单项目。
+
+它同时承载：
+
+```text
+docwarden = 文档维护 workflow
+contexta = context / prompt / capability infrastructure
+isomorph = semantic primitive engine
+```
+
+此前 semantic-lint 和 recognition runtime 使用 `contexta` 名字推进，导致真正的 prompt / capability 基础设施缺位。
+
+当前实践已将 semantic runtime 迁到：
+
+```text
+apps/isomorph/
+.isomorph/
+```
+
+`apps/contexta/` 回到 context / prompt / capability infrastructure 的入口位置。
+
+当前不保留 `.contexta` 占位配置；只有当 contexta 的 catalog / install / activation 机制真实消费本地配置时，才落地 `.contexta`。
+
 ## 当前未完成
 
 当前实践还没有完成：
@@ -147,8 +173,9 @@ agent 默认只能读取 `docs/`，不能修改。
 - review artifact / decision trace schema。
 - spec / guide / wiki 的最小产物模板。
 - promote / pick 的触发和编排。
-- contexta 的内容格式协议。
-- CLI 或 plugin 形态。
+- contexta 的 capability catalog / install / activation 机制。
+- docwarden dogfood 所需的第一批 skills / prompts / agents。
+- isomorph 与 contexta 的接入边界。
 
 ## 当前结论
 
@@ -161,7 +188,9 @@ agent 默认只能读取 `docs/`，不能修改。
   -> 用慢推进循环积累 task material
   -> 通过 review 纠偏
   -> 再把稳定内容分发到 spec / guide / wiki
-  -> 最后再考虑 tooling / CLI / plugin
+  -> 通过 contexta 分发 workflow 所需能力
+  -> 必要时把语义稳定性要求下沉到 isomorph
+  -> 最后再扩展 tooling / CLI / plugin
 ```
 
 这套实践已经在当前项目中跑通了最小闭环。

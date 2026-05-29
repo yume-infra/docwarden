@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-13
-updated: 2026-05-27
+updated: 2026-05-29
 owner: sayori
 ---
 
@@ -22,7 +22,8 @@ owner: sayori
 
 - `17-real-content-dry-run-target/`：真实内容 dry run 靶子准备工作面，当前 draft。
 - `18-contexta-runtime-handoff/`：contexta runtime 第一版实现 handoff 工作面，当前 draft。
-- `19-contexta-v0-migration-audit/`：contexta v0 实现迁移审核工作面，当前 active。
+- `19-contexta-v0-migration-audit/`：contexta v0 实现迁移审核工作面，已被 layer split 取代。
+- `21-contexta-isomorph-layer-split/`：contexta / isomorph / docwarden 三层彻底拆分工作面，当前 active。
 
 ## 归档工作面
 
@@ -47,4 +48,4 @@ owner: sayori
 
 ## 当前入口
 
-当前 active task：`19-contexta-v0-migration-audit/`。
+当前 active task：`21-contexta-isomorph-layer-split/`。

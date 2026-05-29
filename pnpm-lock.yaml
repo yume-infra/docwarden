@@ -129,6 +129,15 @@ importers:
         specifier: 'catalog:'
         version: 4.0.0-beta.70
 
+  apps/isomorph:
+    dependencies:
+      '@effect/platform-node':
+        specifier: 'catalog:'
+        version: 4.0.0-beta.70(effect@4.0.0-beta.70)(ioredis@5.10.1)
+      effect:
+        specifier: 'catalog:'
+        version: 4.0.0-beta.70
+
   packages/tsconfig: {}
 
   packages/tsdown-config: {}

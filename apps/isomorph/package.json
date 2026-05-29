@@ -1,0 +1,39 @@
+{
+  "name": "isomorph",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Semantic primitive engine for concept/assertion/relation material and semantic linting",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "isomorph": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22.22.1"
+  },
+  "scripts": {
+    "build": "tsdown --config tsdown.config.ts && node ../../scripts/ensure-shebang.mjs dist/index.js",
+    "clean": "rm -rf dist",
+    "dev": "tsdown --config tsdown.config.ts --watch",
+    "link:global": "pnpm build && pnpm link",
+    "prepack": "pnpm build",
+    "smoke:bin": "pnpm build && dist/index.js --help",
+    "typecheck": "tsgo -p tsconfig.json --noEmit",
+    "typecheck:tsc": "tsc -p tsconfig.json --noEmit",
+    "unlink:global": "pnpm rm -g isomorph"
+  },
+  "dependencies": {
+    "@effect/platform-node": "catalog:",
+    "effect": "catalog:"
+  }
+}
