@@ -12,6 +12,19 @@ type TaskLayer = 'spec' | 'guide' | 'wiki'
 type ReviewMode = 'target' | 'task'
 type PromoteKind = 'promote' | 'pick'
 
+interface TaskMaterialSummary {
+  readonly taskId: string
+  readonly title: string
+  readonly context: readonly string[]
+  readonly objective: readonly string[]
+  readonly boundary: readonly string[]
+  readonly nextEntry: readonly string[]
+  readonly planObjective: readonly string[]
+  readonly planSteps: readonly string[]
+  readonly logEvents: readonly string[]
+  readonly gaps: readonly string[]
+}
+
 interface CliSuccess {
   readonly output: string
   readonly exitCode: number
@@ -829,21 +842,30 @@ function formatTaskReviewIndex(taskId: string, taskDirectory: string, reviewId: 
 }
 
 function formatTaskReviewLead(taskId: string, taskIndex: string, taskPlan: string): string {
+  const summary = summarizeTaskMaterial(taskId, taskIndex, taskPlan, '')
   return [
     '# Review Lead',
     '',
-    `Task: ${taskId}`,
+    `Task: ${summary.title} (${taskId})`,
     '',
-    '## 本轮需要判断',
-    '- 是否有清晰的业务目标与边界？',
-    '- 是否有足够的上下文支持下一层产出？',
-    '- 本轮是否适合直接 promote / pick？',
+    '## Decision',
+    '- 本轮需要判断：哪些 task material 已经可以进入 spec / guide / wiki，哪些只能作为 side material 或继续留在 task。',
+    `- 推荐路径：${recommendRoute(summary)}`,
     '',
-    '## Index 片段',
-    ...extractPreviewLines(taskIndex, 20).map(line => `- ${line}`),
+    '## Mainline Candidate',
+    ...formatSummaryBullets(summary.objective, '尚未提炼出明确目标，暂不建议直接 promote。'),
     '',
-    '## Plan 片段',
-    ...extractSection(taskPlan, 'Objective').map(line => `- ${line}`),
+    '## Side Material Candidate',
+    ...formatSummaryBullets(summary.context, '当前没有明显 side material；可继续从 log 或 review 反馈中 pick。'),
+    '',
+    '## Missing Context',
+    ...formatSummaryBullets(summary.gaps, '未发现阻塞性缺口。'),
+    '',
+    '## Review Options',
+    '- promote: 目标、边界和执行规则已经足够稳定。',
+    '- pick: 出现了可复用判断、协作偏好或 side knowledge，但不属于主线规范。',
+    '- continue-task: 目标或边界仍缺失，需要继续补 task material。',
+    '- no-op: 本轮没有值得沉淀的新增内容。',
     '',
   ].join('\n')
 }
@@ -857,24 +879,33 @@ function formatTaskReviewBacking(
   taskPlan: string,
   taskLog: string,
 ): string {
+  const summary = summarizeTaskMaterial(taskId, taskIndex, taskPlan, taskLog)
   return [
     '# Review Backing',
     '',
-    `Task: ${taskId}`,
+    `Task: ${summary.title} (${taskId})`,
     '',
     'Source files:',
     `- ${taskIndexPath}`,
     `- ${taskPlanPath}`,
     `- ${taskLogPath}`,
     '',
-    'Task Index 片段：',
-    ...extractPreviewLines(taskIndex, 15).map(line => `- ${line}`),
+    '## Extracted Material',
     '',
-    'Task Plan 片段：',
-    ...extractPreviewLines(taskPlan, 15).map(line => `- ${line}`),
+    '### Context',
+    ...formatSummaryBullets(summary.context, '未提取到 context。'),
     '',
-    'Task Log 片段：',
-    ...extractPreviewLines(taskLog, 15).map(line => `- ${line}`),
+    '### Objective',
+    ...formatSummaryBullets(summary.objective, '未提取到 objective。'),
+    '',
+    '### Boundary',
+    ...formatSummaryBullets(summary.boundary, '未提取到 boundary。'),
+    '',
+    '### Plan Steps',
+    ...formatSummaryBullets(summary.planSteps, '未提取到 plan steps。'),
+    '',
+    '### Recent Log',
+    ...formatSummaryBullets(summary.logEvents, '暂无 log event。'),
     '',
   ].join('\n')
 }
@@ -923,21 +954,34 @@ function formatPromoteArtifact(
   taskIndex: string,
   taskPlan: string,
 ): string {
+  const summary = summarizeTaskMaterial(taskId, taskIndex, taskPlan, '')
+  if (layer === 'guide') {
+    return formatGuideArtifact(summary, createdAt, sourcePaths)
+  }
+  if (layer === 'wiki') {
+    return formatWikiArtifact(summary, createdAt, sourcePaths, 'promote')
+  }
   return [
-    `# Promote to ${layer}`,
+    `# Spec: ${taskTitle}`,
     '',
-    `Task: ${taskTitle} (${taskId})`,
+    `Task: ${summary.taskId}`,
     `Generated at: ${createdAt}`,
-    `Layer: ${layer}`,
+    'Layer: spec',
     '',
     '## Trace',
     ...sourcePaths.map(path => `- ${path}`),
     '',
-    '## Key Points',
-    ...extractPreviewLines(taskIndex, 20).map(line => `- ${line}`),
+    '## Stable Contract',
+    ...formatSummaryBullets(summary.objective, '目标尚未稳定；本产物只能作为待 review 草案。'),
     '',
-    '## Planned Actions',
-    ...extractPreviewLines(taskPlan, 20).map(line => `- ${line}`),
+    '## Execution Rules',
+    ...formatSummaryBullets(summary.planSteps, '尚未形成可执行规则。'),
+    '',
+    '## Boundary',
+    ...formatSummaryBullets(summary.boundary, '边界尚未稳定。'),
+    '',
+    '## Review Notes',
+    ...formatSummaryBullets(summary.gaps, '没有发现阻塞性缺口。'),
     '',
   ].join('\n')
 }
@@ -949,17 +993,85 @@ function formatPickArtifact(
   sourcePaths: readonly string[],
   taskIndex: string,
 ): string {
+  const summary = summarizeTaskMaterial(taskId, taskIndex, '', '')
+  const signal = firstOrFallback(summary.context, 'task material 中存在可能长期复用的判断或上下文。')
   return [
-    `# Pick to wiki (${taskId})`,
+    `# Wiki Pick: ${taskTitle}`,
     '',
-    `Task: ${taskTitle} (${taskId})`,
+    `Task: ${summary.taskId}`,
     `Generated at: ${createdAt}`,
     '',
     '## Trace',
     ...sourcePaths.map(path => `- ${path}`),
     '',
-    '## Draft Snippets',
-    ...extractPreviewLines(taskIndex, 25).map(line => `- ${line}`),
+    '## Pick Reason',
+    `- ${signal}`,
+    '',
+    '## Reusable Pattern',
+    ...formatSummaryBullets(summary.objective, '需要继续观察，多次 signal 后再提升为长期默认模式。'),
+    '',
+    '## Applicability',
+    ...formatSummaryBullets(summary.boundary, '适用于相似上下文中的后续判断，不能覆盖用户当前明确指令。'),
+    '',
+    '## Review State',
+    '- status: picked-from-task',
+    '- next: 多次相似 signal 后再考虑提升为 user-context 或 spec。',
+    '',
+  ].join('\n')
+}
+
+function formatGuideArtifact(
+  summary: TaskMaterialSummary,
+  createdAt: string,
+  sourcePaths: readonly string[],
+): string {
+  return [
+    `# Guide: ${summary.title}`,
+    '',
+    `Task: ${summary.taskId}`,
+    `Generated at: ${createdAt}`,
+    'Layer: guide',
+    '',
+    '## Trace',
+    ...sourcePaths.map(path => `- ${path}`),
+    '',
+    '## Why This Exists',
+    ...formatSummaryBullets(summary.context, '尚未形成足够背景叙事。'),
+    '',
+    '## How To Read This Work',
+    ...formatSummaryBullets(summary.objective, '尚未形成稳定阅读目标。'),
+    '',
+    '## Current Boundary',
+    ...formatSummaryBullets(summary.boundary, '边界仍需用户 review。'),
+    '',
+  ].join('\n')
+}
+
+function formatWikiArtifact(
+  summary: TaskMaterialSummary,
+  createdAt: string,
+  sourcePaths: readonly string[],
+  source: 'promote' | 'pick',
+): string {
+  return [
+    `# Wiki: ${summary.title}`,
+    '',
+    `Task: ${summary.taskId}`,
+    `Generated at: ${createdAt}`,
+    'Layer: wiki',
+    `Source: ${source}`,
+    '',
+    '## Trace',
+    ...sourcePaths.map(path => `- ${path}`),
+    '',
+    '## Concept',
+    ...formatSummaryBullets(summary.objective, '尚未形成稳定概念。'),
+    '',
+    '## Signals',
+    ...formatSummaryBullets(summary.context, '暂无可复用 signal。'),
+    '',
+    '## Boundaries',
+    ...formatSummaryBullets(summary.boundary, '适用边界仍需补充。'),
     '',
   ].join('\n')
 }
@@ -1106,14 +1218,14 @@ function taskLogTemplate(taskId: string, taskTitle: string, createdAt: string, c
 }
 
 function appendTaskToCatalog(content: string, taskId: string, taskTitle: string): string {
-  const entry = `- .docwarden/task/${taskId}/ (${taskTitle})`
+  const entry = `- \`.docwarden/task/${taskId}/\`：${taskTitle}`
   if (content.includes(`.docwarden/task/${taskId}/`)) {
     return content
   }
 
   const marker = /^## 当前 active task|^## Active tasks?/m
   if (marker.test(content)) {
-    return content.replace(marker, match => `${match}\n${entry}`)
+    return content.replace(marker, match => `${match}\n\n${entry}`)
   }
 
   return `${content}\n## 当前 active task\n\n${entry}\n`
@@ -1279,6 +1391,90 @@ function timestampForFiles(value: string): string {
   return value.replace(/[-:.TZ]/g, '')
 }
 
+function summarizeTaskMaterial(taskId: string, taskIndex: string, taskPlan: string, taskLog: string): TaskMaterialSummary {
+  const title = extractTaskTitle(taskIndex, taskId)
+  const context = cleanMaterialLines(extractSection(taskIndex, 'Context'))
+  const indexObjective = cleanMaterialLines(extractSection(taskIndex, 'Objective'))
+  const planObjective = cleanMaterialLines(extractSection(taskPlan, 'Objective'))
+  const boundary = cleanMaterialLines(extractSection(taskIndex, 'Boundary'))
+  const nextEntry = cleanMaterialLines(extractSection(taskIndex, 'Next Entry'))
+  const planSteps = extractPlanSteps(taskPlan)
+  const logEvents = extractLogEvents(taskLog)
+  const objective = indexObjective.length > 0 ? indexObjective : planObjective
+  const gaps = [
+    objective.length === 0 ? '缺少明确 objective。' : undefined,
+    boundary.length === 0 ? '缺少明确 boundary。' : undefined,
+    planSteps.length === 0 ? '缺少可执行 plan steps。' : undefined,
+  ].filter((value): value is string => value !== undefined)
+
+  return {
+    taskId,
+    title,
+    context,
+    objective,
+    boundary,
+    nextEntry,
+    planObjective,
+    planSteps,
+    logEvents,
+    gaps,
+  }
+}
+
+function cleanMaterialLines(lines: readonly string[]): readonly string[] {
+  return lines
+    .map(line => line.trim())
+    .map(line => line.replace(/^- \[[ x]\]\s+/i, ''))
+    .map(line => line.replace(/^[-*]\s*/, ''))
+    .map(line => line.replace(/^\d+\.\s*/, ''))
+    .filter(line => line.length > 0)
+    .filter(line => line !== '---')
+    .filter(line => !line.startsWith('```'))
+    .filter(line => line !== '-')
+}
+
+function extractLogEvents(taskLog: string): readonly string[] {
+  return taskLog
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(line => /^- \[.+\]/.test(line))
+    .map(line => line.replace(/^-\s*/, ''))
+    .slice(-5)
+}
+
+function formatSummaryBullets(lines: readonly string[], fallback: string): readonly string[] {
+  const source = lines.length === 0 ? [fallback] : lines
+  return source.map(line => `- ${line}`)
+}
+
+function firstOrFallback(lines: readonly string[], fallback: string): string {
+  const useful = lines.filter(line => !line.endsWith(':') && !line.endsWith('：'))
+  return useful.slice(0, 2).join(' ') || lines.slice(0, 2).join(' ') || fallback
+}
+
+function recommendRoute(summary: TaskMaterialSummary): string {
+  if (summary.gaps.length > 0) {
+    return 'continue-task'
+  }
+  if (summary.objective.length > 0 && summary.boundary.length > 0) {
+    return 'promote or pick after user review'
+  }
+  return 'review-first'
+}
+
+function extractPlanSteps(taskPlan: string): readonly string[] {
+  const explicitSteps = cleanMaterialLines(extractSection(taskPlan, 'Steps'))
+  if (explicitSteps.length > 0) {
+    return explicitSteps
+  }
+
+  return taskPlan
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(line => /^## Step\s+\d+/i.test(line))
+    .map(line => line.replace(/^##\s*/, ''))
+}
+
 function extractSection(text: string, heading: string): string[] {
   const lines = text.split(/\r?\n/)
   const headingIndex = lines.findIndex(line => line.trim().toLowerCase().startsWith(`## ${heading.toLowerCase()}`))
@@ -1296,14 +1492,6 @@ function extractSection(text: string, heading: string): string[] {
     }
   }
   return out
-}
-
-function extractPreviewLines(text: string, max: number): string[] {
-  return text
-    .split(/\r?\n/)
-    .slice(0, max)
-    .map(line => line.trim())
-    .filter(line => line.length > 0)
 }
 
 function extractTaskTitle(taskIndex: string, taskId: string): string {

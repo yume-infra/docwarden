@@ -161,6 +161,7 @@ describe('docwarden CLI contract', () => {
     const taskIndex = await fs.readFile(path.join(output.taskDirectory, 'index.md'), 'utf8')
     const taskPlan = await fs.readFile(path.join(output.taskDirectory, 'plan.md'), 'utf8')
     const taskLog = await fs.readFile(path.join(output.taskDirectory, 'log.md'), 'utf8')
+    const taskCatalog = await fs.readFile(path.join(workspace, '.docwarden', 'task', 'index.md'), 'utf8')
 
     expect(taskIndex).toContain('## Context')
     expect(taskIndex).toContain('## Objective')
@@ -169,6 +170,8 @@ describe('docwarden CLI contract', () => {
     expect(taskPlan).toContain('## Objective')
     expect(taskLog).toContain('task created:')
     expect(output.nextEntry).toMatch(/plan\.md$/)
+    expect(taskCatalog.match(/## 当前 active task/g)).toHaveLength(1)
+    expect(taskCatalog).toContain('`.docwarden/task/25-docwarden-v0-dogfood-workflow/`')
   })
 
   it('runs task-driven review and writes task-sourced artifacts', async () => {
@@ -213,8 +216,16 @@ describe('docwarden CLI contract', () => {
     const backing = await fs.readFile(path.join(output.reviewDirectory, 'backing.md'), 'utf8')
     const taskLog = await fs.readFile(path.join(workspace, '.docwarden', 'task', '25-docwarden-v0-dogfood-workflow', 'log.md'), 'utf8')
 
-    expect(lead).toContain('本轮需要判断')
+    expect(lead).toContain('## Decision')
+    expect(lead).toContain('## Mainline Candidate')
+    expect(lead).toContain('## Side Material Candidate')
+    expect(lead).toContain('## Missing Context')
+    expect(lead).toContain('## Review Options')
+    expect(lead).not.toContain('## Index 片段')
+    expect(lead).not.toContain('---')
     expect(backing).toContain('Source files')
+    expect(backing).toContain('## Extracted Material')
+    expect(backing).toContain('### Plan Steps')
     expect(taskLog).toContain('review generated from task')
     expect(output.reviewMode).toBe('task')
   })
@@ -258,8 +269,14 @@ describe('docwarden CLI contract', () => {
     await expect(fs.access(promoteOutput.artifactPath)).resolves.toBeUndefined()
 
     const promoteArtifact = await fs.readFile(promoteOutput.artifactPath, 'utf8')
-    expect(promoteArtifact).toContain('# Promote to spec')
+    expect(promoteArtifact).toContain('# Spec: docwarden v0 workflow')
     expect(promoteArtifact).toContain('## Trace')
+    expect(promoteArtifact).toContain('## Stable Contract')
+    expect(promoteArtifact).toContain('## Execution Rules')
+    expect(promoteArtifact).toContain('## Boundary')
+    expect(promoteArtifact).not.toContain('---')
+    expect(promoteArtifact).not.toContain('```text')
+    expect(promoteOutput.artifactPath).toContain(path.join(workspace, '.docwarden', 'spec'))
 
     const pick = await runDocwarden([
       '--root',
@@ -278,7 +295,12 @@ describe('docwarden CLI contract', () => {
     await expect(fs.access(pickOutput.artifactPath)).resolves.toBeUndefined()
 
     const pickArtifact = await fs.readFile(pickOutput.artifactPath, 'utf8')
-    expect(pickArtifact).toContain('# Pick to wiki')
+    expect(pickArtifact).toContain('# Wiki Pick: docwarden v0 workflow')
+    expect(pickArtifact).toContain('## Pick Reason')
+    expect(pickArtifact).toContain('## Reusable Pattern')
+    expect(pickArtifact).toContain('## Applicability')
+    expect(pickArtifact).not.toContain('---')
+    expect(pickOutput.artifactPath).toContain(path.join(workspace, '.docwarden', 'wiki'))
 
     const taskLog = await fs.readFile(path.join(workspace, '.docwarden', 'task', '25-docwarden-v0-dogfood-workflow', 'log.md'), 'utf8')
     expect(taskLog).toContain('promote to spec')
