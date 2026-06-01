@@ -127,6 +127,156 @@ describe('docwarden CLI contract', () => {
     await expect(fs.access(path.join(workspace, '.docwarden', 'config.yaml'))).resolves.toBeUndefined()
   })
 
+  it('generates a minimal review surface', async () => {
+    const workspace = await makeWorkspace()
+    const initResult = await runDocwarden(['--root', workspace, 'init'], repoRoot)
+    expect(initResult.exitCode).toBe(0)
+
+    const target = path.join(workspace, 'target.txt')
+    await fs.writeFile(target, 'line one\nline two\nline three\n')
+
+    const result = await runDocwarden(['--root', workspace, 'review', '--target', 'target.txt', '--json'], repoRoot)
+    expect(result.exitCode).toBe(0)
+    expect(result.stderr).toBe('')
+
+    const output = JSON.parse(result.stdout)
+    expect(output).toMatchObject({
+      command: 'review',
+      workspaceRoot: workspace,
+      docwardenRoot: path.join(workspace, '.docwarden'),
+      targetPath: target,
+      filesWritten: [
+        'index.md',
+        'lead.md',
+        'backing.md',
+        'state.yaml',
+      ],
+    })
+
+    expect(output.reviewDirectory).toContain(path.join(workspace, '.docwarden', 'review'))
+    expect(output.statePath).toBe(path.join(output.reviewDirectory, 'state.yaml'))
+
+    for (const file of output.filesWritten) {
+      await expect(fs.access(path.join(output.reviewDirectory, file))).resolves.toBeUndefined()
+    }
+
+    const state = await fs.readFile(output.statePath, 'utf8')
+    expect(state).toContain('status: review-surface-ready')
+    expect(state).toContain(`target: ${target}`)
+    expect(state).toContain('review_dir:')
+    expect(state).toContain(`config_path: ${output.configPath}`)
+
+    const reviewIndex = await fs.readFile(path.join(output.reviewDirectory, 'index.md'), 'utf8')
+    const reviewLead = await fs.readFile(path.join(output.reviewDirectory, 'lead.md'), 'utf8')
+    const reviewBacking = await fs.readFile(path.join(output.reviewDirectory, 'backing.md'), 'utf8')
+
+    expect(reviewIndex).toContain('Review Surface')
+    expect(reviewLead).toContain('Review Lead')
+    expect(reviewBacking).toContain('Target type: file')
+
+    expect(path.dirname(output.reviewDirectory)).toBe(path.join(workspace, '.docwarden', 'review'))
+  })
+
+  it('prints useful plain output for review', async () => {
+    const workspace = await makeWorkspace()
+    await runDocwarden(['--root', workspace, 'init'], repoRoot)
+    const target = path.join(workspace, 'target.txt')
+    await fs.writeFile(target, 'line one\nline two\nline three\n')
+
+    const result = await runDocwarden(['--root', workspace, 'review', '--target', 'target.txt'], repoRoot)
+
+    expect(result.exitCode).toBe(0)
+    expect(result.stderr).toBe('')
+    expect(result.stdout).toContain('review directory:')
+    expect(result.stdout).toContain(path.join(workspace, '.docwarden', 'review'))
+    expect(result.stdout).toContain('files:')
+    expect(result.stdout).toContain('index.md')
+    expect(result.stdout).toContain('lead.md')
+    expect(result.stdout).toContain('backing.md')
+    expect(result.stdout).toContain('state.yaml')
+  })
+
+  it('supports absolute review target paths', async () => {
+    const workspace = await makeWorkspace()
+    await runDocwarden(['--root', workspace, 'init'], repoRoot)
+
+    const target = path.join(workspace, 'absolute-target.txt')
+    await fs.writeFile(target, 'sample')
+
+    const result = await runDocwarden(['--root', workspace, 'review', '--target', target, '--json'], repoRoot)
+    expect(result.exitCode).toBe(0)
+
+    const output = JSON.parse(result.stdout)
+    expect(output.targetPath).toBe(target)
+    expect(output.reviewDirectory).toContain(path.join(workspace, '.docwarden', 'review'))
+  })
+
+  it('requires initialization before review', async () => {
+    const workspace = await makeWorkspace()
+    const target = path.join(workspace, 'target.txt')
+    await fs.writeFile(target, 'data')
+
+    const result = await runDocwarden(['--root', workspace, 'review', '--target', target], repoRoot)
+
+    expect(result.exitCode).toBe(2)
+    expect(result.stderr).toContain('docwarden config error')
+    expect(result.stderr).toContain('run docwarden init first')
+  })
+
+  it('requires a non-empty runtime config before review', async () => {
+    const workspace = await makeWorkspace()
+    await runDocwarden(['--root', workspace, 'init'], repoRoot)
+    const target = path.join(workspace, 'target.txt')
+    await fs.writeFile(target, 'data')
+    await fs.writeFile(path.join(workspace, '.docwarden', 'config.yaml'), '')
+
+    const result = await runDocwarden(['--root', workspace, 'review', '--target', target], repoRoot)
+
+    expect(result.exitCode).toBe(2)
+    expect(result.stderr).toContain('docwarden config error')
+    expect(result.stderr).toContain('docwarden config is empty')
+  })
+
+  it('requires a valid target path for review', async () => {
+    const workspace = await makeWorkspace()
+    await runDocwarden(['--root', workspace, 'init'], repoRoot)
+
+    const missingTarget = path.join(workspace, 'does-not-exist.txt')
+    const result = await runDocwarden(['--root', workspace, 'review', '--target', missingTarget], repoRoot)
+
+    expect(result.exitCode).toBe(2)
+    expect(result.stderr).toContain('docwarden config error')
+    expect(result.stderr).toContain('review target does not exist or is inaccessible')
+  })
+
+  it('requires --target argument for review', async () => {
+    const workspace = await makeWorkspace()
+    await runDocwarden(['--root', workspace, 'init'], repoRoot)
+
+    const result = await runDocwarden(['--root', workspace, 'review'], repoRoot)
+
+    expect(result.exitCode).toBe(2)
+    expect(result.stderr).toContain('docwarden config error')
+    expect(result.stderr).toContain('missing required --target')
+  })
+
+  it('shows review in CLI help', async () => {
+    const workspace = await makeWorkspace()
+    const result = await runDocwarden(['--root', workspace, '--help'], repoRoot)
+
+    expect(result.exitCode).toBe(0)
+    expect(result.stdout).toContain('review')
+  })
+
+  it('shows review flags in review help', async () => {
+    const workspace = await makeWorkspace()
+    const result = await runDocwarden(['--root', workspace, 'review', '--help'], repoRoot)
+
+    expect(result.exitCode).toBe(0)
+    expect(result.stdout).toContain('--target')
+    expect(result.stdout).toContain('--json')
+  })
+
   it('rejects an existing .docwarden directory as init root', async () => {
     const workspace = await makeWorkspace()
     await fs.mkdir(path.join(workspace, '.docwarden'))

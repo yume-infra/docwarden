@@ -12,6 +12,17 @@ interface CliSuccess {
   readonly exitCode: number
 }
 
+interface DocwardenReviewResult {
+  readonly command: 'review'
+  readonly workspaceRoot: string
+  readonly docwardenRoot: string
+  readonly configPath: string
+  readonly reviewDirectory: string
+  readonly statePath: string
+  readonly targetPath: string
+  readonly filesWritten: readonly string[]
+}
+
 interface DocwardenInitResult {
   readonly command: 'init'
   readonly workspaceRoot: string
@@ -53,6 +64,11 @@ const jsonFlag = Flag.boolean('json').pipe(
   Flag.withDescription('Print machine-readable JSON'),
 )
 
+const targetFlag = Flag.string('target').pipe(
+  Flag.withDescription('Path to review target'),
+  Flag.withDefault(''),
+)
+
 const docwarden = Command.make('docwarden').pipe(
   Command.withSharedFlags({
     root: rootFlag,
@@ -76,8 +92,25 @@ const init = Command.make('init', {
   Command.withDescription('Create .docwarden runtime defaults for review workflow execution'),
 )
 
+const review = Command.make('review', {
+  target: targetFlag,
+  json: jsonFlag,
+}, ({ target, json }) =>
+  Effect.gen(function* () {
+    const root = yield* docwarden
+    yield* runCli(
+      runReviewEffect({ root: root.root, target }),
+      result => ({
+        output: json ? formatJson(result) : formatReview(result),
+        exitCode: 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('Generate minimal review surface and state for a target'),
+)
+
 const command = docwarden.pipe(
-  Command.withSubcommands([init]),
+  Command.withSubcommands([init, review]),
 )
 
 export const main: Effect.Effect<void, unknown> = Command.run(command, {
@@ -171,6 +204,90 @@ function runInitEffect(options: { readonly root: string }): Effect.Effect<Docwar
   })
 }
 
+function runReviewEffect(options: { readonly root: string, readonly target: string }): Effect.Effect<DocwardenReviewResult, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    const path = yield* Path.Path
+    const workspaceRoot = path.resolve(normalizeOptionalPath(options.root) ?? '.')
+    yield* assertDirectory(workspaceRoot, `review root does not exist or is not a directory: ${workspaceRoot}`)
+
+    if (path.basename(workspaceRoot) === '.docwarden') {
+      return yield* Effect.fail(new DocwardenConfigError(
+        `review root must be a workspace root, not an existing .docwarden root: ${workspaceRoot}`,
+      ))
+    }
+
+    const docwardenRoot = path.join(workspaceRoot, '.docwarden')
+    const configPath = path.join(docwardenRoot, 'config.yaml')
+    if (!(yield* pathExists(configPath))) {
+      return yield* Effect.fail(new DocwardenConfigError(
+        `docwarden config missing at ${configPath}; run docwarden init first`,
+      ))
+    }
+    yield* assertReadableConfig(configPath)
+
+    const targetInput = normalizeOptionalPath(options.target)
+    if (targetInput === undefined) {
+      return yield* Effect.fail(new DocwardenConfigError('missing required --target'))
+    }
+    const targetPath = path.resolve(workspaceRoot, targetInput)
+    const targetInfo = yield* stat(targetPath, `review target does not exist or is inaccessible: ${targetPath}`)
+
+    const reviewRunId = makeReviewRunId(targetPath)
+    const reviewDirectory = path.join(docwardenRoot, 'review', reviewRunId)
+    const statePath = path.join(reviewDirectory, 'state.yaml')
+
+    const files = [
+      'index.md',
+      'lead.md',
+      'backing.md',
+      'state.yaml',
+    ] as const
+
+    const backingContent = yield* makeBackingContent({
+      path: targetPath,
+      info: targetInfo,
+      fs,
+    })
+
+    const reviewCreatedAt = new Date().toISOString()
+    const stateYaml = formatStateYaml({
+      targetPath,
+      reviewDirectory,
+      status: 'review-surface-ready',
+      createdAt: reviewCreatedAt,
+      configPath,
+      surfaceFiles: files,
+    })
+    const fileEntries = [
+      ['index.md', formatIndex(targetPath, targetInfo.type, reviewDirectory, reviewCreatedAt)],
+      ['lead.md', formatLead(targetPath, targetInfo.type)],
+      ['backing.md', backingContent],
+      ['state.yaml', stateYaml],
+    ] as const
+
+    yield* fs.makeDirectory(reviewDirectory, { recursive: false }).pipe(
+      Effect.mapError(error => new DocwardenRuntimeError(`failed to create review directory: ${reviewDirectory}: ${formatUnknownCause(error)}`)),
+    )
+
+    yield* Effect.forEach(fileEntries, ([fileName, content]) =>
+      fs.writeFileString(path.join(reviewDirectory, fileName), content).pipe(
+        Effect.mapError(error => new DocwardenRuntimeError(`failed to write review file: ${path.join(reviewDirectory, fileName)}: ${formatUnknownCause(error)}`)),
+      ))
+
+    return {
+      command: 'review',
+      workspaceRoot,
+      docwardenRoot,
+      configPath,
+      reviewDirectory,
+      statePath,
+      targetPath,
+      filesWritten: files,
+    }
+  })
+}
+
 function formatInit(result: DocwardenInitResult): string {
   return [
     'docwarden init',
@@ -182,8 +299,130 @@ function formatInit(result: DocwardenInitResult): string {
   ].join('\n')
 }
 
+function formatReview(result: DocwardenReviewResult): string {
+  return [
+    'docwarden review',
+    `root: ${result.workspaceRoot}`,
+    `target: ${result.targetPath}`,
+    `review directory: ${result.reviewDirectory}`,
+    `state: ${result.statePath}`,
+    'files:',
+    ...result.filesWritten.map(file => `- ${file}`),
+  ].join('\n')
+}
+
 function formatJson(value: unknown): string {
   return JSON.stringify(value, null, 2)
+}
+
+function makeReviewRunId(targetPath: string): string {
+  const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '')
+  const slug = slugify(targetPath)
+  return `${timestamp}-${slug}`
+}
+
+function slugify(value: string): string {
+  const baseName = value.trim().split(/[\\/]/).filter(Boolean).at(-1) ?? 'target'
+  const normalized = baseName
+    .toLowerCase()
+    .replace(/[^\w.-]+/g, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+  if (normalized.length === 0) {
+    return 'target'
+  }
+
+  return normalized.length > 64 ? normalized.slice(0, 64) : normalized
+}
+
+function formatIndex(targetPath: string, targetType: FileSystem.File.Type, reviewDirectory: string, createdAt: string): string {
+  return [
+    `# Review Surface`,
+    '',
+    `- target: ${targetPath}`,
+    `- type: ${targetType}`,
+    `- review_directory: ${reviewDirectory}`,
+    `- created_at: ${createdAt}`,
+    '',
+  ].join('\n')
+}
+
+function formatLead(targetPath: string, targetType: FileSystem.File.Type): string {
+  return [
+    `# Review Lead`,
+    '',
+    `Target: ${targetPath}`,
+    `Type: ${targetType}`,
+  ].join('\n')
+}
+
+function formatStateYaml(input: {
+  readonly targetPath: string
+  readonly reviewDirectory: string
+  readonly status: string
+  readonly createdAt: string
+  readonly configPath: string
+  readonly surfaceFiles: readonly string[]
+}): string {
+  return [
+    `target: ${input.targetPath}`,
+    `review_dir: ${input.reviewDirectory}`,
+    `status: ${input.status}`,
+    `created_at: ${input.createdAt}`,
+    `config_path: ${input.configPath}`,
+    'surface_files:',
+    ...input.surfaceFiles.map(file => `  - ${file}`),
+    '',
+  ].join('\n')
+}
+
+function makeBackingContent(input: {
+  readonly path: string
+  readonly info: FileSystem.File.Info
+  readonly fs: FileSystem.FileSystem
+}): Effect.Effect<string, DocwardenRuntimeError, never> {
+  if (input.info.type === 'Directory') {
+    return Effect.gen(function* () {
+      const children = yield* input.fs.readDirectory(input.path).pipe(
+        Effect.mapError(error => new DocwardenRuntimeError(`failed to read directory contents: ${input.path}: ${formatUnknownCause(error)}`)),
+      )
+      const preview = children.sort().slice(0, 20)
+      return [
+        `Target type: directory`,
+        `Path: ${input.path}`,
+        '',
+        'Entries (first layer, up to 20):',
+        ...preview.map(entry => `- ${entry}`),
+        '',
+      ].join('\n')
+    })
+  }
+
+  if (input.info.type === 'File') {
+    return Effect.gen(function* () {
+      const fileText = yield* input.fs.readFileString(input.path).pipe(
+        Effect.mapError(error => new DocwardenRuntimeError(`failed to read target file: ${input.path}: ${formatUnknownCause(error)}`)),
+      )
+      const excerpt = fileText.split(/\r?\n/).slice(0, 30).join('\n').trim()
+      return [
+        `Target type: file`,
+        `Path: ${input.path}`,
+        '',
+        'Excerpt (up to 30 lines):',
+        excerpt,
+        '',
+      ].join('\n')
+    })
+  }
+
+  return Effect.succeed([
+    `Target type: ${input.info.type}`,
+    `Path: ${input.path}`,
+    '',
+    'Unsupported target kind for deeper backing extraction.',
+    '',
+  ].join('\n'))
 }
 
 function runtimeConfigTemplate(): string {
@@ -216,6 +455,18 @@ function assertDirectory(directory: string, message: string): Effect.Effect<void
     const info = yield* stat(directory, message)
     if (info.type !== 'Directory') {
       return yield* Effect.fail(new DocwardenConfigError(message))
+    }
+  })
+}
+
+function assertReadableConfig(configPath: string): Effect.Effect<void, DocwardenError, FileSystem.FileSystem> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    const config = yield* fs.readFileString(configPath).pipe(
+      Effect.mapError(error => new DocwardenConfigError(`docwarden config is not readable at ${configPath}: ${formatUnknownCause(error)}`)),
+    )
+    if (config.trim().length === 0) {
+      return yield* Effect.fail(new DocwardenConfigError(`docwarden config is empty at ${configPath}; run docwarden init again`))
     }
   })
 }
