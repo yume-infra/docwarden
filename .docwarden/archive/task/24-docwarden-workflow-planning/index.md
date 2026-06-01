@@ -1,8 +1,8 @@
 ---
-status: active
-workspace_status: working
+status: closed
+workspace_status: closed
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-01
 owner: sayori
 ---
 
@@ -50,6 +50,17 @@ owner: sayori
 - 新的 `.isomorph/mapping/docwarden/` 应承接 docwarden workflow definition，并利用 isomorph 的 workflow structure。
 - docwarden 使用层不是 Markdown + frontmatter definition；应由 `docwarden init` 创建 `.docwarden/` 基本框架和 runtime config。
 - runtime config 可采用 yaml 或其他机器友好格式，配置 `review.mode` 等项目实际运行选项。
+
+## 关闭说明
+
+本 task 已关闭。
+
+关闭原因：
+
+- 本 task 属于旧阶段的 docwarden workflow 规划工作面。
+- 当前已回到 `docs/` 原始理论主链路：`task -> review system -> spec / guide / wiki`。
+- 新入口为 `.docwarden/task/25-docwarden-v0-dogfood-workflow/`，用于在当前仓库 dogfood docwarden v0。
+- 本 task 保留为历史规划材料，不再作为当前 active task 继续推进。
 
 ## 后续承接
 

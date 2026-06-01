@@ -1,37 +1,84 @@
+import path from 'node:path'
 import process from 'node:process'
 
 import * as NodeServices from '@effect/platform-node/NodeServices'
-import { Effect, FileSystem, Path } from 'effect'
+import { Effect, FileSystem } from 'effect'
 import * as Command from 'effect/unstable/cli/Command'
 import * as Flag from 'effect/unstable/cli/Flag'
 
 export const version = '0.0.0'
+
+type TaskLayer = 'spec' | 'guide' | 'wiki'
+type ReviewMode = 'target' | 'task'
+type PromoteKind = 'promote' | 'pick'
 
 interface CliSuccess {
   readonly output: string
   readonly exitCode: number
 }
 
-interface DocwardenReviewResult {
-  readonly command: 'review'
+interface CliResultBase {
   readonly workspaceRoot: string
   readonly docwardenRoot: string
+}
+
+interface DocwardenInitResult extends CliResultBase {
+  readonly command: 'init'
   readonly configPath: string
+  readonly filesWritten: readonly string[]
+}
+
+interface DocwardenTaskCreateResult extends CliResultBase {
+  readonly command: 'task-create'
+  readonly taskId: string
+  readonly taskTitle: string
+  readonly taskDirectory: string
+  readonly nextEntry: string
+  readonly filesWritten: readonly string[]
+}
+
+interface DocwardenReviewBaseResult extends CliResultBase {
+  readonly command: 'review'
+  readonly reviewMode: ReviewMode
   readonly reviewDirectory: string
   readonly statePath: string
-  readonly targetPath: string
   readonly filesWritten: readonly string[]
-}
-
-interface DocwardenInitResult {
-  readonly command: 'init'
-  readonly workspaceRoot: string
-  readonly docwardenRoot: string
+  readonly reviewId: string
   readonly configPath: string
+}
+
+interface DocwardenTaskReviewResult extends DocwardenReviewBaseResult {
+  readonly reviewMode: 'task'
+  readonly taskId: string
+  readonly taskDirectory: string
+  readonly sourceFiles: readonly string[]
+}
+
+interface DocwardenTargetReviewResult extends DocwardenReviewBaseResult {
+  readonly reviewMode: 'target'
+  readonly targetPath: string
+}
+
+type DocwardenReviewResult = DocwardenTaskReviewResult | DocwardenTargetReviewResult
+
+interface DocwardenPromoteResult extends CliResultBase {
+  readonly command: 'promote'
+  readonly taskId: string
+  readonly taskDirectory: string
+  readonly targetLayer: TaskLayer
+  readonly artifactPath: string
   readonly filesWritten: readonly string[]
 }
 
-type DocwardenRuntimeServices = FileSystem.FileSystem | Path.Path
+interface DocwardenPickResult extends CliResultBase {
+  readonly command: 'pick'
+  readonly taskId: string
+  readonly taskDirectory: string
+  readonly artifactPath: string
+  readonly filesWritten: readonly string[]
+}
+
+type DocwardenRuntimeServices = FileSystem.FileSystem
 
 class DocwardenConfigError extends Error {
   readonly _tag = 'DocwardenConfigError' as const
@@ -69,11 +116,31 @@ const targetFlag = Flag.string('target').pipe(
   Flag.withDefault(''),
 )
 
+const taskRefFlag = Flag.string('task').pipe(
+  Flag.withDescription('Task id'),
+  Flag.withDefault(''),
+)
+
+const taskIdFlag = Flag.string('id').pipe(
+  Flag.withDescription('Task id'),
+  Flag.withDefault(''),
+)
+
+const taskTitleFlag = Flag.string('title').pipe(
+  Flag.withDescription('Task title'),
+  Flag.withDefault(''),
+)
+
+const toFlag = Flag.string('to').pipe(
+  Flag.withDescription('Destination layer (spec|guide|wiki)'),
+  Flag.withDefault(''),
+)
+
 const docwarden = Command.make('docwarden').pipe(
   Command.withSharedFlags({
     root: rootFlag,
   }),
-  Command.withDescription('Materialize a local .docwarden runtime skeleton'),
+  Command.withDescription('Document maintenance workflow tooling'),
 )
 
 const init = Command.make('init', {
@@ -82,35 +149,105 @@ const init = Command.make('init', {
   Effect.gen(function* () {
     const root = yield* docwarden
     yield* runCli(
-      runInitEffect({ root: root.root }),
+      runInitEffect(root.root),
       result => ({
         output: json ? formatJson(result) : formatInit(result),
         exitCode: 0,
       }),
     )
   })).pipe(
-  Command.withDescription('Create .docwarden runtime defaults for review workflow execution'),
+  Command.withDescription('Create .docwarden runtime defaults for the workflow'),
+)
+
+const taskCreate = Command.make('create', {
+  id: taskIdFlag,
+  title: taskTitleFlag,
+  json: jsonFlag,
+}, ({ id, title, json }) =>
+  Effect.gen(function* () {
+    const root = yield* docwarden
+    yield* runCli(
+      runTaskCreateEffect(root.root, id, title),
+      result => ({
+        output: json ? formatJson(result) : formatTaskCreate(result),
+        exitCode: 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('Create task materials'),
+)
+
+const task = Command.make('task').pipe(
+  Command.withDescription('Task working-material controls'),
+  Command.withSubcommands([taskCreate]),
 )
 
 const review = Command.make('review', {
   target: targetFlag,
+  task: taskRefFlag,
   json: jsonFlag,
-}, ({ target, json }) =>
+}, ({ target, task, json }) =>
   Effect.gen(function* () {
     const root = yield* docwarden
     yield* runCli(
-      runReviewEffect({ root: root.root, target }),
+      runReviewEffect(root.root, target, task),
       result => ({
         output: json ? formatJson(result) : formatReview(result),
         exitCode: 0,
       }),
     )
   })).pipe(
-  Command.withDescription('Generate minimal review surface and state for a target'),
+  Command.withDescription('Generate review artifacts from task material or target'),
+)
+
+const promote = Command.make('promote', {
+  task: taskRefFlag,
+  to: toFlag,
+  json: jsonFlag,
+}, ({ task, to, json }) =>
+  Effect.gen(function* () {
+    const root = yield* docwarden
+    yield* runCli(
+      runPromoteEffect({
+        root: root.root,
+        task,
+        to,
+        kind: 'promote',
+      } satisfies PromoteInput & { kind: 'promote' }),
+      result => ({
+        output: json ? formatJson(result) : formatPromote(result),
+        exitCode: 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('Promote task outputs to spec / guide / wiki'),
+)
+
+const pick = Command.make('pick', {
+  task: taskRefFlag,
+  to: toFlag,
+  json: jsonFlag,
+}, ({ task, to, json }) =>
+  Effect.gen(function* () {
+    const root = yield* docwarden
+    yield* runCli(
+      runPromoteEffect({
+        root: root.root,
+        task,
+        to,
+        kind: 'pick',
+      } satisfies PromoteInput & { kind: 'pick' }),
+      result => ({
+        output: json ? formatJson(result) : formatPick(result),
+        exitCode: 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('Pick task outputs into wiki'),
 )
 
 const command = docwarden.pipe(
-  Command.withSubcommands([init, review]),
+  Command.withSubcommands([init, task, review, promote, pick]),
 )
 
 export const main: Effect.Effect<void, unknown> = Command.run(command, {
@@ -119,7 +256,10 @@ export const main: Effect.Effect<void, unknown> = Command.run(command, {
   Effect.provide(NodeServices.layer),
 )
 
-function runCli<A>(run: Effect.Effect<A, DocwardenError, DocwardenRuntimeServices>, onSuccess: (result: A) => CliSuccess): Effect.Effect<void, never, DocwardenRuntimeServices> {
+function runCli<A>(
+  run: Effect.Effect<A, DocwardenError, DocwardenRuntimeServices>,
+  onSuccess: (result: A) => CliSuccess,
+): Effect.Effect<void, never, DocwardenRuntimeServices> {
   return run.pipe(
     Effect.matchEffect({
       onFailure: (error) => {
@@ -138,11 +278,10 @@ function runCli<A>(run: Effect.Effect<A, DocwardenError, DocwardenRuntimeService
   )
 }
 
-function runInitEffect(options: { readonly root: string }): Effect.Effect<DocwardenInitResult, DocwardenError, DocwardenRuntimeServices> {
+function runInitEffect(rootRaw: string): Effect.Effect<DocwardenInitResult, DocwardenError, DocwardenRuntimeServices> {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
-    const path = yield* Path.Path
-    const workspaceRoot = path.resolve(normalizeOptionalPath(options.root) ?? '.')
+    const workspaceRoot = resolveWorkspaceRoot(rootRaw)
     yield* assertDirectory(workspaceRoot, `init root does not exist or is not a directory: ${workspaceRoot}`)
 
     if (path.basename(workspaceRoot) === '.docwarden') {
@@ -156,44 +295,59 @@ function runInitEffect(options: { readonly root: string }): Effect.Effect<Docwar
       return yield* Effect.fail(new DocwardenConfigError(`local .docwarden already exists: ${docwardenRoot}`))
     }
 
-    const taskDirectory = path.join(docwardenRoot, 'task')
-    const reviewDirectory = path.join(docwardenRoot, 'review')
-    const archiveDirectory = path.join(docwardenRoot, 'archive')
-    const configPath = path.join(docwardenRoot, 'config.yaml')
-    const config = runtimeConfigTemplate()
-    const filesWritten = [
+    const createdAt = new Date().toISOString()
+    const directories = [
+      docwardenRoot,
+      path.join(docwardenRoot, 'task'),
+      path.join(docwardenRoot, 'review'),
+      path.join(docwardenRoot, 'spec'),
+      path.join(docwardenRoot, 'guide'),
+      path.join(docwardenRoot, 'wiki'),
+      path.join(docwardenRoot, 'archive'),
+    ] as const
+    const files = [
+      ['.docwarden/task/index.md', taskRootIndexTemplate(createdAt)],
+      ['.docwarden/review/index.md', reviewIndexTemplate()],
+      ['.docwarden/spec/index.md', specIndexTemplate()],
+      ['.docwarden/guide/index.md', guideIndexTemplate()],
+      ['.docwarden/wiki/index.md', wikiIndexTemplate()],
+      ['.docwarden/config.yaml', runtimeConfigTemplate()],
+    ] as const
+
+    const filesWritten: readonly string[] = [
       '.docwarden/task',
+      '.docwarden/task/index.md',
       '.docwarden/review',
+      '.docwarden/review/index.md',
+      '.docwarden/spec',
+      '.docwarden/spec/index.md',
+      '.docwarden/guide',
+      '.docwarden/guide/index.md',
+      '.docwarden/wiki',
+      '.docwarden/wiki/index.md',
       '.docwarden/archive',
       '.docwarden/config.yaml',
     ]
-    const create = Effect.gen(function* () {
-      yield* fs.makeDirectory(docwardenRoot, { recursive: false }).pipe(
-        Effect.mapError(error => new DocwardenRuntimeError(`failed to create local .docwarden: ${docwardenRoot}: ${formatUnknownCause(error)}`)),
-      )
-      yield* fs.makeDirectory(taskDirectory, { recursive: false }).pipe(
-        Effect.mapError(error => new DocwardenRuntimeError(`failed to create task directory: ${taskDirectory}: ${formatUnknownCause(error)}`)),
-      )
-      yield* fs.makeDirectory(reviewDirectory, { recursive: false }).pipe(
-        Effect.mapError(error => new DocwardenRuntimeError(`failed to create review directory: ${reviewDirectory}: ${formatUnknownCause(error)}`)),
-      )
-      yield* fs.makeDirectory(archiveDirectory, { recursive: false }).pipe(
-        Effect.mapError(error => new DocwardenRuntimeError(`failed to create archive directory: ${archiveDirectory}: ${formatUnknownCause(error)}`)),
-      )
-      yield* fs.writeFileString(configPath, config).pipe(
-        Effect.mapError(error => new DocwardenRuntimeError(`failed to write config: ${configPath}: ${formatUnknownCause(error)}`)),
-      )
+
+    const init = Effect.gen(function* () {
+      for (const directory of directories) {
+        yield* writeDirectory(directory, `failed to create directory: ${directory}:`)
+      }
+      for (const [relativePath, content] of files) {
+        const absolutePath = path.join(workspaceRoot, relativePath)
+        yield* writeTextFile(absolutePath, content)
+      }
 
       return {
         command: 'init' as const,
         workspaceRoot,
         docwardenRoot,
-        configPath,
+        configPath: path.join(docwardenRoot, 'config.yaml'),
         filesWritten,
-      }
+      } satisfies DocwardenInitResult
     })
 
-    return yield* create.pipe(
+    return yield* init.pipe(
       Effect.catch((error) => {
         const cleanup = fs.remove(docwardenRoot, { force: true, recursive: true }).pipe(
           Effect.catch(() => Effect.void),
@@ -204,87 +358,288 @@ function runInitEffect(options: { readonly root: string }): Effect.Effect<Docwar
   })
 }
 
-function runReviewEffect(options: { readonly root: string, readonly target: string }): Effect.Effect<DocwardenReviewResult, DocwardenError, DocwardenRuntimeServices> {
+function runTaskCreateEffect(rootRaw: string, rawId: string, rawTitle: string): Effect.Effect<DocwardenTaskCreateResult, DocwardenError, DocwardenRuntimeServices> {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
-    const path = yield* Path.Path
-    const workspaceRoot = path.resolve(normalizeOptionalPath(options.root) ?? '.')
-    yield* assertDirectory(workspaceRoot, `review root does not exist or is not a directory: ${workspaceRoot}`)
+    const workspaceRoot = resolveWorkspaceRoot(rootRaw)
+    yield* assertDirectory(workspaceRoot, `init root does not exist or is not a directory: ${workspaceRoot}`)
 
     if (path.basename(workspaceRoot) === '.docwarden') {
       return yield* Effect.fail(new DocwardenConfigError(
-        `review root must be a workspace root, not an existing .docwarden root: ${workspaceRoot}`,
+        `init root must be a workspace root, not an existing .docwarden root: ${workspaceRoot}`,
       ))
     }
 
-    const docwardenRoot = path.join(workspaceRoot, '.docwarden')
-    const configPath = path.join(docwardenRoot, 'config.yaml')
-    if (!(yield* pathExists(configPath))) {
-      return yield* Effect.fail(new DocwardenConfigError(
-        `docwarden config missing at ${configPath}; run docwarden init first`,
-      ))
-    }
+    const taskId = yield* parseTaskId(rawId, '--id')
+    const taskTitle = parseTaskTitle(rawTitle)
+    const { docwardenRoot, configPath } = yield* assertDocwardenRuntime(workspaceRoot)
     yield* assertReadableConfig(configPath)
 
-    const targetInput = normalizeOptionalPath(options.target)
-    if (targetInput === undefined) {
-      return yield* Effect.fail(new DocwardenConfigError('missing required --target'))
+    const taskDirectory = path.join(docwardenRoot, 'task', taskId)
+    if (yield* pathExists(taskDirectory)) {
+      return yield* Effect.fail(new DocwardenConfigError(`task already exists: .docwarden/task/${taskId}`))
     }
-    const targetPath = path.resolve(workspaceRoot, targetInput)
+
+    const createdAt = new Date().toISOString()
+    const createdAtCompact = timestampForFiles(createdAt)
+    const taskIndexPath = path.join(taskDirectory, 'index.md')
+    const taskPlanPath = path.join(taskDirectory, 'plan.md')
+    const taskLogPath = path.join(taskDirectory, 'log.md')
+    const taskCatalogPath = path.join(docwardenRoot, 'task', 'index.md')
+
+    const catalogSource = yield* readTaskCatalog(taskCatalogPath)
+    const catalogNext = appendTaskToCatalog(catalogSource, taskId, taskTitle)
+
+    const create = Effect.gen(function* () {
+      yield* writeDirectory(taskDirectory)
+      yield* writeTextFile(taskIndexPath, taskWorkingIndexTemplate(taskId, taskTitle, createdAt))
+      yield* writeTextFile(taskPlanPath, taskPlanTemplate(taskId, taskTitle, createdAt))
+      yield* writeTextFile(taskLogPath, taskLogTemplate(taskId, taskTitle, createdAt, createdAtCompact))
+      yield* writeTextFile(taskCatalogPath, catalogNext)
+
+      return {
+        command: 'task-create' as const,
+        workspaceRoot,
+        docwardenRoot,
+        taskId,
+        taskTitle,
+        taskDirectory,
+        nextEntry: taskPlanPath,
+        filesWritten: ['index.md', 'plan.md', 'log.md'],
+      } satisfies DocwardenTaskCreateResult
+    })
+
+    return yield* create.pipe(
+      Effect.catch((error) => {
+        const cleanup = fs.remove(taskDirectory, { force: true, recursive: true }).pipe(
+          Effect.catch(() => Effect.void),
+        )
+        return cleanup.pipe(Effect.andThen(Effect.fail(toDocwardenError(error))))
+      }),
+    )
+  })
+}
+
+function runReviewEffect(rootRaw: string, targetRaw: string, taskRaw: string): Effect.Effect<DocwardenReviewResult, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const targetInput = normalizeOptionalPath(targetRaw)
+    const taskInput = normalizeOptionalPath(taskRaw)
+
+    if (targetInput !== undefined && taskInput !== undefined) {
+      return yield* Effect.fail(new DocwardenConfigError('provide only one of --task or --target'))
+    }
+    if (targetInput === undefined && taskInput === undefined) {
+      return yield* Effect.fail(new DocwardenConfigError('missing required --task or --target'))
+    }
+
+    if (targetInput !== undefined) {
+      return yield* runLegacyReviewEffect(rootRaw, targetInput)
+    }
+
+    if (taskInput === undefined) {
+      return yield* Effect.fail(new DocwardenConfigError('missing required --task'))
+    }
+    const parsedTaskId = yield* parseTaskId(taskInput, '--task')
+    return yield* runTaskReviewEffect(rootRaw, parsedTaskId)
+  })
+}
+
+function runLegacyReviewEffect(rootRaw: string, targetRaw: string): Effect.Effect<DocwardenTargetReviewResult, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const runtime = yield* assertDocwardenRuntime(resolveWorkspaceRoot(rootRaw))
+    const targetPath = path.resolve(runtime.workspaceRoot, targetRaw)
     const targetInfo = yield* stat(targetPath, `review target does not exist or is inaccessible: ${targetPath}`)
 
-    const reviewRunId = makeReviewRunId(targetPath)
-    const reviewDirectory = path.join(docwardenRoot, 'review', reviewRunId)
+    const reviewRunId = makeReviewRunId('target', targetPath)
+    const reviewDirectory = path.join(runtime.docwardenRoot, 'review', reviewRunId)
     const statePath = path.join(reviewDirectory, 'state.yaml')
+    const createdAt = new Date().toISOString()
+    const sourceFiles = [targetPath]
 
-    const files = [
-      'index.md',
-      'lead.md',
-      'backing.md',
-      'state.yaml',
-    ] as const
-
-    const backingContent = yield* makeBackingContent({
+    const source = yield* makeTargetBackingContent({
       path: targetPath,
       info: targetInfo,
-      fs,
-    })
-
-    const reviewCreatedAt = new Date().toISOString()
-    const stateYaml = formatStateYaml({
-      targetPath,
-      reviewDirectory,
-      status: 'review-surface-ready',
-      createdAt: reviewCreatedAt,
-      configPath,
-      surfaceFiles: files,
     })
     const fileEntries = [
-      ['index.md', formatIndex(targetPath, targetInfo.type, reviewDirectory, reviewCreatedAt)],
-      ['lead.md', formatLead(targetPath, targetInfo.type)],
-      ['backing.md', backingContent],
-      ['state.yaml', stateYaml],
+      ['index.md', formatLegacyReviewIndex(targetPath, targetInfo.type, reviewDirectory, createdAt)],
+      ['lead.md', formatLegacyReviewLead(targetPath, targetInfo.type)],
+      ['backing.md', source],
+      [
+        'state.yaml',
+        formatStateYaml({
+          mode: 'target',
+          reviewId: reviewRunId,
+          reviewDirectory,
+          status: 'review-surface-ready',
+          createdAt,
+          configPath: runtime.configPath,
+          sourceFiles,
+          targetPath,
+        }),
+      ],
     ] as const
 
-    yield* fs.makeDirectory(reviewDirectory, { recursive: false }).pipe(
-      Effect.mapError(error => new DocwardenRuntimeError(`failed to create review directory: ${reviewDirectory}: ${formatUnknownCause(error)}`)),
-    )
-
+    yield* writeDirectory(reviewDirectory)
     yield* Effect.forEach(fileEntries, ([fileName, content]) =>
-      fs.writeFileString(path.join(reviewDirectory, fileName), content).pipe(
-        Effect.mapError(error => new DocwardenRuntimeError(`failed to write review file: ${path.join(reviewDirectory, fileName)}: ${formatUnknownCause(error)}`)),
-      ))
+      writeTextFile(path.join(reviewDirectory, fileName), content))
 
     return {
-      command: 'review',
-      workspaceRoot,
-      docwardenRoot,
-      configPath,
+      command: 'review' as const,
+      reviewMode: 'target' as const,
+      workspaceRoot: runtime.workspaceRoot,
+      docwardenRoot: runtime.docwardenRoot,
+      configPath: runtime.configPath,
       reviewDirectory,
       statePath,
+      filesWritten: ['index.md', 'lead.md', 'backing.md', 'state.yaml'],
       targetPath,
-      filesWritten: files,
+      reviewId: reviewRunId,
+    } satisfies DocwardenTargetReviewResult
+  })
+}
+
+function runTaskReviewEffect(rootRaw: string, taskId: string): Effect.Effect<DocwardenTaskReviewResult, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const runtime = yield* assertDocwardenRuntime(resolveWorkspaceRoot(rootRaw))
+    const taskDirectory = path.join(runtime.docwardenRoot, 'task', taskId)
+
+    if (!(yield* pathExists(taskDirectory))) {
+      return yield* Effect.fail(new DocwardenConfigError(`task does not exist: .docwarden/task/${taskId}`))
     }
+
+    const taskIndexPath = path.join(taskDirectory, 'index.md')
+    const taskPlanPath = path.join(taskDirectory, 'plan.md')
+    const taskLogPath = path.join(taskDirectory, 'log.md')
+    const taskIndex = yield* readTaskFile(taskIndexPath, `missing task index: ${taskIndexPath}`)
+    const taskPlan = yield* readTaskFile(taskPlanPath, `missing task plan: ${taskPlanPath}`)
+    const taskLog = yield* readTaskFile(taskLogPath, `missing task log: ${taskLogPath}`)
+
+    const reviewRunId = makeReviewRunId('task', taskId)
+    const reviewDirectory = path.join(runtime.docwardenRoot, 'review', reviewRunId)
+    const statePath = path.join(reviewDirectory, 'state.yaml')
+    const createdAt = new Date().toISOString()
+    const sourceFiles = [taskIndexPath, taskPlanPath, taskLogPath]
+
+    const fileEntries = [
+      ['index.md', formatTaskReviewIndex(taskId, taskDirectory, reviewRunId, reviewDirectory, createdAt)],
+      ['lead.md', formatTaskReviewLead(taskId, taskIndex, taskPlan)],
+      ['backing.md', formatTaskReviewBacking(taskId, taskIndexPath, taskPlanPath, taskLogPath, taskIndex, taskPlan, taskLog)],
+      [
+        'state.yaml',
+        formatStateYaml({
+          mode: 'task',
+          reviewId: reviewRunId,
+          reviewDirectory,
+          status: 'review-surface-ready',
+          createdAt,
+          configPath: runtime.configPath,
+          sourceFiles,
+          taskId,
+        }),
+      ],
+    ] as const
+
+    yield* writeDirectory(reviewDirectory)
+    yield* Effect.forEach(fileEntries, ([fileName, content]) =>
+      writeTextFile(path.join(reviewDirectory, fileName), content))
+    yield* appendTaskLog({
+      logPath: taskLogPath,
+      taskId,
+      event: 'review generated from task',
+      artifactPath: reviewDirectory,
+      createdAt,
+    })
+
+    return {
+      command: 'review' as const,
+      reviewMode: 'task' as const,
+      workspaceRoot: runtime.workspaceRoot,
+      docwardenRoot: runtime.docwardenRoot,
+      configPath: runtime.configPath,
+      reviewDirectory,
+      statePath,
+      filesWritten: ['index.md', 'lead.md', 'backing.md', 'state.yaml'],
+      taskId,
+      taskDirectory,
+      sourceFiles,
+      reviewId: reviewRunId,
+    } satisfies DocwardenTaskReviewResult
+  })
+}
+
+interface PromoteInput {
+  readonly root: string
+  readonly task: string
+  readonly to: string
+}
+
+function runPromoteEffect(input: PromoteInput & { readonly kind: 'promote' }): Effect.Effect<DocwardenPromoteResult, DocwardenError, DocwardenRuntimeServices>
+function runPromoteEffect(input: PromoteInput & { readonly kind: 'pick' }): Effect.Effect<DocwardenPickResult, DocwardenError, DocwardenRuntimeServices>
+function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }): Effect.Effect<DocwardenPromoteResult | DocwardenPickResult, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const runtime = yield* assertDocwardenRuntime(resolveWorkspaceRoot(input.root))
+    const taskId = yield* parseTaskId(input.task, '--task')
+    const targetLayer = yield* parseDestinationLayer(input.to, input.kind)
+
+    const taskDirectory = path.join(runtime.docwardenRoot, 'task', taskId)
+    if (!(yield* pathExists(taskDirectory))) {
+      return yield* Effect.fail(new DocwardenConfigError(`task does not exist: .docwarden/task/${taskId}`))
+    }
+
+    const taskIndexPath = path.join(taskDirectory, 'index.md')
+    const taskPlanPath = path.join(taskDirectory, 'plan.md')
+    const taskLogPath = path.join(taskDirectory, 'log.md')
+    const taskIndex = yield* readTaskFile(taskIndexPath, `missing task index: ${taskIndexPath}`)
+    const taskPlan = yield* readTaskFile(taskPlanPath, `missing task plan: ${taskPlanPath}`)
+
+    const createdAt = new Date().toISOString()
+    const artifactTimestamp = timestampForFiles(createdAt)
+    const artifactName = input.kind === 'promote'
+      ? `${taskId}-${targetLayer}-${artifactTimestamp}.md`
+      : `${taskId}-wiki-pick-${artifactTimestamp}.md`
+    const artifactPath = path.join(runtime.docwardenRoot, input.kind === 'pick' ? 'wiki' : targetLayer, artifactName)
+
+    const sourcePaths = input.kind === 'promote'
+      ? [taskIndexPath, taskPlanPath, taskLogPath]
+      : [taskIndexPath, taskPlanPath]
+
+    const taskTitle = extractTaskTitle(taskIndex, taskId)
+
+    const artifact = input.kind === 'promote'
+      ? formatPromoteArtifact(taskId, taskTitle, targetLayer, createdAt, sourcePaths, taskIndex, taskPlan)
+      : formatPickArtifact(taskId, taskTitle, createdAt, sourcePaths, taskIndex)
+
+    yield* writeTextFile(artifactPath, artifact)
+    yield* appendTaskLog({
+      logPath: taskLogPath,
+      taskId,
+      artifactPath,
+      event: input.kind === 'promote' ? `promote to ${targetLayer}` : 'pick to wiki',
+      createdAt,
+    })
+
+    if (input.kind === 'promote') {
+      return {
+        command: 'promote' as const,
+        workspaceRoot: runtime.workspaceRoot,
+        docwardenRoot: runtime.docwardenRoot,
+        taskId,
+        taskDirectory,
+        targetLayer,
+        artifactPath,
+        filesWritten: ['artifact.md'],
+      } satisfies DocwardenPromoteResult
+    }
+
+    return {
+      command: 'pick' as const,
+      workspaceRoot: runtime.workspaceRoot,
+      docwardenRoot: runtime.docwardenRoot,
+      taskId,
+      taskDirectory,
+      artifactPath,
+      filesWritten: ['artifact.md'],
+    } satisfies DocwardenPickResult
   })
 }
 
@@ -299,13 +654,61 @@ function formatInit(result: DocwardenInitResult): string {
   ].join('\n')
 }
 
+function formatTaskCreate(result: DocwardenTaskCreateResult): string {
+  return [
+    'docwarden task create',
+    `task: ${result.taskDirectory}`,
+    `title: ${result.taskTitle}`,
+    `next entry: ${result.nextEntry}`,
+    'files:',
+    ...result.filesWritten.map(file => `- ${file}`),
+  ].join('\n')
+}
+
 function formatReview(result: DocwardenReviewResult): string {
+  if (result.reviewMode === 'target') {
+    return [
+      'docwarden review',
+      `mode: target`,
+      `target: ${result.targetPath}`,
+      `review directory: ${result.reviewDirectory}`,
+      `state: ${result.statePath}`,
+      'files:',
+      ...result.filesWritten.map(file => `- ${file}`),
+    ].join('\n')
+  }
+
   return [
     'docwarden review',
-    `root: ${result.workspaceRoot}`,
-    `target: ${result.targetPath}`,
+    `mode: task`,
+    `task: ${result.taskId}`,
+    `task directory: ${result.taskDirectory}`,
     `review directory: ${result.reviewDirectory}`,
     `state: ${result.statePath}`,
+    'source files:',
+    ...result.sourceFiles.map(file => `- ${file}`),
+    'files:',
+    ...result.filesWritten.map(file => `- ${file}`),
+  ].join('\n')
+}
+
+function formatPromote(result: DocwardenPromoteResult): string {
+  return [
+    'docwarden promote',
+    `task: ${result.taskId}`,
+    `to: ${result.targetLayer}`,
+    `artifact: ${result.artifactPath}`,
+    'files:',
+    ...result.filesWritten.map(file => `- ${file}`),
+  ].join('\n')
+}
+
+function formatPick(result: DocwardenPickResult): string {
+  return [
+    'docwarden pick',
+    `task: ${result.taskId}`,
+    'to: wiki',
+    `artifact: ${result.artifactPath}`,
     'files:',
     ...result.filesWritten.map(file => `- ${file}`),
   ].join('\n')
@@ -315,14 +718,12 @@ function formatJson(value: unknown): string {
   return JSON.stringify(value, null, 2)
 }
 
-function makeReviewRunId(targetPath: string): string {
-  const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '')
-  const slug = slugify(targetPath)
-  return `${timestamp}-${slug}`
+function makeReviewRunId(scope: string, seed: string): string {
+  return `${timestampForFiles(new Date().toISOString())}-${slugify(`${scope}-${seed}`)}`
 }
 
 function slugify(value: string): string {
-  const baseName = value.trim().split(/[\\/]/).filter(Boolean).at(-1) ?? 'target'
+  const baseName = value.trim().split(/[\\/]/).filter(Boolean).at(-1) ?? 'review'
   const normalized = baseName
     .toLowerCase()
     .replace(/[^\w.-]+/g, '-')
@@ -330,16 +731,17 @@ function slugify(value: string): string {
     .replace(/^-+|-+$/g, '')
 
   if (normalized.length === 0) {
-    return 'target'
+    return 'entry'
   }
 
   return normalized.length > 64 ? normalized.slice(0, 64) : normalized
 }
 
-function formatIndex(targetPath: string, targetType: FileSystem.File.Type, reviewDirectory: string, createdAt: string): string {
+function formatLegacyReviewIndex(targetPath: string, targetType: FileSystem.File.Type, reviewDirectory: string, createdAt: string): string {
   return [
-    `# Review Surface`,
+    '# Review Surface',
     '',
+    `- mode: target`,
     `- target: ${targetPath}`,
     `- type: ${targetType}`,
     `- review_directory: ${reviewDirectory}`,
@@ -348,43 +750,28 @@ function formatIndex(targetPath: string, targetType: FileSystem.File.Type, revie
   ].join('\n')
 }
 
-function formatLead(targetPath: string, targetType: FileSystem.File.Type): string {
+function formatLegacyReviewLead(targetPath: string, targetType: FileSystem.File.Type): string {
   return [
-    `# Review Lead`,
+    '# Review Lead',
     '',
     `Target: ${targetPath}`,
     `Type: ${targetType}`,
-  ].join('\n')
-}
-
-function formatStateYaml(input: {
-  readonly targetPath: string
-  readonly reviewDirectory: string
-  readonly status: string
-  readonly createdAt: string
-  readonly configPath: string
-  readonly surfaceFiles: readonly string[]
-}): string {
-  return [
-    `target: ${input.targetPath}`,
-    `review_dir: ${input.reviewDirectory}`,
-    `status: ${input.status}`,
-    `created_at: ${input.createdAt}`,
-    `config_path: ${input.configPath}`,
-    'surface_files:',
-    ...input.surfaceFiles.map(file => `  - ${file}`),
+    '',
+    '检查点：',
+    '- 目标摘要是否足够支撑 review',
+    '- 是否需要补齐上下文再进入 promote/pick',
     '',
   ].join('\n')
 }
 
-function makeBackingContent(input: {
+function makeTargetBackingContent(input: {
   readonly path: string
   readonly info: FileSystem.File.Info
-  readonly fs: FileSystem.FileSystem
-}): Effect.Effect<string, DocwardenRuntimeError, never> {
-  if (input.info.type === 'Directory') {
-    return Effect.gen(function* () {
-      const children = yield* input.fs.readDirectory(input.path).pipe(
+}): Effect.Effect<string, DocwardenRuntimeError, FileSystem.FileSystem> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    if (input.info.type === 'Directory') {
+      const children = yield* fs.readDirectory(input.path).pipe(
         Effect.mapError(error => new DocwardenRuntimeError(`failed to read directory contents: ${input.path}: ${formatUnknownCause(error)}`)),
       )
       const preview = children.sort().slice(0, 20)
@@ -396,12 +783,10 @@ function makeBackingContent(input: {
         ...preview.map(entry => `- ${entry}`),
         '',
       ].join('\n')
-    })
-  }
+    }
 
-  if (input.info.type === 'File') {
-    return Effect.gen(function* () {
-      const fileText = yield* input.fs.readFileString(input.path).pipe(
+    if (input.info.type === 'File') {
+      const fileText = yield* fs.readFileString(input.path).pipe(
         Effect.mapError(error => new DocwardenRuntimeError(`failed to read target file: ${input.path}: ${formatUnknownCause(error)}`)),
       )
       const excerpt = fileText.split(/\r?\n/).slice(0, 30).join('\n').trim()
@@ -413,16 +798,170 @@ function makeBackingContent(input: {
         excerpt,
         '',
       ].join('\n')
-    })
+    }
+
+    return [
+      `Target type: ${input.info.type}`,
+      `Path: ${input.path}`,
+      '',
+      'Unsupported target kind for deeper backing extraction.',
+      '',
+    ].join('\n')
+  })
+}
+
+function formatTaskReviewIndex(taskId: string, taskDirectory: string, reviewId: string, reviewDirectory: string, createdAt: string): string {
+  return [
+    '# Review Surface',
+    '',
+    `- mode: task`,
+    `- task_id: ${taskId}`,
+    `- task_directory: ${taskDirectory}`,
+    `- review_id: ${reviewId}`,
+    `- review_directory: ${reviewDirectory}`,
+    `- created_at: ${createdAt}`,
+    '',
+    '## 审查目标',
+    '- 从 task/index.md / task/plan.md / task/log.md 提炼可审查决策边界',
+    '- 决定哪些内容进入 spec / guide / wiki',
+    '',
+  ].join('\n')
+}
+
+function formatTaskReviewLead(taskId: string, taskIndex: string, taskPlan: string): string {
+  return [
+    '# Review Lead',
+    '',
+    `Task: ${taskId}`,
+    '',
+    '## 本轮需要判断',
+    '- 是否有清晰的业务目标与边界？',
+    '- 是否有足够的上下文支持下一层产出？',
+    '- 本轮是否适合直接 promote / pick？',
+    '',
+    '## Index 片段',
+    ...extractPreviewLines(taskIndex, 20).map(line => `- ${line}`),
+    '',
+    '## Plan 片段',
+    ...extractSection(taskPlan, 'Objective').map(line => `- ${line}`),
+    '',
+  ].join('\n')
+}
+
+function formatTaskReviewBacking(
+  taskId: string,
+  taskIndexPath: string,
+  taskPlanPath: string,
+  taskLogPath: string,
+  taskIndex: string,
+  taskPlan: string,
+  taskLog: string,
+): string {
+  return [
+    '# Review Backing',
+    '',
+    `Task: ${taskId}`,
+    '',
+    'Source files:',
+    `- ${taskIndexPath}`,
+    `- ${taskPlanPath}`,
+    `- ${taskLogPath}`,
+    '',
+    'Task Index 片段：',
+    ...extractPreviewLines(taskIndex, 15).map(line => `- ${line}`),
+    '',
+    'Task Plan 片段：',
+    ...extractPreviewLines(taskPlan, 15).map(line => `- ${line}`),
+    '',
+    'Task Log 片段：',
+    ...extractPreviewLines(taskLog, 15).map(line => `- ${line}`),
+    '',
+  ].join('\n')
+}
+
+function formatStateYaml(input: {
+  readonly mode: ReviewMode
+  readonly reviewId: string
+  readonly reviewDirectory: string
+  readonly status: string
+  readonly createdAt: string
+  readonly configPath: string
+  readonly sourceFiles: readonly string[]
+  readonly targetPath?: string
+  readonly taskId?: string
+}): string {
+  const lines = [
+    `mode: ${input.mode}`,
+    `review_id: ${input.reviewId}`,
+    `status: ${input.status}`,
+    `created_at: ${input.createdAt}`,
+    `review_dir: ${input.reviewDirectory}`,
+    `config_path: ${input.configPath}`,
+  ]
+
+  if (input.targetPath !== undefined) {
+    lines.push(`target: ${input.targetPath}`)
+  }
+  if (input.taskId !== undefined) {
+    lines.push(`task_id: ${input.taskId}`)
   }
 
-  return Effect.succeed([
-    `Target type: ${input.info.type}`,
-    `Path: ${input.path}`,
+  return [
+    ...lines,
+    'source_files:',
+    ...input.sourceFiles.map(file => `  - ${file}`),
     '',
-    'Unsupported target kind for deeper backing extraction.',
+  ].join('\n')
+}
+
+function formatPromoteArtifact(
+  taskId: string,
+  taskTitle: string,
+  layer: TaskLayer,
+  createdAt: string,
+  sourcePaths: readonly string[],
+  taskIndex: string,
+  taskPlan: string,
+): string {
+  return [
+    `# Promote to ${layer}`,
     '',
-  ].join('\n'))
+    `Task: ${taskTitle} (${taskId})`,
+    `Generated at: ${createdAt}`,
+    `Layer: ${layer}`,
+    '',
+    '## Trace',
+    ...sourcePaths.map(path => `- ${path}`),
+    '',
+    '## Key Points',
+    ...extractPreviewLines(taskIndex, 20).map(line => `- ${line}`),
+    '',
+    '## Planned Actions',
+    ...extractPreviewLines(taskPlan, 20).map(line => `- ${line}`),
+    '',
+  ].join('\n')
+}
+
+function formatPickArtifact(
+  taskId: string,
+  taskTitle: string,
+  createdAt: string,
+  sourcePaths: readonly string[],
+  taskIndex: string,
+): string {
+  return [
+    `# Pick to wiki (${taskId})`,
+    '',
+    `Task: ${taskTitle} (${taskId})`,
+    `Generated at: ${createdAt}`,
+    '',
+    '## Trace',
+    ...sourcePaths.map(path => `- ${path}`),
+    '',
+    '## Draft Snippets',
+    ...extractPreviewLines(taskIndex, 25).map(line => `- ${line}`),
+    '',
+  ].join('\n')
 }
 
 function runtimeConfigTemplate(): string {
@@ -450,7 +989,235 @@ function runtimeConfigTemplate(): string {
   ].join('\n')
 }
 
-function assertDirectory(directory: string, message: string): Effect.Effect<void, DocwardenError, FileSystem.FileSystem> {
+function taskRootIndexTemplate(createdAt: string): string {
+  return [
+    '# task index',
+    '',
+    '本层承载 process 任务过程材料（task / plan / log）。',
+    `生成时间: ${createdAt}`,
+    '',
+    '## 当前 active task',
+    '',
+  ].join('\n')
+}
+
+function reviewIndexTemplate(): string {
+  return [
+    '# review index',
+    '',
+    'review surface 由 `task` 或 `target` 触发，产物保存到 `.docwarden/review/<id>/`。',
+    '',
+    '- 目标文件：`index.md`',
+    '- 判断文件：`lead.md`',
+    '- 证据文件：`backing.md`',
+    '- 状态文件：`state.yaml`',
+    '',
+  ].join('\n')
+}
+
+function specIndexTemplate(): string {
+  return [
+    '# spec index',
+    '',
+    '正式规格文档由 `docwarden promote --to spec` 生成并沉淀。',
+    '',
+  ].join('\n')
+}
+
+function guideIndexTemplate(): string {
+  return [
+    '# guide index',
+    '',
+    '用户文档在 `docwarden promote --to guide` 后沉淀。',
+    '',
+  ].join('\n')
+}
+
+function wikiIndexTemplate(): string {
+  return [
+    '# wiki index',
+    '',
+    '知识与经验条目由 `promote --to wiki` 或 `pick --to wiki` 产出。',
+    '',
+  ].join('\n')
+}
+
+function taskWorkingIndexTemplate(taskId: string, taskTitle: string, createdAt: string): string {
+  return [
+    '---',
+    'status: active',
+    'workspace_status: working',
+    `created: ${createdAt}`,
+    `updated: ${createdAt}`,
+    `title: ${taskTitle}`,
+    `id: ${taskId}`,
+    '---',
+    '',
+    `# ${taskTitle}`,
+    '',
+    '## Context',
+    '- ',
+    '',
+    '## Objective',
+    '- ',
+    '',
+    '## Boundary',
+    '- ',
+    '',
+    '## Next Entry',
+    '- plan.md',
+    '',
+  ].join('\n')
+}
+
+function taskPlanTemplate(taskId: string, taskTitle: string, createdAt: string): string {
+  return [
+    `# ${taskId} plan`,
+    '',
+    `Task title: ${taskTitle}`,
+    `Created: ${createdAt}`,
+    '',
+    '## Objective',
+    '- ',
+    '',
+    '## Steps',
+    '- [ ] 定义边界与验收标准',
+    '- [ ] 生成 review surface',
+    '- [ ] 完成 promote / pick 决策',
+    '',
+  ].join('\n')
+}
+
+function taskLogTemplate(taskId: string, taskTitle: string, createdAt: string, compact: string): string {
+  return [
+    '---',
+    'status: active',
+    `created: ${createdAt}`,
+    `updated: ${createdAt}`,
+    `title: ${taskTitle}`,
+    `id: ${taskId}`,
+    '---',
+    '',
+    '# Log',
+    '',
+    `- [${compact}] task created: ${taskTitle} (${taskId})`,
+    '',
+  ].join('\n')
+}
+
+function appendTaskToCatalog(content: string, taskId: string, taskTitle: string): string {
+  const entry = `- .docwarden/task/${taskId}/ (${taskTitle})`
+  if (content.includes(`.docwarden/task/${taskId}/`)) {
+    return content
+  }
+
+  const marker = /^## 当前 active task|^## Active tasks?/m
+  if (marker.test(content)) {
+    return content.replace(marker, match => `${match}\n${entry}`)
+  }
+
+  return `${content}\n## 当前 active task\n\n${entry}\n`
+}
+
+function appendTaskLog(input: {
+  readonly logPath: string
+  readonly taskId: string
+  readonly event: string
+  readonly artifactPath: string
+  readonly createdAt: string
+}): Effect.Effect<void, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    const exists = yield* pathExists(input.logPath)
+    const existing = exists
+      ? yield* fs.readFileString(input.logPath).pipe(
+        Effect.mapError(error => new DocwardenRuntimeError(`failed to read task log: ${input.logPath}: ${formatUnknownCause(error)}`)),
+      )
+      : taskLogTemplate(input.taskId, input.taskId, input.createdAt, timestampForFiles(input.createdAt))
+
+    const next = `${existing.trimEnd()}\n- [${input.createdAt}] ${input.event}: ${input.artifactPath}\n`
+    yield* writeTextFile(input.logPath, next)
+  })
+}
+
+function readTaskCatalog(taskCatalogPath: string): Effect.Effect<string, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    if (!(yield* pathExists(taskCatalogPath))) {
+      return taskRootIndexTemplate(new Date().toISOString())
+    }
+    return yield* fs.readFileString(taskCatalogPath).pipe(
+      Effect.mapError(error => new DocwardenConfigError(`failed to read task index: ${taskCatalogPath}: ${formatUnknownCause(error)}`)),
+    )
+  })
+}
+
+function readTaskFile(filePath: string, missingMessage: string): Effect.Effect<string, DocwardenConfigError | DocwardenRuntimeError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    return yield* fs.readFileString(filePath).pipe(
+      Effect.mapError(error => new DocwardenConfigError(`${missingMessage}: ${formatUnknownCause(error)}`)),
+    )
+  })
+}
+
+function assertDocwardenRuntime(workspaceRoot: string): Effect.Effect<{ workspaceRoot: string, docwardenRoot: string, configPath: string }, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    yield* assertDirectory(workspaceRoot, `review root does not exist or is not a directory: ${workspaceRoot}`)
+    if (path.basename(workspaceRoot) === '.docwarden') {
+      return yield* Effect.fail(new DocwardenConfigError(
+        `review root must be a workspace root, not an existing .docwarden root: ${workspaceRoot}`,
+      ))
+    }
+
+    const docwardenRoot = path.join(workspaceRoot, '.docwarden')
+    const configPath = path.join(docwardenRoot, 'config.yaml')
+    if (!(yield* pathExists(configPath))) {
+      return yield* Effect.fail(new DocwardenConfigError(`docwarden config missing at ${configPath}; run docwarden init first`))
+    }
+
+    yield* assertReadableConfig(configPath)
+    return { workspaceRoot, docwardenRoot, configPath }
+  })
+}
+
+function parseTaskId(raw: string, flagName: '--id' | '--task'): Effect.Effect<string, DocwardenConfigError> {
+  const value = normalizeOptionalPath(raw)
+  if (value === undefined) {
+    return Effect.fail(new DocwardenConfigError(`missing required ${flagName}`))
+  }
+  if (value.includes('/') || value.includes('\\') || value === '.') {
+    return Effect.fail(new DocwardenConfigError(`invalid task id: ${value}`))
+  }
+  if (!/^[a-z0-9][\w.-]*$/i.test(value)) {
+    return Effect.fail(new DocwardenConfigError(`invalid task id: ${value}`))
+  }
+  return Effect.succeed(value)
+}
+
+function parseTaskTitle(raw: string): string {
+  return normalizeOptionalPath(raw) ?? 'untitled task'
+}
+
+function parseDestinationLayer(raw: string, kind: PromoteKind): Effect.Effect<TaskLayer, DocwardenConfigError> {
+  const value = normalizeOptionalPath(raw)
+  if (value === undefined) {
+    return kind === 'promote'
+      ? Effect.fail(new DocwardenConfigError('missing required --to'))
+      : Effect.fail(new DocwardenConfigError('missing required --to wiki'))
+  }
+
+  if (value === 'spec' || value === 'guide' || value === 'wiki') {
+    if (kind === 'pick' && value !== 'wiki') {
+      return Effect.fail(new DocwardenConfigError('pick only supports --to wiki'))
+    }
+    return Effect.succeed(value)
+  }
+
+  return Effect.fail(new DocwardenConfigError(`invalid --to destination: ${value}; expected spec, guide, wiki`))
+}
+
+function assertDirectory(directory: string, message: string): Effect.Effect<void, DocwardenError, DocwardenRuntimeServices> {
   return Effect.gen(function* () {
     const info = yield* stat(directory, message)
     if (info.type !== 'Directory') {
@@ -459,19 +1226,38 @@ function assertDirectory(directory: string, message: string): Effect.Effect<void
   })
 }
 
-function assertReadableConfig(configPath: string): Effect.Effect<void, DocwardenError, FileSystem.FileSystem> {
+function assertReadableConfig(configPath: string): Effect.Effect<void, DocwardenError, DocwardenRuntimeServices> {
   return Effect.gen(function* () {
-    const fs = yield* FileSystem.FileSystem
-    const config = yield* fs.readFileString(configPath).pipe(
-      Effect.mapError(error => new DocwardenConfigError(`docwarden config is not readable at ${configPath}: ${formatUnknownCause(error)}`)),
-    )
+    const config = yield* readTaskFile(configPath, `docwarden config is not readable at ${configPath}`)
     if (config.trim().length === 0) {
       return yield* Effect.fail(new DocwardenConfigError(`docwarden config is empty at ${configPath}; run docwarden init again`))
     }
   })
 }
 
-function pathExists(filePath: string): Effect.Effect<boolean, DocwardenRuntimeError, FileSystem.FileSystem> {
+function resolveWorkspaceRoot(rawRoot: string): string {
+  return path.resolve(normalizeOptionalPath(rawRoot) ?? '.')
+}
+
+function writeDirectory(directory: string, messagePrefix = 'failed to create directory:'): Effect.Effect<void, DocwardenRuntimeError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    yield* fs.makeDirectory(directory, { recursive: false }).pipe(
+      Effect.mapError(error => new DocwardenRuntimeError(`${messagePrefix} ${directory}: ${formatUnknownCause(error)}`)),
+    )
+  })
+}
+
+function writeTextFile(filePath: string, content: string): Effect.Effect<void, DocwardenRuntimeError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    yield* fs.writeFileString(filePath, content).pipe(
+      Effect.mapError(error => new DocwardenRuntimeError(`failed to write file: ${filePath}: ${formatUnknownCause(error)}`)),
+    )
+  })
+}
+
+function pathExists(filePath: string): Effect.Effect<boolean, DocwardenRuntimeError, DocwardenRuntimeServices> {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
     return yield* fs.exists(filePath).pipe(
@@ -480,13 +1266,52 @@ function pathExists(filePath: string): Effect.Effect<boolean, DocwardenRuntimeEr
   })
 }
 
-function stat(filePath: string, message: string): Effect.Effect<FileSystem.File.Info, DocwardenConfigError | DocwardenRuntimeError, FileSystem.FileSystem> {
+function stat(filePath: string, message: string): Effect.Effect<FileSystem.File.Info, DocwardenConfigError | DocwardenRuntimeError, DocwardenRuntimeServices> {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
     return yield* fs.stat(filePath).pipe(
       Effect.mapError(error => new DocwardenConfigError(`${message}: ${formatUnknownCause(error)}`)),
     )
   })
+}
+
+function timestampForFiles(value: string): string {
+  return value.replace(/[-:.TZ]/g, '')
+}
+
+function extractSection(text: string, heading: string): string[] {
+  const lines = text.split(/\r?\n/)
+  const headingIndex = lines.findIndex(line => line.trim().toLowerCase().startsWith(`## ${heading.toLowerCase()}`))
+  if (headingIndex < 0) {
+    return []
+  }
+  const out: string[] = []
+  const rest = lines.slice(headingIndex + 1)
+  for (const line of rest) {
+    if (line.startsWith('## ') && out.length > 0) {
+      break
+    }
+    if (line.trim().length > 0) {
+      out.push(line.trim())
+    }
+  }
+  return out
+}
+
+function extractPreviewLines(text: string, max: number): string[] {
+  return text
+    .split(/\r?\n/)
+    .slice(0, max)
+    .map(line => line.trim())
+    .filter(line => line.length > 0)
+}
+
+function extractTaskTitle(taskIndex: string, taskId: string): string {
+  const heading = taskIndex.split(/\r?\n/).find(line => line.startsWith('# '))
+  if (heading !== undefined && heading !== '# ') {
+    return heading.slice(2).trim()
+  }
+  return taskId
 }
 
 function writeStdout(message: string): Effect.Effect<void> {

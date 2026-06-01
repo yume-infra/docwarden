@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-13
-updated: 2026-05-31
+updated: 2026-06-01
 owner: sayori
 ---
 
@@ -22,8 +22,7 @@ owner: sayori
 
 当前 active task：
 
-- `.docwarden/task/23-symphony-dogfood-planning/`：规划用 `symphony-ts` 驱动本仓库迭代的 dogfood 回路。
-- `.docwarden/task/24-docwarden-workflow-planning/`：规划 docwarden 自身 workflow 的 v0 目标和最小闭环。
+- `.docwarden/task/25-docwarden-v0-dogfood-workflow/`：按原始理论在当前仓库 dogfood docwarden v0 workflow。
 
 ## 归档工作面
 
@@ -51,10 +50,11 @@ owner: sayori
 - `.docwarden/archive/task/20-contexta-next-goal-prep/`：strict runtime contract 预备工作面，已归档，相关实现已进入 isomorph。
 - `.docwarden/archive/task/21-contexta-isomorph-layer-split/`：三层拆分工作面，已完成并归档。
 - `.docwarden/archive/task/22-contexta-dogfood-baseline/`：新基线留档，已归档。
+- `.docwarden/archive/task/23-symphony-dogfood-planning/`：symphony dogfood 规划工作面，已归档；当前不再作为主线前置。
+- `.docwarden/archive/task/24-docwarden-workflow-planning/`：docwarden workflow 旧规划工作面，已归档；后续由 task 25 承接。
 
 ## 当前入口
 
 当前 active task：
 
-- `.docwarden/task/23-symphony-dogfood-planning/`
-- `.docwarden/task/24-docwarden-workflow-planning/`
+- `.docwarden/task/25-docwarden-v0-dogfood-workflow/`

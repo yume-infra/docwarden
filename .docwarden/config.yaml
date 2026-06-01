@@ -1,0 +1,19 @@
+review:
+  mode: review-first
+  pending_marker: review-pending
+
+cleanup:
+  after_promote_pick: delete
+
+review_surface:
+  files:
+    - index.md
+    - lead.md
+    - backing.md
+
+route_targets:
+  - promote
+  - pick
+  - log-only
+  - transfer
+  - no-op

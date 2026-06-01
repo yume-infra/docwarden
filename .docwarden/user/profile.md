@@ -2,7 +2,7 @@
 kind: user-context
 status: accepted
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-06-01
 owner: sayori
 ---
 
@@ -44,6 +44,7 @@ agent 应在理解需求、推进协作、组织审核内容和处理纠偏信�
 - agent MAY 在 0->1 过程中留下半成品、占位和未定设计。
 - agent MUST 显式写出当前已有设计、缺口和后续承接位置。
 - agent MUST NOT 因为设计未完整就完全不写。
+- 当实现刚跑通但产物仍机械时，agent SHOULD 倾向于先提交可回滚基线，再审 dogfood 产物质量，并开下一轮 task 修真实语义，而不是继续扩功能面。
 
 ### 审核协作
 
@@ -66,6 +67,12 @@ agent 应在理解需求、推进协作、组织审核内容和处理纠偏信�
 - agent SHOULD 将用户纠偏和 agent 错误模式视为 pick 来源。
 - agent SHOULD 在纠偏被接受后更新后续推理。
 - agent SHOULD 预期重复已纠正错误会降低用户容忍度。
+- 当没有明确 task，但上下文中出现可复用协作模式，且用户明确反馈该判断准确或满意时，agent MAY 提示将该模式 pick 到持久上下文。
+- 单次正向反馈只构成 pick 提示信号；agent SHOULD 在多次相似 signal 后再主动建议提升为长期默认模式。
+
+### Pick 示例
+
+- 无 task、有上下文、用户反馈某个推进判断准确时，可以将其作为 user-context 候选：例如先提交可回滚基线，再审 dogfood 产物质量，再开新 task 修真实语义。
 
 ### 资产边界
 

@@ -1,8 +1,8 @@
 ---
-status: active
-workspace_status: working
+status: closed
+workspace_status: closed
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-01
 owner: sayori
 ---
 
@@ -50,6 +50,16 @@ contexta
 - contexta 当前的最小 dogfood 起点是 `ym:write-skill -> Codex skill`。
 - 下一阶段应围绕 “由 symphony 调度 contexta 后续 capability 建设” 来拆任务。
 - 任务拆分应优先服务可运行闭环，而不是理论完备。
+
+## 关闭说明
+
+本 task 已关闭。
+
+关闭原因：
+
+- 当前方向已从“先规划 symphony 调度本仓库迭代”调整为“先在当前仓库 dogfood docwarden 自己”。
+- 新入口为 `.docwarden/task/25-docwarden-v0-dogfood-workflow/`。
+- `symphony-ts` 后续仍可作为运行层重新接入，但不再作为当前 active task 的前置主线。
 
 ## 后续承接
 

@@ -1,11 +1,13 @@
 ---
-status: active
+status: closed
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-01
 owner: sayori
 ---
 
 # Plan
+
+> 本 plan 已关闭。后续实现入口转入 `.docwarden/task/25-docwarden-v0-dogfood-workflow/`。
 
 ## Loop 1: 定位
 

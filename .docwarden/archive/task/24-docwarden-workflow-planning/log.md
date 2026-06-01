@@ -1,7 +1,7 @@
 ---
-status: active
+status: closed
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-01
 owner: sayori
 ---
 
@@ -42,3 +42,8 @@ owner: sayori
 - 新增 `mapping-layer-correction.md`：isomorph mapping 层表示 semantic mapping；`bootstrap` 是自举；旧 `.isomorph/mapping/docwarden/` 的 user-context 示例应改为 contexta 口径；新的 `.isomorph/mapping/docwarden/` 承接 docwarden workflow definition。
 - 修正 `review-workflow-config-draft.md`：撤回 `.docwarden/workflow/review.md` 作为定义入口；Markdown + frontmatter 属于 mapping definition；docwarden 使用层 config 应由 `docwarden init` 创建并用 yaml 或其他配置格式维护。
 - 修正 `docwarden-contexta-separation.md`、`config-maintained-workflow.md`、`basic-link-stabilization-plan.md` 和 `index.md`，将基本链路改为 `isomorph workflow structure -> mapping/docwarden definition -> docwarden init -> .docwarden runtime config -> dw:review -> review surface`。
+
+## 2026-06-01
+
+- 回到 `docs/` 原始理论后确认：docwarden 主链路应为 `task -> review system -> spec / guide / wiki`。
+- 本 task 关闭；后续入口转入 `.docwarden/task/25-docwarden-v0-dogfood-workflow/`。
