@@ -1,11 +1,11 @@
-import type { ContextaRuntimePaths } from './domain.js'
+import type { ContextaCapabilityDefinition, ContextaInstallResult, ContextaInstallTarget, ContextaRuntimePaths } from './domain.js'
 import process from 'node:process'
 import * as NodeServices from '@effect/platform-node/NodeServices'
 import { Effect, Option } from 'effect'
 import * as Argument from 'effect/unstable/cli/Argument'
 import * as Command from 'effect/unstable/cli/Command'
 import * as Flag from 'effect/unstable/cli/Flag'
-import { activationResult, capabilityResult, contextaInfraPackage, installCapabilityResult, resolveContextaPaths } from './runtime.js'
+import { activationResult, capabilityResult, contextaInfraPackage, installCapability, listCapabilityDefinitions, resolveContextaPaths } from './runtime.js'
 
 export const version = '0.0.0'
 
@@ -14,12 +14,35 @@ interface CliSuccess {
   readonly exitCode: number
 }
 
+class ContextaCliError extends Error {
+  readonly _tag = 'ContextaCliError' as const
+
+  constructor(message: string) {
+    super(message)
+    this.name = 'ContextaCliError'
+  }
+}
+
 const rootFlag = Flag.string('root').pipe(
   Flag.withDescription('Workspace root or .contexta path'),
   Flag.withDefault(''),
 )
 const jsonFlag = Flag.boolean('json').pipe(
   Flag.withDescription('Print machine-readable JSON'),
+)
+const targetFlag = Flag.string('target').pipe(
+  Flag.withDescription('Install target: codex-project or codex-user'),
+  Flag.withDefault('codex-project'),
+)
+const targetDirFlag = Flag.string('target-dir').pipe(
+  Flag.withDescription('Explicit install directory for materialized assets'),
+  Flag.withDefault(''),
+)
+const forceFlag = Flag.boolean('force').pipe(
+  Flag.withDescription('Replace an existing materialized skill'),
+)
+const dryRunFlag = Flag.boolean('dry-run').pipe(
+  Flag.withDescription('Preview install paths without writing files'),
 )
 
 const contexta = Command.make('contexta').pipe(
@@ -62,8 +85,9 @@ const catalog = Command.make('catalog', {
       command: 'catalog' as const,
       root: workspace,
     }
+    const catalog = listCapabilityDefinitions(workspace)
     yield* runCli(
-      Effect.succeed(json ? capabilityResult(payload) : formatCapability(payload, resolveContextaPaths(workspace))),
+      Effect.succeed(json ? formatJson(catalog) : formatCatalog(payload, resolveContextaPaths(workspace), catalog.items)),
       result => ({
         output: result,
         exitCode: 0,
@@ -73,28 +97,76 @@ const catalog = Command.make('catalog', {
   Command.withDescription('Resolve catalog locations for infra-backed assets'),
 )
 
-const install = Command.make('install', {
+const installPlan = Command.make('plan', {
   capability: Argument.string('capability'),
+  target: targetFlag,
+  targetDir: targetDirFlag,
   json: jsonFlag,
-}, ({ capability, json }) =>
+}, ({ capability, json, target, targetDir }) =>
   Effect.gen(function* () {
     const context = yield* contexta
     const root = context.root
     const workspace = yield* resolveWorkspace(root)
-    const payload = {
-      command: 'install' as const,
-      capability,
-      root: workspace,
-    }
+    const resolvedTarget = yield* parseInstallTarget(target)
     yield* runCli(
-      Effect.succeed(json ? installCapabilityResult(payload) : formatInstall(payload, resolveContextaPaths(workspace))),
+      Effect.tryPromise({
+        try: () => installCapability({
+          capability,
+          dryRun: true,
+          force: false,
+          root: workspace,
+          target: resolvedTarget,
+          targetDir,
+        }),
+        catch: toContextaCliError,
+      }),
       result => ({
-        output: result,
+        output: json ? formatJson(result) : formatInstallResult(result),
+        exitCode: 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('Preview capability install paths without writing files'),
+)
+
+const installRoot = Command.make('install', {
+  capability: Argument.string('capability').pipe(
+    Argument.optional,
+  ),
+  target: targetFlag,
+  targetDir: targetDirFlag,
+  force: forceFlag,
+  dryRun: dryRunFlag,
+  json: jsonFlag,
+}, ({ capability, dryRun, force, json, target, targetDir }) =>
+  Effect.gen(function* () {
+    const context = yield* contexta
+    const root = context.root
+    const workspace = yield* resolveWorkspace(root)
+    const resolvedTarget = yield* parseInstallTarget(target)
+    const capabilityId = Option.isSome(capability) ? capability.value : ''
+    yield* runCli(
+      capabilityId.trim().length === 0
+        ? Effect.fail(new ContextaCliError('missing capability argument for install'))
+        : Effect.tryPromise({
+            try: () => installCapability({
+              capability: capabilityId,
+              dryRun,
+              force,
+              root: workspace,
+              target: resolvedTarget,
+              targetDir,
+            }),
+            catch: toContextaCliError,
+          }),
+      result => ({
+        output: json ? formatJson(result) : formatInstallResult(result),
         exitCode: 0,
       }),
     )
   })).pipe(
   Command.withDescription('Install capability by identifier for the infra context'),
+  Command.withSubcommands([installPlan]),
 )
 
 const activation = Command.make('activation', {
@@ -147,7 +219,7 @@ const asset = Command.make('asset', {
 )
 
 const command = contexta.pipe(
-  Command.withSubcommands([capability, catalog, install, activation, asset]),
+  Command.withSubcommands([capability, catalog, installRoot, activation, asset]),
 )
 
 export const main: Effect.Effect<void, unknown> = Command.run(command, {
@@ -156,7 +228,7 @@ export const main: Effect.Effect<void, unknown> = Command.run(command, {
   Effect.provide(NodeServices.layer),
 )
 
-function runCli<A>(run: Effect.Effect<A>, onSuccess: (result: A) => CliSuccess): Effect.Effect<void, never> {
+function runCli<A>(run: Effect.Effect<A, unknown>, onSuccess: (result: A) => CliSuccess): Effect.Effect<void, never> {
   return run.pipe(
     Effect.matchEffect({
       onFailure: error => writeStderr(`contexta error: ${formatError(error)}`).pipe(
@@ -177,6 +249,16 @@ function formatError(error: unknown): string {
     return error.message
   }
   return String(error)
+}
+
+function toContextaCliError(error: unknown): ContextaCliError {
+  if (error instanceof ContextaCliError) {
+    return error
+  }
+  if (error instanceof Error) {
+    return new ContextaCliError(error.message)
+  }
+  return new ContextaCliError(String(error))
 }
 
 function writeStdout(message: string): Effect.Effect<void> {
@@ -201,6 +283,17 @@ function resolveWorkspace(root: string): Effect.Effect<string> {
   return Effect.sync(() => root.trim().length === 0 ? process.cwd() : root)
 }
 
+function parseInstallTarget(target: string): Effect.Effect<ContextaInstallTarget, ContextaCliError> {
+  if (target === 'codex-project' || target === 'codex-user') {
+    return Effect.succeed(target)
+  }
+  return Effect.fail(new ContextaCliError(`invalid install target '${target}'. Expected codex-project or codex-user.`))
+}
+
+function formatJson(value: unknown): string {
+  return JSON.stringify(value, null, 2)
+}
+
 function formatCapability(payload: { command: string }, paths: ContextaRuntimePaths): string {
   return [
     contextaInfraPackage,
@@ -211,12 +304,27 @@ function formatCapability(payload: { command: string }, paths: ContextaRuntimePa
   ].join('\n')
 }
 
-function formatInstall(payload: { command: string, capability: string }, paths: ContextaRuntimePaths): string {
+function formatCatalog(payload: { command: string }, paths: ContextaRuntimePaths, items: readonly ContextaCapabilityDefinition[]): string {
   return [
     contextaInfraPackage,
     `command: ${payload.command}`,
-    `capability: ${payload.capability}`,
-    `installRoot: ${paths.contextaRoot}`,
+    `catalogRoot: ${paths.catalogRoot}`,
+    'capabilities:',
+    ...items.map(item => `- ${item.id} -> ${item.kind}:${item.materializedName}`),
+  ].join('\n')
+}
+
+function formatInstallResult(result: ContextaInstallResult): string {
+  return [
+    contextaInfraPackage,
+    `command: ${result.command}`,
+    `capability: ${result.capability}`,
+    `kind: ${result.kind}`,
+    `materializedName: ${result.materializedName}`,
+    `sourcePath: ${result.sourcePath}`,
+    `targetPath: ${result.targetPath}`,
+    `status: ${result.dryRun ? 'dry-run' : 'installed'}`,
+    `overwritten: ${String(result.overwritten)}`,
   ].join('\n')
 }
 

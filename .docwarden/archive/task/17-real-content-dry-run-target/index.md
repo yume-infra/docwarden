@@ -1,11 +1,14 @@
 ---
-status: draft
+status: accepted
+workspace_status: archived
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-05-29
 owner: sayori
 ---
 
 # real content dry run target
+
+当前 task 已归档。剩余 locator-ready dry run 目标转入 isomorph backlog，不作为下一轮 contexta dogfood 主线。
 
 本 task 处理为 semantic-lint dry run 准备一个真实内容靶子。
 

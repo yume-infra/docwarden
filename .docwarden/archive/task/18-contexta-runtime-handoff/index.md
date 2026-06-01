@@ -1,11 +1,14 @@
 ---
-status: draft
+status: accepted
+workspace_status: archived
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-05-29
 owner: sayori
 ---
 
 # contexta runtime handoff
+
+当前 task 已归档。原 runtime handoff 已被 isomorph 分层取代。
 
 本 task 承接 contexta runtime 第一版实现前的 handoff 材料。
 

@@ -1,11 +1,14 @@
 ---
-status: draft
+status: accepted
+workspace_status: archived
 created: 2026-05-27
-updated: 2026-05-27
+updated: 2026-05-29
 owner: sayori
 ---
 
 # contexta v0 migration audit
+
+当前 task 已归档。迁移审核结论已被 strict runtime 实现和 isomorph layer split 消化。
 
 本 task 承接 2026-05-27 对 `apps/contexta` 当前 v0 实现的 subagent 审核结论。
 
@@ -56,4 +59,3 @@ owner: sayori
 ## 当前状态
 
 本任务已记录 v0 审核结论，等待 sayori review。
-

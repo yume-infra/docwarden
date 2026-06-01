@@ -1,11 +1,14 @@
 ---
 status: accepted
+workspace_status: archived
 created: 2026-05-27
-updated: 2026-05-28
+updated: 2026-05-29
 owner: sayori
 ---
 
 # contexta next goal prep
+
+当前 task 已归档。strict runtime contract 已进入 isomorph，下一轮主线转向 contexta dogfood。
 
 本 task 承接 2026-05-27 对 `apps/contexta` 重构后实现的第二轮 subagent 审核。
 

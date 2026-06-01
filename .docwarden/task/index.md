@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-13
-updated: 2026-05-29
+updated: 2026-05-31
 owner: sayori
 ---
 
@@ -20,10 +20,10 @@ owner: sayori
 
 ## 工作面索引
 
-- `17-real-content-dry-run-target/`：真实内容 dry run 靶子准备工作面，当前 draft。
-- `18-contexta-runtime-handoff/`：contexta runtime 第一版实现 handoff 工作面，当前 draft。
-- `19-contexta-v0-migration-audit/`：contexta v0 实现迁移审核工作面，已被 layer split 取代。
-- `21-contexta-isomorph-layer-split/`：contexta / isomorph / docwarden 三层彻底拆分工作面，当前 active。
+当前 active task：
+
+- `.docwarden/task/23-symphony-dogfood-planning/`：规划用 `symphony-ts` 驱动本仓库迭代的 dogfood 回路。
+- `.docwarden/task/24-docwarden-workflow-planning/`：规划 docwarden 自身 workflow 的 v0 目标和最小闭环。
 
 ## 归档工作面
 
@@ -45,7 +45,16 @@ owner: sayori
 - `.docwarden/archive/task/14-magic-word-registry-expansion/`：magic-word registry 扩充工作面，已完成并归档。
 - `.docwarden/archive/task/15-semantic-lint-signal-chain/`：semantic-lint / signal pure chain 工作面，已完成并归档。
 - `.docwarden/archive/task/16-signal-review-handoff/`：signal 进入 review 的交接边界工作面，已完成并归档。
+- `.docwarden/archive/task/17-real-content-dry-run-target/`：真实内容 dry run 靶子准备工作面，已归档，后续只作为 isomorph 历史参考。
+- `.docwarden/archive/task/18-contexta-runtime-handoff/`：contexta runtime handoff 工作面，已归档，semantic runtime 内容已迁入 isomorph 口径。
+- `.docwarden/archive/task/19-contexta-v0-migration-audit/`：contexta v0 迁移审核工作面，已归档，后续被 layer split 取代。
+- `.docwarden/archive/task/20-contexta-next-goal-prep/`：strict runtime contract 预备工作面，已归档，相关实现已进入 isomorph。
+- `.docwarden/archive/task/21-contexta-isomorph-layer-split/`：三层拆分工作面，已完成并归档。
+- `.docwarden/archive/task/22-contexta-dogfood-baseline/`：新基线留档，已归档。
 
 ## 当前入口
 
-当前 active task：`21-contexta-isomorph-layer-split/`。
+当前 active task：
+
+- `.docwarden/task/23-symphony-dogfood-planning/`
+- `.docwarden/task/24-docwarden-workflow-planning/`

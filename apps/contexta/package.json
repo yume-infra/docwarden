@@ -25,7 +25,7 @@
     "build": "tsdown --config tsdown.config.ts && node ../../scripts/ensure-shebang.mjs dist/index.js",
     "clean": "rm -rf dist",
     "dev": "tsdown --config tsdown.config.ts --watch",
-    "link:global": "pnpm build && pnpm link",
+    "link:global": "pnpm build && pnpm link --global",
     "prepack": "pnpm build",
     "smoke:bin": "pnpm build && dist/index.js --help",
     "typecheck": "tsgo -p tsconfig.json --noEmit",

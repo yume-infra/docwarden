@@ -84,7 +84,76 @@ describe('contexta CLI contract', () => {
 
     expect(catalog.exitCode).toBe(0)
     expect(catalog.stdout).toContain('catalogRoot:')
+    expect(catalog.stdout).toContain('ym:write-skill')
     expect(activation.exitCode).toBe(0)
     expect(activation.stdout).toContain('mode: runtime')
+  })
+
+  it('lists the first ym-dispatched skill in catalog json', async () => {
+    const workspace = await makeWorkspace()
+    const result = await runContexta(['--root', workspace, 'catalog', '--json'], repoRoot)
+
+    expect(result.exitCode).toBe(0)
+    const output = JSON.parse(result.stdout)
+    expect(output.items).toContainEqual(expect.objectContaining({
+      id: 'ym:write-skill',
+      kind: 'codex-skill',
+      materializedName: 'write-skill',
+      namespace: 'ym',
+    }))
+  })
+
+  it('plans ym:write-skill installation without writing files', async () => {
+    const workspace = await makeWorkspace()
+    const targetDir = path.join(workspace, 'materialized-skills')
+    const result = await runContexta([
+      '--root',
+      repoRoot,
+      'install',
+      'plan',
+      'ym:write-skill',
+      '--target-dir',
+      targetDir,
+      '--json',
+    ], repoRoot)
+
+    expect(result.exitCode).toBe(0)
+    const output = JSON.parse(result.stdout)
+    expect(output).toMatchObject({
+      capability: 'ym:write-skill',
+      dryRun: true,
+      installed: false,
+      materializedName: 'write-skill',
+    })
+    await expect(fs.access(path.join(targetDir, 'write-skill'))).rejects.toThrow()
+  })
+
+  it('installs ym:write-skill as a Codex-native skill directory', async () => {
+    const workspace = await makeWorkspace()
+    const targetDir = path.join(workspace, 'materialized-skills')
+    const result = await runContexta([
+      '--root',
+      repoRoot,
+      'install',
+      'ym:write-skill',
+      '--target-dir',
+      targetDir,
+      '--json',
+    ], repoRoot)
+
+    expect(result.exitCode).toBe(0)
+    const output = JSON.parse(result.stdout)
+    const installedSkill = path.join(targetDir, 'write-skill')
+    expect(output).toMatchObject({
+      capability: 'ym:write-skill',
+      dryRun: false,
+      installed: true,
+      targetPath: installedSkill,
+    })
+
+    const skill = await fs.readFile(path.join(installedSkill, 'SKILL.md'), 'utf8')
+    expect(skill).toContain('name: write-skill')
+    expect(skill).toContain('description:')
+    await expect(fs.access(path.join(installedSkill, 'scripts', 'quick_validate.py'))).resolves.toBeUndefined()
   })
 })

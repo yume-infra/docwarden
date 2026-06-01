@@ -1,5 +1,6 @@
 ---
-status: active
+status: accepted
+workspace_status: archived
 created: 2026-05-29
 updated: 2026-05-29
 owner: sayori
@@ -14,7 +15,7 @@ owner: sayori
 - 执行代码与本地材料迁移：
   - `apps/contexta` semantic runtime -> `apps/isomorph`
   - `.contexta/mapping` -> `.isomorph/mapping`
-  - `.contexta` 新增最小 context infra activation config
+  - `.contexta` 不保留占位配置
 - 验证：
   - `pnpm --filter isomorph typecheck`
   - `pnpm --filter contexta typecheck`

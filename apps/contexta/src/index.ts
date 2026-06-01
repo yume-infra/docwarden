@@ -13,14 +13,21 @@ export {
   activationResult,
   capabilityResult,
   contextaInfraPackage,
+  getCapabilityDefinition,
+  installCapability,
   installCapabilityResult,
+  listCapabilityDefinitions,
   resolveContextaPaths,
 } from './runtime.js'
 
 export type {
   ContextaActivationPayload,
+  ContextaCapabilityDefinition,
   ContextaCapabilityPayload,
+  ContextaInstallOptions,
   ContextaInstallPayload,
+  ContextaInstallResult,
+  ContextaInstallTarget,
   ContextaRuntimePaths,
 } from './runtime.js'
 
