@@ -25,6 +25,7 @@
     "build": "tsdown --config tsdown.config.ts && node ../../scripts/ensure-shebang.mjs dist/index.js",
     "clean": "rm -rf dist",
     "dev": "tsdown --config tsdown.config.ts --watch",
+    "test": "cd ../../ && vitest run --config packages/vitest-config/workspace.config.ts apps/docwarden/tests/cli.test.ts",
     "prepack": "pnpm build",
     "smoke:bin": "pnpm build && dist/index.js --help",
     "typecheck": "tsgo -p tsconfig.json --noEmit",

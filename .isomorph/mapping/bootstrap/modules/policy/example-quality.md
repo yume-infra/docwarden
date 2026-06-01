@@ -65,7 +65,7 @@ example 的价值在于降低 agent 从抽象理解到实际判断之间的损�
 
 ### Scenario
 
-用户要求 agent “把 template 规则写进 `.isomorph/mapping/docwarden/templates/user-context.md`”。
+用户要求 agent “把 template 规则写进 `.isomorph/mapping/contexta/templates/user-context.md`”。
 
 ### Judgment Material
 

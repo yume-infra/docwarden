@@ -1,18 +1,24 @@
 #!/usr/bin/env node
 
+import { realpathSync } from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
+import { fileURLToPath } from 'node:url'
+
 import * as NodeRuntime from '@effect/platform-node/NodeRuntime'
-import * as NodeServices from '@effect/platform-node/NodeServices'
-import * as Console from 'effect/Console'
-import * as Effect from 'effect/Effect'
-import * as Command from 'effect/unstable/cli/Command'
 
-const command = Command.make('docwarden', {}, () =>
-  Console.log('docwarden CLI'))
+import { main } from './cli.js'
 
-const main = Command.run(command, {
-  version: '0.0.0',
-}).pipe(
-  Effect.provide(NodeServices.layer),
-)
+export {
+  main,
+  version,
+} from './cli.js'
 
-NodeRuntime.runMain(main)
+function isMain(): boolean {
+  const entry = process.argv[1]
+  return entry !== undefined && realpathSync(path.resolve(entry)) === fileURLToPath(import.meta.url)
+}
+
+if (isMain()) {
+  NodeRuntime.runMain(main)
+}

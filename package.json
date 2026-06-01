@@ -7,6 +7,7 @@
   "description": "Workspace for docwarden workflow, contexta infra, and isomorph semantic runtime CLIs",
   "license": "MIT",
   "bin": {
+    "docwarden": "apps/docwarden/dist/index.js",
     "contexta": "apps/contexta/dist/index.js",
     "isomorph": "apps/isomorph/dist/index.js"
   },
@@ -28,7 +29,7 @@
     "effect:unpatch": "effect-tsgo unpatch",
     "husky:install": "husky",
     "knip": "knip",
-    "link": "pnpm build:isomorph && pnpm build:contexta && pnpm link",
+    "link": "pnpm build:docwarden && pnpm build:isomorph && pnpm build:contexta && pnpm link",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "outdated": "pnpm outdated -r",
