@@ -22,7 +22,11 @@ owner: sayori
 
 当前 active task：
 
-- `.docwarden/task/25-docwarden-v0-dogfood-workflow/`：按原始理论在当前仓库 dogfood docwarden v0 workflow。
+- `.docwarden/task/26-docwarden-artifact-quality-loop/`：修正第一轮 dogfood 暴露的 review / promote / pick 产物质量问题。
+
+最近完成：
+
+- `.docwarden/task/25-docwarden-v0-dogfood-workflow/`：按原始理论在当前仓库 dogfood docwarden v0 workflow，已形成 v0 可运行基线。
 
 ## 归档工作面
 
@@ -57,4 +61,4 @@ owner: sayori
 
 当前 active task：
 
-- `.docwarden/task/25-docwarden-v0-dogfood-workflow/`
+- `.docwarden/task/26-docwarden-artifact-quality-loop/`
