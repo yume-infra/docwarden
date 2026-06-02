@@ -1,20 +1,57 @@
----
-status: accepted
-created: 2026-05-13
-updated: 2026-05-13
-owner: sayori
----
-
 # spec index
 
-`.docwarden/spec/` 是 agent-facing 执行规范层。
+`.docwarden/spec/` 是描述当前仓库稳定现状的 md module 集合。
 
-它服务 agent 编码和项目执行。
+本层不保存 task summary，不保存 review surface，也不替代 `docs/`。
 
-spec 应该比 task 更稳定，比 review 更面向执行。
+## Model
 
-## 当前状态
+```text
+.docwarden/spec/
+  workspace/
+  apps/
+  packages/
+  harness/
+    <module>.md
+```
 
-当前只建立入口文件。
+- 目录名表达当前 monorepo 的真实资产分组。
+- 每个 `.md` 文件天然是一个 module。
+- module frontmatter 只保留 `kind`。
+- module 正文承载可被 review / promote / lint 的 assertion。
 
-spec 的最小产物形态将在后续 task 中继续定义。
+## Current Workspace Assets
+
+- `workspace/package-topology.md`：pnpm workspace package topology。
+- `workspace/verification-pipeline.md`：root turbo verification pipeline。
+- `workspace/docs-authority.md`：`docs/` human-maintained source boundary。
+- `workspace/effect-source-reference.md`：pinned Effect source reference boundary。
+- `apps/docwarden.md`：docwarden CLI package contract。
+- `apps/contexta.md`：contexta CLI package contract。
+- `apps/isomorph.md`：isomorph CLI package contract。
+- `packages/tsconfig.md`：shared TypeScript config package。
+- `packages/tsdown-config.md`：shared CLI build config package。
+- `packages/vitest-config.md`：shared test config package。
+- `harness/docwarden-harness.md`：`.docwarden` repository maintenance harness。
+- `harness/spec-entry-boundary.md`：stable spec write boundary。
+- `harness/review-workflow.md`：review workflow materialization boundary。
+- `harness/review-surface.md`：review surface composition boundary。
+- `harness/promote-to-spec.md`：reviewed material to stable spec pipeline。
+
+## Entry Rule
+
+进入 spec 的内容必须能定位到：
+
+```text
+.docwarden/spec/<target>.md
+```
+
+无法定位到具体 module 的内容不能直接进入 stable spec。
+
+## Structure Mapping
+
+当前层级的结构映射定义在：
+
+```text
+.isomorph/mapping/docwarden/modules/structure/stable-spec-hierarchy.md
+```

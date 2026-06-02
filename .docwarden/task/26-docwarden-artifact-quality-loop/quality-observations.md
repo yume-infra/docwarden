@@ -1,7 +1,7 @@
 ---
-status: active
+status: accepted
 created: 2026-06-01
-updated: 2026-06-01
+updated: 2026-06-02
 owner: sayori
 ---
 

@@ -13,6 +13,14 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
+    "smoke:bin": {
+      "dependsOn": ["build"],
+      "outputs": []
+    },
     "lint": {
       "outputs": []
     },

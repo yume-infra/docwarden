@@ -27,7 +27,8 @@
     "dev": "tsdown --config tsdown.config.ts --watch",
     "link:global": "pnpm build && pnpm link --global",
     "prepack": "pnpm build",
-    "smoke:bin": "pnpm build && dist/index.js --help",
+    "smoke:bin": "dist/index.js --help",
+    "test": "cd ../../ && vitest run --config packages/vitest-config/workspace.config.ts apps/contexta/tests",
     "typecheck": "tsgo -p tsconfig.json --noEmit",
     "typecheck:tsc": "tsc -p tsconfig.json --noEmit",
     "unlink:global": "pnpm rm -g contexta"

@@ -1,7 +1,7 @@
 ---
-status: active
+status: closed
 created: 2026-06-01
-updated: 2026-06-01
+updated: 2026-06-02
 owner: sayori
 ---
 
@@ -17,3 +17,4 @@ owner: sayori
 - [2026-06-01T07:13:42.869Z] review generated from task: /Users/sayori/Desktop/docwarden/.docwarden/review/20260601071342869-task-25-docwarden-v0-dogfood-workflow
 - [2026-06-01T07:13:45.854Z] promote to spec: /Users/sayori/Desktop/docwarden/.docwarden/spec/25-docwarden-v0-dogfood-workflow-spec-20260601071345854.md
 - [2026-06-01T07:13:49.850Z] pick to wiki: /Users/sayori/Desktop/docwarden/.docwarden/wiki/25-docwarden-v0-dogfood-workflow-wiki-pick-20260601071349850.md
+- [2026-06-02] task closed: v0 runnable workflow baseline is established; artifact quality follow-up lives in task26.

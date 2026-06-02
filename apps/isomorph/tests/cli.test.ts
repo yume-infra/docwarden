@@ -6,7 +6,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 
-import { beforeAll, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 interface ProcessResult {
   readonly stdout: string
@@ -46,11 +46,6 @@ function runProcess(command: string, args: readonly string[], cwd: string): Prom
 function runIsomorph(args: readonly string[], cwd: string): Promise<ProcessResult> {
   return runProcess(process.execPath, [isomorphBin, ...args], cwd)
 }
-
-beforeAll(async () => {
-  const result = await runProcess('pnpm', ['--filter', 'isomorph', 'build'], repoRoot)
-  expect(result.exitCode, result.stderr).toBe(0)
-}, 60_000)
 
 describe('isomorph CLI contract', () => {
   it('prints help', async () => {
@@ -244,6 +239,28 @@ Create a local skill primitive.
     expect(readyResult.stdout).toContain('status: ready')
     expect(needsWorkResult.exitCode).toBe(1)
     expect(needsWorkJson.status).toBe('needs-work')
+  })
+
+  it('lists mapping scopes, kinds, and templates', async () => {
+    const workspace = await makeWorkspace()
+    await runIsomorph(['--root', workspace, 'init'], repoRoot)
+
+    const result = await runIsomorph(['--root', workspace, 'mapping', '--json'], repoRoot)
+    const output = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(0)
+    expect(result.stderr).toBe('')
+    expect(output.scopes.map((scope: { scope: string }) => scope.scope)).toContain('bootstrap')
+    const bootstrap = output.scopes.find((scope: { scope: string }) => scope.scope === 'bootstrap')
+    expect(bootstrap.path).toBe('mapping/bootstrap/')
+    expect(bootstrap.kinds).toContain('concept')
+    expect(bootstrap.templates).toContain('concept')
+    expect(bootstrap.templates).toContain('policy')
+
+    const plain = await runIsomorph(['--root', workspace, 'mapping'], repoRoot)
+    expect(plain.exitCode).toBe(0)
+    expect(plain.stdout).toContain('isomorph mapping')
+    expect(plain.stdout).toContain('## bootstrap')
   })
 
   it('reports pinned upgrade status and malformed pin parse errors', async () => {

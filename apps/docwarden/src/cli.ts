@@ -11,6 +11,7 @@ export const version = '0.0.0'
 type TaskLayer = 'spec' | 'guide' | 'wiki'
 type ReviewMode = 'target' | 'task'
 type PromoteKind = 'promote' | 'pick'
+type SpecModuleKind = string
 
 interface TaskMaterialSummary {
   readonly taskId: string
@@ -39,6 +40,7 @@ interface DocwardenInitResult extends CliResultBase {
   readonly command: 'init'
   readonly configPath: string
   readonly filesWritten: readonly string[]
+  readonly filesSkipped: readonly string[]
 }
 
 interface DocwardenTaskCreateResult extends CliResultBase {
@@ -79,6 +81,8 @@ interface DocwardenPromoteResult extends CliResultBase {
   readonly taskId: string
   readonly taskDirectory: string
   readonly targetLayer: TaskLayer
+  readonly specTarget?: string
+  readonly specKind?: SpecModuleKind
   readonly artifactPath: string
   readonly filesWritten: readonly string[]
 }
@@ -149,6 +153,16 @@ const toFlag = Flag.string('to').pipe(
   Flag.withDefault(''),
 )
 
+const specKindFlag = Flag.string('kind').pipe(
+  Flag.withDescription('Content kind for a missing spec target'),
+  Flag.withDefault(''),
+)
+
+const specTargetFlag = Flag.string('target').pipe(
+  Flag.withDescription('Spec target path for --to spec, without .md'),
+  Flag.withDefault(''),
+)
+
 const docwarden = Command.make('docwarden').pipe(
   Command.withSharedFlags({
     root: rootFlag,
@@ -169,7 +183,7 @@ const init = Command.make('init', {
       }),
     )
   })).pipe(
-  Command.withDescription('Create .docwarden runtime defaults for the workflow'),
+  Command.withDescription('Create missing .docwarden harness assets for the workflow'),
 )
 
 const taskCreate = Command.make('create', {
@@ -216,8 +230,10 @@ const review = Command.make('review', {
 const promote = Command.make('promote', {
   task: taskRefFlag,
   to: toFlag,
+  specKind: specKindFlag,
+  specTarget: specTargetFlag,
   json: jsonFlag,
-}, ({ task, to, json }) =>
+}, ({ task, to, specKind, specTarget, json }) =>
   Effect.gen(function* () {
     const root = yield* docwarden
     yield* runCli(
@@ -225,6 +241,8 @@ const promote = Command.make('promote', {
         root: root.root,
         task,
         to,
+        specKind,
+        specTarget,
         kind: 'promote',
       } satisfies PromoteInput & { kind: 'promote' }),
       result => ({
@@ -248,6 +266,8 @@ const pick = Command.make('pick', {
         root: root.root,
         task,
         to,
+        specKind: '',
+        specTarget: '',
         kind: 'pick',
       } satisfies PromoteInput & { kind: 'pick' }),
       result => ({
@@ -293,7 +313,6 @@ function runCli<A>(
 
 function runInitEffect(rootRaw: string): Effect.Effect<DocwardenInitResult, DocwardenError, DocwardenRuntimeServices> {
   return Effect.gen(function* () {
-    const fs = yield* FileSystem.FileSystem
     const workspaceRoot = resolveWorkspaceRoot(rootRaw)
     yield* assertDirectory(workspaceRoot, `init root does not exist or is not a directory: ${workspaceRoot}`)
 
@@ -305,7 +324,7 @@ function runInitEffect(rootRaw: string): Effect.Effect<DocwardenInitResult, Docw
 
     const docwardenRoot = path.join(workspaceRoot, '.docwarden')
     if (yield* pathExists(docwardenRoot)) {
-      return yield* Effect.fail(new DocwardenConfigError(`local .docwarden already exists: ${docwardenRoot}`))
+      yield* assertDirectory(docwardenRoot, `local .docwarden exists but is not a directory: ${docwardenRoot}`)
     }
 
     const createdAt = new Date().toISOString()
@@ -327,47 +346,38 @@ function runInitEffect(rootRaw: string): Effect.Effect<DocwardenInitResult, Docw
       ['.docwarden/config.yaml', runtimeConfigTemplate()],
     ] as const
 
-    const filesWritten: readonly string[] = [
-      '.docwarden/task',
-      '.docwarden/task/index.md',
-      '.docwarden/review',
-      '.docwarden/review/index.md',
-      '.docwarden/spec',
-      '.docwarden/spec/index.md',
-      '.docwarden/guide',
-      '.docwarden/guide/index.md',
-      '.docwarden/wiki',
-      '.docwarden/wiki/index.md',
-      '.docwarden/archive',
-      '.docwarden/config.yaml',
-    ]
+    const filesWritten: string[] = []
+    const filesSkipped: string[] = []
 
-    const init = Effect.gen(function* () {
-      for (const directory of directories) {
-        yield* writeDirectory(directory, `failed to create directory: ${directory}:`)
+    for (const directory of directories) {
+      const relativeDirectory = workspaceRelative(workspaceRoot, directory)
+      if (yield* pathExists(directory)) {
+        yield* assertDirectory(directory, `docwarden init expected a directory at ${directory}`)
+        filesSkipped.push(relativeDirectory)
+        continue
       }
-      for (const [relativePath, content] of files) {
-        const absolutePath = path.join(workspaceRoot, relativePath)
-        yield* writeTextFile(absolutePath, content)
+      yield* writeDirectory(directory, `failed to create directory: ${directory}:`)
+      filesWritten.push(relativeDirectory)
+    }
+
+    for (const [relativePath, content] of files) {
+      const absolutePath = path.join(workspaceRoot, relativePath)
+      if (yield* pathExists(absolutePath)) {
+        filesSkipped.push(relativePath)
+        continue
       }
+      yield* writeTextFile(absolutePath, content)
+      filesWritten.push(relativePath)
+    }
 
-      return {
-        command: 'init' as const,
-        workspaceRoot,
-        docwardenRoot,
-        configPath: path.join(docwardenRoot, 'config.yaml'),
-        filesWritten,
-      } satisfies DocwardenInitResult
-    })
-
-    return yield* init.pipe(
-      Effect.catch((error) => {
-        const cleanup = fs.remove(docwardenRoot, { force: true, recursive: true }).pipe(
-          Effect.catch(() => Effect.void),
-        )
-        return cleanup.pipe(Effect.andThen(Effect.fail(toDocwardenError(error))))
-      }),
-    )
+    return {
+      command: 'init' as const,
+      workspaceRoot,
+      docwardenRoot,
+      configPath: path.join(docwardenRoot, 'config.yaml'),
+      filesWritten,
+      filesSkipped,
+    } satisfies DocwardenInitResult
   })
 }
 
@@ -584,6 +594,8 @@ interface PromoteInput {
   readonly root: string
   readonly task: string
   readonly to: string
+  readonly specKind: string
+  readonly specTarget: string
 }
 
 function runPromoteEffect(input: PromoteInput & { readonly kind: 'promote' }): Effect.Effect<DocwardenPromoteResult, DocwardenError, DocwardenRuntimeServices>
@@ -593,6 +605,9 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
     const runtime = yield* assertDocwardenRuntime(resolveWorkspaceRoot(input.root))
     const taskId = yield* parseTaskId(input.task, '--task')
     const targetLayer = yield* parseDestinationLayer(input.to, input.kind)
+    const specTarget = targetLayer === 'spec'
+      ? yield* parseSpecTarget(input.specTarget, input.specKind)
+      : undefined
 
     const taskDirectory = path.join(runtime.docwardenRoot, 'task', taskId)
     if (!(yield* pathExists(taskDirectory))) {
@@ -604,13 +619,16 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
     const taskLogPath = path.join(taskDirectory, 'log.md')
     const taskIndex = yield* readTaskFile(taskIndexPath, `missing task index: ${taskIndexPath}`)
     const taskPlan = yield* readTaskFile(taskPlanPath, `missing task plan: ${taskPlanPath}`)
+    const taskLog = yield* readTaskFile(taskLogPath, `missing task log: ${taskLogPath}`)
 
     const createdAt = new Date().toISOString()
     const artifactTimestamp = timestampForFiles(createdAt)
     const artifactName = input.kind === 'promote'
       ? `${taskId}-${targetLayer}-${artifactTimestamp}.md`
       : `${taskId}-wiki-pick-${artifactTimestamp}.md`
-    const artifactPath = path.join(runtime.docwardenRoot, input.kind === 'pick' ? 'wiki' : targetLayer, artifactName)
+    const artifactPath = specTarget === undefined
+      ? path.join(runtime.docwardenRoot, input.kind === 'pick' ? 'wiki' : targetLayer, artifactName)
+      : path.join(runtime.docwardenRoot, 'spec', `${specTarget.target}.md`)
 
     const sourcePaths = input.kind === 'promote'
       ? [taskIndexPath, taskPlanPath, taskLogPath]
@@ -619,15 +637,22 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
     const taskTitle = extractTaskTitle(taskIndex, taskId)
 
     const artifact = input.kind === 'promote'
-      ? formatPromoteArtifact(taskId, taskTitle, targetLayer, createdAt, sourcePaths, taskIndex, taskPlan)
+      ? specTarget === undefined
+        ? formatPromoteArtifact(taskId, taskTitle, targetLayer, createdAt, sourcePaths, taskIndex, taskPlan)
+        : yield* formatSpecModulePromoteArtifact(artifactPath, specTarget.target, specTarget.kind, taskId, taskIndex, taskPlan, taskLog, createdAt, sourcePaths)
       : formatPickArtifact(taskId, taskTitle, createdAt, sourcePaths, taskIndex)
 
+    if (specTarget !== undefined) {
+      yield* ensureDirectory(path.dirname(artifactPath))
+    }
     yield* writeTextFile(artifactPath, artifact)
     yield* appendTaskLog({
       logPath: taskLogPath,
       taskId,
       artifactPath,
-      event: input.kind === 'promote' ? `promote to ${targetLayer}` : 'pick to wiki',
+      event: specTarget === undefined
+        ? input.kind === 'promote' ? `promote to ${targetLayer}` : 'pick to wiki'
+        : `promote to spec ${specTarget.target}`,
       createdAt,
     })
 
@@ -639,8 +664,14 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
         taskId,
         taskDirectory,
         targetLayer,
+        ...(specTarget === undefined
+          ? {}
+          : {
+              specTarget: specTarget.target,
+            }),
+        ...(specTarget?.kind === undefined ? {} : { specKind: specTarget.kind }),
         artifactPath,
-        filesWritten: ['artifact.md'],
+        filesWritten: [workspaceRelative(runtime.workspaceRoot, artifactPath)],
       } satisfies DocwardenPromoteResult
     }
 
@@ -651,7 +682,7 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
       taskId,
       taskDirectory,
       artifactPath,
-      filesWritten: ['artifact.md'],
+      filesWritten: [workspaceRelative(runtime.workspaceRoot, artifactPath)],
     } satisfies DocwardenPickResult
   })
 }
@@ -660,9 +691,11 @@ function formatInit(result: DocwardenInitResult): string {
   return [
     'docwarden init',
     `root: ${result.workspaceRoot}`,
-    `created: ${result.docwardenRoot}`,
-    'files:',
-    ...result.filesWritten.map(file => `- ${file}`),
+    `harness: ${result.docwardenRoot}`,
+    'created:',
+    ...formatPathList(result.filesWritten),
+    'skipped existing:',
+    ...formatPathList(result.filesSkipped),
     `config: ${result.configPath}`,
   ].join('\n')
 }
@@ -729,6 +762,10 @@ function formatPick(result: DocwardenPickResult): string {
 
 function formatJson(value: unknown): string {
   return JSON.stringify(value, null, 2)
+}
+
+function formatPathList(paths: readonly string[]): readonly string[] {
+  return paths.length === 0 ? ['- (none)'] : paths.map(file => `- ${file}`)
 }
 
 function makeReviewRunId(scope: string, seed: string): string {
@@ -945,6 +982,47 @@ function formatStateYaml(input: {
   ].join('\n')
 }
 
+function formatSpecModulePromoteArtifact(
+  modulePath: string,
+  target: string,
+  kind: SpecModuleKind | undefined,
+  taskId: string,
+  taskIndex: string,
+  taskPlan: string,
+  taskLog: string,
+  createdAt: string,
+  sourcePaths: readonly string[],
+): Effect.Effect<string, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const existing = (yield* pathExists(modulePath))
+      ? yield* readTaskFile(modulePath, `failed to read spec module: ${modulePath}`)
+      : kind === undefined
+        ? yield* Effect.fail(new DocwardenConfigError('promote --to spec requires --kind when creating a missing target'))
+        : formatNewSpecModule(kind, path.basename(target))
+    const summary = summarizeTaskMaterial(taskId, taskIndex, taskPlan, taskLog)
+    const assertion = firstOrFallback(summary.objective, `task ${taskId} produced a reviewed spec candidate.`)
+    const marker = `^task-${taskId.replace(/[^a-z0-9]+/gi, '-')}-${timestampForFiles(createdAt).slice(0, 14)}`
+    const addition = [
+      '',
+      '## Assertions',
+      '',
+      `- ${assertion} ${marker}`,
+      '',
+      '## Trace',
+      '',
+      `- task: \`.docwarden/task/${taskId}/\``,
+      `- promoted_at: ${createdAt}`,
+      ...sourcePaths.map(path => `- source: ${path}`),
+      '',
+    ].join('\n')
+
+    if (existing.includes(marker)) {
+      return existing
+    }
+    return `${existing.trimEnd()}\n${addition}`
+  })
+}
+
 function formatPromoteArtifact(
   taskId: string,
   taskTitle: string,
@@ -1131,7 +1209,38 @@ function specIndexTemplate(): string {
   return [
     '# spec index',
     '',
-    '正式规格文档由 `docwarden promote --to spec` 生成并沉淀。',
+    '`.docwarden/spec/` 承载当前 workspace 已 review 的稳定 md module。',
+    '',
+    '`docwarden init` 只创建这个入口和空目录，不推断项目层级，不写入真实 spec 内容。',
+    '',
+    '具体目录、module 和 assertion 由后续 review / promote 依据当前项目映射生成。',
+    '',
+    '## Entry',
+    '',
+    '```text',
+    '.docwarden/spec/<target>.md',
+    '```',
+    '',
+    '如果项目使用 isomorph mapping，mapping 负责约束 `<target>` 的实际形状。',
+    '',
+    '## Boundary',
+    '',
+    '- 不保存 task summary。',
+    '- 不保存 review surface。',
+    '- 不替代 `docs/`。',
+    '',
+    '没有明确 `<target>` 的内容不能进入 stable spec。',
+    '',
+  ].join('\n')
+}
+
+function formatNewSpecModule(kind: SpecModuleKind, moduleName: string): string {
+  return [
+    '---',
+    `kind: ${kind}`,
+    '---',
+    '',
+    `# ${moduleName}`,
     '',
   ].join('\n')
 }
@@ -1329,6 +1438,38 @@ function parseDestinationLayer(raw: string, kind: PromoteKind): Effect.Effect<Ta
   return Effect.fail(new DocwardenConfigError(`invalid --to destination: ${value}; expected spec, guide, wiki`))
 }
 
+function parseSpecTarget(
+  rawTarget: string,
+  rawKind: string,
+): Effect.Effect<{ readonly target: string, readonly kind?: SpecModuleKind }, DocwardenConfigError> {
+  const target = normalizeOptionalPath(rawTarget)
+  const kind = normalizeOptionalPath(rawKind)
+  if (target === undefined) {
+    return Effect.fail(new DocwardenConfigError('promote --to spec requires --target'))
+  }
+  const normalizedTarget = target.endsWith('.md') ? target.slice(0, -3) : target
+  if (normalizedTarget.length === 0 || normalizedTarget.startsWith('/') || normalizedTarget.includes('\\')) {
+    return Effect.fail(new DocwardenConfigError(`invalid spec target: ${target}`))
+  }
+  const segments = normalizedTarget.split('/')
+  if (segments.length < 2) {
+    return Effect.fail(new DocwardenConfigError(`invalid spec target: ${target}; expected <scope>/<module>`))
+  }
+  if (segments.some(segment => segment.length === 0 || segment === '.' || segment === '..' || !/^[a-z0-9][\w.-]*$/i.test(segment))) {
+    return Effect.fail(new DocwardenConfigError(`invalid spec target: ${target}`))
+  }
+  if (kind !== undefined && (kind.includes('/') || kind.includes('\\') || kind === '.')) {
+    return Effect.fail(new DocwardenConfigError(`invalid spec kind: ${kind}`))
+  }
+  if (kind !== undefined && !/^[a-z0-9][\w.-]*$/i.test(kind)) {
+    return Effect.fail(new DocwardenConfigError(`invalid spec kind: ${kind}`))
+  }
+  return Effect.succeed({
+    target: normalizedTarget,
+    ...(kind === undefined ? {} : { kind }),
+  })
+}
+
 function assertDirectory(directory: string, message: string): Effect.Effect<void, DocwardenError, DocwardenRuntimeServices> {
   return Effect.gen(function* () {
     const info = yield* stat(directory, message)
@@ -1351,11 +1492,24 @@ function resolveWorkspaceRoot(rawRoot: string): string {
   return path.resolve(normalizeOptionalPath(rawRoot) ?? '.')
 }
 
+function workspaceRelative(workspaceRoot: string, absolutePath: string): string {
+  return path.relative(workspaceRoot, absolutePath).split(path.sep).join('/')
+}
+
 function writeDirectory(directory: string, messagePrefix = 'failed to create directory:'): Effect.Effect<void, DocwardenRuntimeError, DocwardenRuntimeServices> {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
     yield* fs.makeDirectory(directory, { recursive: false }).pipe(
       Effect.mapError(error => new DocwardenRuntimeError(`${messagePrefix} ${directory}: ${formatUnknownCause(error)}`)),
+    )
+  })
+}
+
+function ensureDirectory(directory: string): Effect.Effect<void, DocwardenRuntimeError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    yield* fs.makeDirectory(directory, { recursive: true }).pipe(
+      Effect.mapError(error => new DocwardenRuntimeError(`failed to create directory: ${directory}: ${formatUnknownCause(error)}`)),
     )
   })
 }

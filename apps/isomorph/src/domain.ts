@@ -137,6 +137,19 @@ export interface IsomorphModel {
   readonly skillPrimitiveMaterial: readonly IsomorphDocument[]
 }
 
+export interface MappingScopeSummary {
+  readonly scope: string
+  readonly path: string
+  readonly modules: number
+  readonly kinds: readonly string[]
+  readonly templates: readonly string[]
+}
+
+export interface MappingListResult {
+  readonly root: IsomorphRoot
+  readonly scopes: readonly MappingScopeSummary[]
+}
+
 export interface TriggerHit {
   readonly raw: string
   readonly known: boolean

@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-13
-updated: 2026-06-01
+updated: 2026-06-02
 owner: sayori
 ---
 
@@ -22,11 +22,16 @@ owner: sayori
 
 当前 active task：
 
-- `.docwarden/task/26-docwarden-artifact-quality-loop/`：修正第一轮 dogfood 暴露的 review / promote / pick 产物质量问题。
+- `.docwarden/task/26-docwarden-artifact-quality-loop/`：基于已收口的 spec target 口径，修正 review / promote / pick 产物质量。
 
 最近完成：
 
 - `.docwarden/task/25-docwarden-v0-dogfood-workflow/`：按原始理论在当前仓库 dogfood docwarden v0 workflow，已形成 v0 可运行基线。
+- `.docwarden/task/27-docwarden-spec-layer-definition/`：定义 docwarden spec 层级划分，解除 task26 的产物语义阻塞。
+
+当前 blocked：
+
+- 当前无 blocked task。
 
 ## 归档工作面
 

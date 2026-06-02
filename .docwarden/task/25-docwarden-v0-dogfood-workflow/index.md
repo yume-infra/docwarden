@@ -1,12 +1,27 @@
 ---
-status: active
-workspace_status: working
+status: closed
+workspace_status: closed
 created: 2026-06-01
-updated: 2026-06-01
+updated: 2026-06-02
 owner: sayori
 ---
 
 # Docwarden V0 Dogfood Workflow
+
+## Closed
+
+本 task 已收口。
+
+已形成 docwarden v0 可运行主链路：
+
+```text
+docwarden init
+  -> docwarden task create
+  -> docwarden review --task
+  -> docwarden promote / pick
+```
+
+后续不再在本 task 中继续扩展命令面。第一轮 dogfood 暴露的产物质量问题已转入 `.docwarden/task/26-docwarden-artifact-quality-loop/`。
 
 ## Context
 
@@ -78,6 +93,10 @@ docwarden init
 - 不把 `isomorph` 变成 task / review / promote / pick 编排层。
 - 不引入新的 registry / diagnose / run 主链路来替代原始理论。
 - `review --target` 可以保留为低层能力，但不能作为 docwarden 主入口。
+
+## Next Entry
+
+- `.docwarden/task/26-docwarden-artifact-quality-loop/`
 
 ## Task Surface
 

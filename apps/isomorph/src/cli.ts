@@ -1,11 +1,11 @@
-import type { DoctorInspectResult, DoctorRepairResult, InitResult, IsomorphError, IsomorphRuntimeServices, LintResult, PrimitiveSkillResult, RecognitionRunResult, UpgradeStatusResult } from './runtime.js'
+import type { DoctorInspectResult, DoctorRepairResult, InitResult, IsomorphError, IsomorphRuntimeServices, LintResult, MappingListResult, PrimitiveSkillResult, RecognitionRunResult, UpgradeStatusResult } from './runtime.js'
 
 import process from 'node:process'
 import { Effect, Option } from 'effect'
 import * as Argument from 'effect/unstable/cli/Argument'
 import * as Command from 'effect/unstable/cli/Command'
 import * as Flag from 'effect/unstable/cli/Flag'
-import { IsomorphConfigError, isomorphLiveLayer, runDoctorInspectEffect, runDoctorRepairEffect, runInitEffect, runLintEffect, runPrimitiveSkillEffect, runRecognitionEffect, runUpgradeStatusEffect, toIsomorphError } from './runtime.js'
+import { IsomorphConfigError, isomorphLiveLayer, runDoctorInspectEffect, runDoctorRepairEffect, runInitEffect, runLintEffect, runMappingListEffect, runPrimitiveSkillEffect, runRecognitionEffect, runUpgradeStatusEffect, toIsomorphError } from './runtime.js'
 
 export const version = '0.0.0'
 
@@ -116,6 +116,22 @@ const primitive = Command.make('primitive').pipe(
   Command.withSubcommands([primitiveSkill]),
 )
 
+const mapping = Command.make('mapping', {
+  json: jsonFlag,
+}, ({ json }) =>
+  Effect.gen(function* () {
+    const root = yield* isomorph
+    yield* runCli(
+      runMappingListEffect({ root: root.root }),
+      result => ({
+        output: json ? formatJson(result) : formatMapping(result),
+        exitCode: 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('List local isomorph mapping scopes, content kinds, and templates'),
+)
+
 const upgrade = Command.make('upgrade', {
   json: jsonFlag,
 }, ({ json }) =>
@@ -188,7 +204,7 @@ const doctor = Command.make('doctor', {
 )
 
 const command = isomorph.pipe(
-  Command.withSubcommands([init, recognize, lint, primitive, upgrade, doctor]),
+  Command.withSubcommands([init, recognize, lint, primitive, mapping, upgrade, doctor]),
 )
 
 export const main: Effect.Effect<void, unknown> = Command.run(command, {
@@ -364,6 +380,23 @@ function formatPrimitiveSkill(result: PrimitiveSkillResult): string {
       ? ['- none']
       : result.diagnostics.map(diagnostic => `- ${diagnostic.severity}: ${diagnostic.message}`)),
   ].join('\n')
+}
+
+function formatMapping(result: MappingListResult): string {
+  const lines = [
+    'isomorph mapping',
+    `root: ${result.root.isomorphRoot}`,
+    `scopes: ${result.scopes.length}`,
+  ]
+  for (const scope of result.scopes) {
+    lines.push('')
+    lines.push(`## ${scope.scope}`)
+    lines.push(`path: ${scope.path}`)
+    lines.push(`modules: ${scope.modules}`)
+    lines.push(`kinds: ${scope.kinds.length === 0 ? '(none)' : scope.kinds.join(', ')}`)
+    lines.push(`templates: ${scope.templates.length === 0 ? '(none)' : scope.templates.join(', ')}`)
+  }
+  return lines.join('\n')
 }
 
 function formatUpgrade(result: UpgradeStatusResult): string {

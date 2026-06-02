@@ -6,7 +6,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import { beforeAll, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 interface ProcessResult {
   readonly stdout: string
@@ -69,11 +69,6 @@ async function makeWorkspace(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'docwarden-cli-test-'))
 }
 
-beforeAll(async () => {
-  const result = await runProcess('pnpm', ['--filter', 'docwarden', 'build'], repoRoot)
-  expect(result.exitCode, result.stderr).toBe(0)
-}, 60_000)
-
 describe('docwarden CLI contract', () => {
   it('initializes with JSON output', async () => {
     const workspace = await makeWorkspace()
@@ -88,6 +83,7 @@ describe('docwarden CLI contract', () => {
       workspaceRoot: workspace,
       docwardenRoot: path.join(workspace, '.docwarden'),
       filesWritten: expect.arrayContaining([
+        '.docwarden',
         '.docwarden/task',
         '.docwarden/task/index.md',
         '.docwarden/review',
@@ -101,12 +97,15 @@ describe('docwarden CLI contract', () => {
         '.docwarden/archive',
         '.docwarden/config.yaml',
       ]),
+      filesSkipped: [],
     })
 
     await expect(fs.access(path.join(workspace, '.docwarden', 'config.yaml'))).resolves.toBeUndefined()
     await expect(fs.access(path.join(workspace, '.docwarden', 'task'))).resolves.toBeUndefined()
     await expect(fs.access(path.join(workspace, '.docwarden', 'review'))).resolves.toBeUndefined()
     await expect(fs.access(path.join(workspace, '.docwarden', 'spec'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(workspace, '.docwarden', 'spec', 'concept', 'spec.md'))).rejects.toThrow()
+    await expect(fs.access(path.join(workspace, '.docwarden', 'template'))).rejects.toThrow()
     await expect(fs.access(path.join(workspace, '.docwarden', 'guide'))).resolves.toBeUndefined()
     await expect(fs.access(path.join(workspace, '.docwarden', 'wiki'))).resolves.toBeUndefined()
     await expect(fs.access(path.join(workspace, '.docwarden', 'archive'))).resolves.toBeUndefined()
@@ -118,7 +117,7 @@ describe('docwarden CLI contract', () => {
     expect(config).not.toContain('structure: workflow')
   })
 
-  it('initializes complete skeleton indexes', async () => {
+  it('initializes only generic skeleton indexes', async () => {
     const workspace = await makeWorkspace()
     const result = await runDocwarden(['--root', workspace, 'init'], repoRoot)
     expect(result.exitCode).toBe(0)
@@ -129,7 +128,14 @@ describe('docwarden CLI contract', () => {
     const wikiIndex = await fs.readFile(path.join(workspace, '.docwarden', 'wiki', 'index.md'), 'utf8')
 
     expect(reviewIndex).toContain('review surface')
-    expect(specIndex).toContain('promote --to spec')
+    expect(specIndex).toContain('.docwarden/spec/<target>.md')
+    expect(specIndex).toContain('不推断项目层级')
+    expect(specIndex).toContain('isomorph mapping')
+    expect(specIndex).not.toContain('workspace/')
+    expect(specIndex).not.toContain('apps/')
+    expect(specIndex).not.toContain('packages/')
+    expect(specIndex).not.toContain('harness/')
+    expect(specIndex).not.toContain('.docwarden/template')
     expect(guideIndex).toContain('promote --to guide')
     expect(wikiIndex).toContain('promote --to wiki')
   })
@@ -259,6 +265,10 @@ describe('docwarden CLI contract', () => {
       '25-docwarden-v0-dogfood-workflow',
       '--to',
       'spec',
+      '--target',
+      'harness/spec-entry-boundary',
+      '--kind',
+      'policy',
       '--json',
     ], repoRoot)
 
@@ -266,17 +276,18 @@ describe('docwarden CLI contract', () => {
     const promoteOutput = JSON.parse(promote.stdout)
     expect(promoteOutput.command).toBe('promote')
     expect(promoteOutput.targetLayer).toBe('spec')
+    expect(promoteOutput.specTarget).toBe('harness/spec-entry-boundary')
+    expect(promoteOutput.specKind).toBe('policy')
     await expect(fs.access(promoteOutput.artifactPath)).resolves.toBeUndefined()
 
     const promoteArtifact = await fs.readFile(promoteOutput.artifactPath, 'utf8')
-    expect(promoteArtifact).toContain('# Spec: docwarden v0 workflow')
+    expect(promoteArtifact).toContain('kind: policy')
+    expect(promoteArtifact).toContain('# spec-entry-boundary')
+    expect(promoteArtifact).toContain('## Assertions')
     expect(promoteArtifact).toContain('## Trace')
-    expect(promoteArtifact).toContain('## Stable Contract')
-    expect(promoteArtifact).toContain('## Execution Rules')
-    expect(promoteArtifact).toContain('## Boundary')
-    expect(promoteArtifact).not.toContain('---')
-    expect(promoteArtifact).not.toContain('```text')
-    expect(promoteOutput.artifactPath).toContain(path.join(workspace, '.docwarden', 'spec'))
+    expect(promoteArtifact).not.toContain('mapping:')
+    expect(promoteArtifact).not.toContain('status:')
+    expect(promoteOutput.artifactPath).toBe(path.join(workspace, '.docwarden', 'spec', 'harness', 'spec-entry-boundary.md'))
 
     const pick = await runDocwarden([
       '--root',
@@ -303,9 +314,79 @@ describe('docwarden CLI contract', () => {
     expect(pickOutput.artifactPath).toContain(path.join(workspace, '.docwarden', 'wiki'))
 
     const taskLog = await fs.readFile(path.join(workspace, '.docwarden', 'task', '25-docwarden-v0-dogfood-workflow', 'log.md'), 'utf8')
-    expect(taskLog).toContain('promote to spec')
+    expect(taskLog).toContain('promote to spec harness/spec-entry-boundary')
     expect(taskLog).toContain('pick to wiki')
     expect(taskLog).toContain('review generated from task')
+  })
+
+  it('creates missing spec modules from the built-in minimal scaffold', async () => {
+    const workspace = await makeWorkspace()
+    await runDocwarden(['--root', workspace, 'init'], repoRoot)
+    await runDocwarden([
+      '--root',
+      workspace,
+      'task',
+      'create',
+      '--id',
+      '28-built-in-scaffold',
+      '--title',
+      'built in scaffold',
+    ], repoRoot)
+
+    const promote = await runDocwarden([
+      '--root',
+      workspace,
+      'promote',
+      '--task',
+      '28-built-in-scaffold',
+      '--to',
+      'spec',
+      '--target',
+      'apps/docwarden/review-output',
+      '--kind',
+      'artifact',
+      '--json',
+    ], repoRoot)
+
+    expect(promote.exitCode).toBe(0)
+    const promoteOutput = JSON.parse(promote.stdout)
+    expect(promoteOutput.specTarget).toBe('apps/docwarden/review-output')
+    expect(promoteOutput.specKind).toBe('artifact')
+    expect(promoteOutput.artifactPath).toBe(path.join(workspace, '.docwarden', 'spec', 'apps', 'docwarden', 'review-output.md'))
+
+    const artifact = await fs.readFile(promoteOutput.artifactPath, 'utf8')
+    expect(artifact).toContain('kind: artifact')
+    expect(artifact).toContain('# review-output')
+    expect(artifact).toContain('## Assertions')
+  })
+
+  it('requires concrete spec module target for promote to spec', async () => {
+    const workspace = await makeWorkspace()
+    await runDocwarden(['--root', workspace, 'init'], repoRoot)
+    await runDocwarden([
+      '--root',
+      workspace,
+      'task',
+      'create',
+      '--id',
+      '25-docwarden-v0-dogfood-workflow',
+      '--title',
+      'docwarden v0 workflow',
+    ], repoRoot)
+
+    const result = await runDocwarden([
+      '--root',
+      workspace,
+      'promote',
+      '--task',
+      '25-docwarden-v0-dogfood-workflow',
+      '--to',
+      'spec',
+    ], repoRoot)
+
+    expect(result.exitCode).toBe(2)
+    expect(result.stderr).toContain('docwarden config error')
+    expect(result.stderr).toContain('promote --to spec requires --target')
   })
 
   it('requires --task for promote', async () => {
@@ -354,15 +435,65 @@ describe('docwarden CLI contract', () => {
     expect(result.stderr).toContain('pick only supports --to wiki')
   })
 
-  it('rejects duplicate init with config error', async () => {
+  it('keeps init idempotent and never overwrites existing harness assets', async () => {
     const workspace = await makeWorkspace()
     const first = await runDocwarden(['--root', workspace, 'init', '--json'], repoRoot)
     expect(first.exitCode).toBe(0)
 
-    const duplicate = await runDocwarden(['--root', workspace, 'init'], repoRoot)
-    expect(duplicate.exitCode).toBe(2)
-    expect(duplicate.stderr).toContain('docwarden config error')
-    expect(duplicate.stderr).toContain('local .docwarden already exists')
+    const customConfig = 'review:\n  mode: review-later\n'
+    await fs.writeFile(path.join(workspace, '.docwarden', 'config.yaml'), customConfig)
+
+    const duplicate = await runDocwarden(['--root', workspace, 'init', '--json'], repoRoot)
+    expect(duplicate.exitCode).toBe(0)
+    expect(duplicate.stderr).toBe('')
+
+    const output = JSON.parse(duplicate.stdout)
+    expect(output.filesWritten).toEqual([])
+    expect(output.filesSkipped).toEqual(expect.arrayContaining([
+      '.docwarden',
+      '.docwarden/task',
+      '.docwarden/task/index.md',
+      '.docwarden/review',
+      '.docwarden/review/index.md',
+      '.docwarden/spec',
+      '.docwarden/spec/index.md',
+      '.docwarden/guide',
+      '.docwarden/guide/index.md',
+      '.docwarden/wiki',
+      '.docwarden/wiki/index.md',
+      '.docwarden/archive',
+      '.docwarden/config.yaml',
+    ]))
+
+    await expect(fs.readFile(path.join(workspace, '.docwarden', 'config.yaml'), 'utf8')).resolves.toBe(customConfig)
+  })
+
+  it('fills missing harness assets when .docwarden already exists', async () => {
+    const workspace = await makeWorkspace()
+    await fs.mkdir(path.join(workspace, '.docwarden', 'task'), { recursive: true })
+    await fs.writeFile(path.join(workspace, '.docwarden', 'task', 'index.md'), '# custom task index\n')
+
+    const result = await runDocwarden(['--root', workspace, 'init', '--json'], repoRoot)
+    expect(result.exitCode).toBe(0)
+    expect(result.stderr).toBe('')
+
+    const output = JSON.parse(result.stdout)
+    expect(output.filesSkipped).toEqual(expect.arrayContaining([
+      '.docwarden',
+      '.docwarden/task',
+      '.docwarden/task/index.md',
+    ]))
+    expect(output.filesWritten).toEqual(expect.arrayContaining([
+      '.docwarden/review',
+      '.docwarden/spec',
+      '.docwarden/guide',
+      '.docwarden/wiki',
+      '.docwarden/archive',
+      '.docwarden/config.yaml',
+    ]))
+
+    await expect(fs.readFile(path.join(workspace, '.docwarden', 'task', 'index.md'), 'utf8')).resolves.toBe('# custom task index\n')
+    await expect(fs.access(path.join(workspace, '.docwarden', 'config.yaml'))).resolves.toBeUndefined()
   })
 
   it('initializes in cwd when --root is omitted', async () => {

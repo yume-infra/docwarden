@@ -1,11 +1,19 @@
 ---
-status: active
+status: closed
 created: 2026-06-01
-updated: 2026-06-01
+updated: 2026-06-02
 owner: sayori
 ---
 
 # Plan
+
+## Closure
+
+Status: done
+
+本 plan 已完成。v0 主链路已跑通，后续问题不是命令入口缺失，而是 review / promote / pick 产物质量不足。
+
+下一步进入 `.docwarden/task/26-docwarden-artifact-quality-loop/`。
 
 ## Step 1: 修正 init skeleton
 

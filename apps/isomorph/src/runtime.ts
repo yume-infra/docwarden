@@ -30,6 +30,8 @@ export type {
   IsomorphRoot,
   LintResult,
   LintSignal,
+  MappingListResult,
+  MappingScopeSummary,
   PinMetadata,
   PinStatus,
   PrimitiveDiagnostic,
@@ -57,6 +59,9 @@ export {
 export {
   runInitEffect,
 } from './init.js'
+export {
+  runMappingListEffect,
+} from './mapping.js'
 export { readPinEffect } from './pin.js'
 export { resolveIsomorphRootEffect } from './root.js'
 export { isomorphLiveLayer, type IsomorphRuntimeServices } from './services.js'

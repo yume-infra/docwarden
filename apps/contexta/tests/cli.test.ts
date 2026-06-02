@@ -6,7 +6,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 
-import { beforeAll, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 interface ProcessResult {
   readonly stdout: string
@@ -46,11 +46,6 @@ function runContexta(args: readonly string[], cwd: string): Promise<ProcessResul
 async function makeWorkspace(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'contexta-cli-test-'))
 }
-
-beforeAll(async () => {
-  const result = await runProcess('pnpm', ['--filter', 'contexta', 'build'], repoRoot)
-  expect(result.exitCode, result.stderr).toBe(0)
-}, 60_000)
 
 describe('contexta CLI contract', () => {
   it('prints command entrypoints', async () => {
