@@ -1,3 +1,4 @@
 interface:
-  display_name: Write Skill
-  short_description: Create and validate Codex skills
+  display_name: Skill Creator
+  short_description: Design and validate Codex skills
+  default_prompt: 'Use $skill-creator to turn this workflow into a concise, validated Codex skill.'
