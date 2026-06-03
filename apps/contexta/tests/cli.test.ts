@@ -56,6 +56,10 @@ async function makeWorkspaceWithContexta(): Promise<string> {
   return workspace
 }
 
+async function writeDocwardenManifest(workspace: string, manifest: string): Promise<void> {
+  await fs.writeFile(path.join(workspace, '.contexta/packs/docwarden/contexta.yaml'), manifest, 'utf8')
+}
+
 describe('contexta CLI contract', () => {
   it('reports new command surface and removes old contracts', async () => {
     const result = await runContexta(['--help'], repoRoot)
@@ -105,17 +109,17 @@ describe('contexta CLI contract', () => {
     expect(generatedPacks.packs).toHaveLength(1)
   })
 
-  it('exports a full pack to explicit target dir', async () => {
+  it('exports selected skill to repo-skill runtime root', async () => {
     const workspace = await makeWorkspaceWithContexta()
-    const target = path.join(workspace, 'codex-target')
+    const targetRoot = path.join(workspace, 'runtime-root')
     const result = await runContexta([
       '--root',
       workspace,
       'export',
       'codex',
-      'docwarden',
+      'skill:dw/review-doc',
       '--target-dir',
-      target,
+      targetRoot,
       '--json',
     ], workspace)
 
@@ -129,36 +133,22 @@ describe('contexta CLI contract', () => {
 
     expect(output.command).toBe('export')
     expect(output.target).toBe('codex')
-    expect(output.targetRoot).toBe(target)
-    expect(output.items).toContainEqual(expect.objectContaining({
-      kind: 'skill',
-      assetId: 'skill:dw/review-doc',
-      destinationPaths: [path.join(target, 'skills', 'review-doc', 'SKILL.md')],
-    }))
-    expect(output.items).toContainEqual(expect.objectContaining({
-      kind: 'prompt',
-      assetId: 'prompt:dw/review-guidance',
-      destinationPaths: [path.join(target, 'prompts', 'review-guidance.md')],
-    }))
-    expect(output.items).toContainEqual(expect.objectContaining({
-      kind: 'agent',
-      assetId: 'agent:dw/doc-assistant',
-      destinationPaths: [path.join(target, 'agents', 'doc-assistant.toml')],
-    }))
-    expect(output.items).toContainEqual(expect.objectContaining({
-      kind: 'hook',
-      assetId: 'hooks',
-      destinationPaths: [path.join(target, 'hooks.json')],
-    }))
-
-    await expect(fs.readFile(path.join(target, 'skills', 'review-doc', 'SKILL.md'), 'utf8')).resolves.toContain('name: review-doc')
-    await expect(fs.readFile(path.join(target, 'agents', 'doc-assistant.toml'), 'utf8')).resolves.toContain('[agent]')
-    await expect(fs.access(path.join(target, 'hooks.json'))).resolves.toBeUndefined()
+    expect(output.targetRoot).toBe(targetRoot)
+    expect(output.items).toStrictEqual([
+      expect.objectContaining({
+        kind: 'skill',
+        assetId: 'skill:dw/review-doc',
+        destinationPaths: [path.join(targetRoot, '.agents', 'skills', 'dw-review-doc', 'SKILL.md')],
+      }),
+    ])
+    await expect(fs.readFile(path.join(targetRoot, '.agents', 'skills', 'dw-review-doc', 'SKILL.md'), 'utf8')).resolves.toContain('name: dw-review-doc')
+    await expect(fs.access(path.join(targetRoot, '.agents', 'prompts', 'review-guidance.md'))).rejects.toThrow()
+    await expect(fs.access(path.join(targetRoot, '.agents', 'agents', 'doc-assistant.toml'))).rejects.toThrow()
   })
 
   it('supports dry-run and keeps destination untouched', async () => {
     const workspace = await makeWorkspaceWithContexta()
-    const target = path.join(workspace, 'codex-target')
+    const targetRoot = path.join(workspace, 'runtime-root')
     const result = await runContexta([
       '--root',
       workspace,
@@ -166,7 +156,7 @@ describe('contexta CLI contract', () => {
       'codex',
       'skill:dw/review-doc',
       '--target-dir',
-      target,
+      targetRoot,
       '--dry-run',
       '--json',
     ], workspace)
@@ -181,40 +171,155 @@ describe('contexta CLI contract', () => {
       skipped: true,
       assetId: 'skill:dw/review-doc',
     }))
-    await expect(fs.access(path.join(target, 'skills', 'review-doc', 'SKILL.md'))).rejects.toThrow()
+    await expect(fs.access(path.join(targetRoot, '.agents', 'skills', 'dw-review-doc', 'SKILL.md'))).rejects.toThrow()
   })
 
-  it('supports export --all for full pack space', async () => {
+  it('rejects non-repo-skill assets without writing runtime files', async () => {
     const workspace = await makeWorkspaceWithContexta()
-    const target = path.join(workspace, 'codex-target')
+    const targetRoot = path.join(workspace, 'runtime-root')
     const result = await runContexta([
       '--root',
       workspace,
       'export',
       'codex',
-      '--all',
+      'prompt:dw/review-guidance',
       '--target-dir',
-      target,
+      targetRoot,
+      '--json',
+    ], workspace)
+
+    expect(result.exitCode).toBe(2)
+    expect(result.stderr).toContain('asset \'prompt:dw/review-guidance\' is not exportable to codex.repo-skill')
+    await expect(fs.access(path.join(targetRoot, '.agents', 'prompts', 'review-guidance.md'))).rejects.toThrow()
+  })
+
+  it('rejects hook assets that are not Codex hooks.json payloads', async () => {
+    const workspace = await makeWorkspaceWithContexta()
+    const targetRoot = path.join(workspace, 'runtime-root')
+    const result = await runContexta([
+      '--root',
+      workspace,
+      'export',
+      'codex',
+      'hook:dw/bootstrap',
+      '--target-dir',
+      targetRoot,
+      '--json',
+    ], workspace)
+
+    expect(result.exitCode).toBe(2)
+    expect(result.stderr).toContain('hook \'hook:dw/bootstrap\' must be a Codex hooks.json payload')
+    await expect(fs.access(path.join(targetRoot, '.codex', 'hooks.json'))).rejects.toThrow()
+  })
+
+  it('rejects pack export with unsupported v1 assets before writing plugin files', async () => {
+    const workspace = await makeWorkspaceWithContexta()
+    const targetRoot = path.join(workspace, 'runtime-root')
+    const result = await runContexta([
+      '--root',
+      workspace,
+      'export',
+      'codex',
+      'docwarden',
+      '--target-dir',
+      targetRoot,
+      '--json',
+    ], workspace)
+
+    expect(result.exitCode).toBe(2)
+    expect(result.stderr).toMatch(/not supported in codex\.plugin v1/)
+    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden'))).rejects.toThrow()
+  })
+
+  it('exports a supported pack as Codex plugin surfaces', async () => {
+    const workspace = await makeWorkspaceWithContexta()
+    await writeDocwardenManifest(workspace, `pack: docwarden
+namespace: dw
+description: Docwarden context assets distributed through contexta.
+target: codex
+assets:
+  skill:
+    - review-doc
+  agent: []
+  hook: []
+  prompt:
+    - review-guidance
+  workflow:
+    - review-workflow
+  profile: []
+  reference:
+    - glossary
+`)
+    const targetRoot = path.join(workspace, 'runtime-root')
+    const result = await runContexta([
+      '--root',
+      workspace,
+      'export',
+      'codex',
+      'docwarden',
+      '--target-dir',
+      targetRoot,
       '--json',
     ], workspace)
 
     expect(result.exitCode).toBe(0)
     const output = JSON.parse(result.stdout) as {
       readonly targetRoot: string
-      readonly items: readonly { readonly kind: string, readonly assetId: string }[]
+      readonly items: readonly { readonly assetId: string, readonly destinationPaths: readonly string[] }[]
     }
-    expect(output.targetRoot).toBe(target)
+    expect(output.targetRoot).toBe(targetRoot)
     expect(output.items).toContainEqual(expect.objectContaining({
-      kind: 'workflow',
-      assetId: 'workflow:dw/review-workflow',
+      assetId: 'skill:dw/review-doc',
+      destinationPaths: [path.join(targetRoot, 'plugins', 'dw-docwarden', 'skills', 'dw-review-doc', 'SKILL.md')],
     }))
     expect(output.items).toContainEqual(expect.objectContaining({
-      kind: 'profile',
-      assetId: 'profile:dw/default',
+      assetId: 'plugin:dw-docwarden',
+      destinationPaths: [
+        path.join(targetRoot, 'plugins', 'dw-docwarden', '.codex-plugin', 'plugin.json'),
+        path.join(targetRoot, '.agents', 'plugins', 'marketplace.json'),
+      ],
     }))
-    expect(output.items).toContainEqual(expect.objectContaining({
-      kind: 'reference',
-      assetId: 'reference:dw/glossary',
-    }))
+
+    await expect(fs.readFile(path.join(targetRoot, 'plugins', 'dw-docwarden', 'skills', 'dw-review-doc', 'SKILL.md'), 'utf8')).resolves.toContain('name: dw-review-doc')
+    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'references', 'prompts', 'review-guidance.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'references', 'workflows', 'review-workflow.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'references', 'references', 'glossary.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(targetRoot, '.codex', 'hooks.json'))).rejects.toThrow()
+
+    const manifest = JSON.parse(await fs.readFile(path.join(targetRoot, 'plugins', 'dw-docwarden', '.codex-plugin', 'plugin.json'), 'utf8')) as {
+      readonly name: string
+      readonly version: string
+      readonly description: string
+      readonly skills: string
+      readonly author: { readonly name: string }
+      readonly interface: { readonly displayName: string, readonly capabilities: readonly string[] }
+    }
+    expect(manifest).toMatchObject({
+      name: 'dw-docwarden',
+      version: '0.1.0',
+      description: 'Docwarden context assets distributed through contexta.',
+      skills: './skills/',
+      author: { name: 'contexta' },
+    })
+    expect(manifest.interface.displayName).toBe('Dw Docwarden')
+    expect(manifest.interface.capabilities).toContain('Skills')
+
+    const marketplace = JSON.parse(await fs.readFile(path.join(targetRoot, '.agents', 'plugins', 'marketplace.json'), 'utf8')) as {
+      readonly name: string
+      readonly plugins: readonly unknown[]
+    }
+    expect(marketplace.name).toBe('local-repo')
+    expect(marketplace.plugins).toContainEqual({
+      name: 'dw-docwarden',
+      source: {
+        source: 'local',
+        path: './plugins/dw-docwarden',
+      },
+      policy: {
+        installation: 'AVAILABLE',
+        authentication: 'ON_INSTALL',
+      },
+      category: 'Productivity',
+    })
   })
 })

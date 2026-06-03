@@ -162,17 +162,23 @@ pack 内可包含：
 当前最小目标只适配 Codex：
 
 ```text
-contexta asset -> Codex runtime artifact
+contexta asset -> Codex upstream surface
 ```
 
 示例：
 
 ```text
-.contexta pack skill -> ~/.codex/skills/<name>/SKILL.md
-.contexta pack prompt -> Codex 可使用的 prompt artifact
-.contexta pack profile -> Codex 可读取的 user context artifact
-.contexta pack hook -> Codex 可加载的 hook artifact
+.contexta skill asset -> .agents/skills/<runtime-skill-name>/SKILL.md
+.contexta pack -> plugins/<runtime-plugin-name>/.codex-plugin/plugin.json
+.contexta hook asset -> .codex/hooks.json
+.contexta config asset -> .codex/config.toml
 ```
+
+runtime skill / plugin name 由 contexta namespace 参与 materialize，例如 `skill:dw/review-doc -> dw-review-doc`、`pack: docwarden + namespace: dw -> dw-docwarden`。
+
+prompt / profile / reference / workflow 这类 source asset 不默认生成裸 Codex 目录。它们应作为 skill / plugin 的 references、AGENTS projection 或 config projection 被明确投影。
+
+若上游 runtime 不支持某个 surface，projection / export 不得为它发明输出路径。不能生成可用 skill、plugin、hook 或 config 的资产，应停留在 source layer。
 
 这一层可以先通过 `contexta` CLI 暴露，例如：
 
@@ -192,6 +198,8 @@ runtime artifact -> Codex 可加载文件
 
 本轮只实现 Codex materializer，不允许同时保留其他 runtime 的兼容适配层。
 
+Codex materializer 必须以官方 runtime surface 为准；`.codex/skills`、`.codex/prompts`、`.codex/agents`、`.codex/workflows`、`.codex/profiles`、`.codex/references` 不作为 v1 默认输出。
+
 ### Not Responsible For
 
 - 定义 skill-primitive 语义。
@@ -205,12 +213,15 @@ runtime artifact -> Codex 可加载文件
 
 对当前阶段来说，目标 runtime 是 Codex。
 
+这一层的验收标准不是“文件已生成”，而是 Codex 能实际发现、加载、触发或执行。skill artifact 必须是可用的 `SKILL.md` 目录。
+
 这一层只表示 materialization 结果，例如：
 
 - Codex skill directory
-- Codex 可读取的 prompt / context 文件
+- Codex plugin directory
+- Codex project hooks / config
 - 项目级 agent instruction 文件
-- 后续可能出现的 Codex plugin / app artifact
+- 后续确认的 Codex plugin / app artifact
 
 runtime artifact 不承担语义 authority。它只是 agent 实际消费的结果。
 

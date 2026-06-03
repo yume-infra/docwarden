@@ -4,85 +4,97 @@ import path from 'node:path'
 
 interface ExportAssetOptions {
   readonly asset: ContextaAsset
-  readonly targetRoot: string
+  readonly destinationPath: string
+  readonly dryRun: boolean
+  readonly force: boolean
+}
+
+interface ExportSkillOptions {
+  readonly asset: ContextaAsset
+  readonly destinationDir: string
+  readonly skillMarkdown: string
   readonly dryRun: boolean
   readonly force: boolean
 }
 
 interface WriteHooksOptions {
-  readonly targetRoot: string
-  readonly payload: Record<string, unknown>
+  readonly outputPath: string
+  readonly payload: unknown
   readonly force: boolean
+  readonly dryRun: boolean
 }
 
 export async function exportAssetToCodex(options: ExportAssetOptions): Promise<ContextaAssetExportResult> {
-  const { asset, targetRoot, dryRun, force } = options
+  const { asset, destinationPath, dryRun, force } = options
   const sourceIsDirectory = await fs.stat(asset.sourcePath).then(stat => stat.isDirectory(), () => false)
-  const destination = destinationForAsset(targetRoot, asset, sourceIsDirectory)
+  const destination = destinationPath
 
   if (!dryRun) {
-    const destinationDir = destination.kind === 'file' ? path.dirname(destination.path) : destination.path
-    await fs.mkdir(destinationDir, { recursive: true })
-
-    const destinationExists = await pathExists(destination.path)
+    const destinationExists = await pathExists(destination)
     if (destinationExists && !force) {
       throw new Error(`destination exists for asset '${asset.id}', use force mode to overwrite`)
     }
 
-    if (destination.kind === 'directory') {
-      await fs.rm(destination.path, { force: true, recursive: true })
-      await fs.cp(asset.sourcePath, destination.path, { recursive: true })
+    if (sourceIsDirectory) {
+      await fs.mkdir(path.dirname(destination), { recursive: true })
+      await fs.rm(destination, { force: true, recursive: true })
+      await fs.cp(asset.sourcePath, destination, { recursive: true })
     }
     else {
-      await fs.copyFile(asset.sourcePath, destination.path)
+      await fs.mkdir(path.dirname(destination), { recursive: true })
+      await fs.copyFile(asset.sourcePath, destination)
     }
   }
 
   return {
     assetId: asset.id,
     kind: asset.kind,
-    destinationPaths: [destination.path],
+    destinationPaths: [destination],
     skipped: dryRun,
   }
 }
 
-export async function writeCodexHooks(options: WriteHooksOptions): Promise<void> {
-  const hooksPath = path.resolve(options.targetRoot, 'hooks.json')
-  const exists = await pathExists(hooksPath)
-  if (exists && !options.force) {
-    throw new Error('hooks.json already exists, use force mode to overwrite')
+export async function exportSkillToCodex(options: ExportSkillOptions): Promise<ContextaAssetExportResult> {
+  const skillPath = path.resolve(options.destinationDir, 'SKILL.md')
+  const sourceIsDirectory = await fs.stat(options.asset.sourcePath).then(stat => stat.isDirectory(), () => false)
+
+  if (!options.dryRun) {
+    const destinationExists = await pathExists(options.destinationDir)
+    if (destinationExists && !options.force) {
+      throw new Error(`destination exists for asset '${options.asset.id}', use force mode to overwrite`)
+    }
+
+    await fs.mkdir(path.dirname(options.destinationDir), { recursive: true })
+    await fs.rm(options.destinationDir, { force: true, recursive: true })
+
+    if (sourceIsDirectory) {
+      await fs.cp(options.asset.sourcePath, options.destinationDir, { recursive: true })
+    }
+    else {
+      await fs.mkdir(options.destinationDir, { recursive: true })
+    }
+
+    await fs.writeFile(skillPath, options.skillMarkdown, 'utf8')
   }
-  await fs.mkdir(path.dirname(hooksPath), { recursive: true })
-  await fs.writeFile(hooksPath, `${JSON.stringify(options.payload, null, 2)}\n`, 'utf8')
+
+  return {
+    assetId: options.asset.id,
+    kind: options.asset.kind,
+    destinationPaths: [skillPath],
+    skipped: options.dryRun,
+  }
 }
 
-function destinationForAsset(
-  targetRoot: string,
-  asset: ContextaAsset,
-  sourceIsDirectory: boolean,
-): { readonly path: string, readonly kind: 'file' | 'directory' } {
-  const normalizedTargetRoot = path.resolve(targetRoot)
-  const sourceExt = path.extname(asset.sourcePath).toLowerCase()
-
-  if (asset.kind === 'skill') {
-    const targetDir = path.resolve(normalizedTargetRoot, 'skills', asset.name)
-    if (sourceIsDirectory) {
-      return { path: targetDir, kind: 'directory' }
-    }
-    return { path: path.resolve(targetDir, 'SKILL.md'), kind: 'file' }
+export async function writeCodexHooks(options: WriteHooksOptions): Promise<void> {
+  const exists = await pathExists(options.outputPath)
+  if (exists && !options.force) {
+    throw new Error(`output exists at '${options.outputPath}', use force mode to overwrite`)
   }
-
-  if (asset.kind === 'agent') {
-    const ext = sourceExt.length > 0 ? sourceExt : '.toml'
-    return { path: path.resolve(normalizedTargetRoot, 'agents', `${asset.name}${ext}`), kind: 'file' }
+  if (options.dryRun) {
+    return
   }
-
-  if (asset.kind === 'prompt' || asset.kind === 'workflow' || asset.kind === 'profile' || asset.kind === 'reference') {
-    const ext = sourceExt.length > 0 ? sourceExt : '.md'
-    return { path: path.resolve(normalizedTargetRoot, `${asset.kind}s`, `${asset.name}${ext}`), kind: 'file' }
-  }
-
-  return { path: path.resolve(normalizedTargetRoot, `${asset.kind}s`, `${asset.name}${sourceExt}`), kind: 'file' }
+  await fs.mkdir(path.dirname(options.outputPath), { recursive: true })
+  await fs.writeFile(options.outputPath, `${JSON.stringify(options.payload, null, 2)}\n`, 'utf8')
 }
 
 async function pathExists(target: string): Promise<boolean> {

@@ -27,7 +27,7 @@ namespace
   dw / iso / ym 这类资产 id 前缀
 
 target
-  codex 这类 runtime 输出目标
+  codex.repo-skill / codex.plugin / codex.project-hooks 这类 runtime 输出目标
 ```
 
 ## Source Layout
@@ -46,7 +46,7 @@ target
       references/
 ```
 
-`contexta.yaml` 描述 pack 身份、namespace、资产清单、依赖和目标用途，并应包含目标运行目标（当前为 `codex`）。
+`contexta.yaml` 描述 pack 身份、namespace、资产清单、依赖和目标用途，并应包含目标 runtime family（当前为 `codex`）。
 
 示例身份：
 
@@ -98,6 +98,27 @@ prompt:dw/review-lead -> packs/docwarden/prompts/review-lead
 ```
 
 但人维护源资产时，应进入 pack。
+
+## Target Is Not Kind
+
+asset kind 不直接等于 Codex 输出目录。
+
+例如：
+
+```text
+skill asset
+  can export to codex.repo-skill
+  can export to codex.plugin
+
+prompt asset
+  becomes skill/plugin reference material
+  does not become .codex/prompts by default
+
+reference asset
+  becomes skill/plugin reference material
+```
+
+`pack` 保存共同演进关系；`target` 决定如何投影到上游 runtime surface。
 
 ## Rejected Shape
 

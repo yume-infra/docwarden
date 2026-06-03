@@ -157,6 +157,15 @@ Target shape:
 apps/contexta/
   src/assets/
   src/exporters/codex/
+
+.agents/
+  skills/
+  plugins/
+
+plugins/
+  <runtime-plugin-name>/
+    .codex-plugin/
+    skills/
 ```
 
 Deliverable:
@@ -167,7 +176,7 @@ Exit condition:
 
 - Source assets live under `.isomorph` or `.contexta`.
 - Tool implementation lives under `apps/*`.
-- Runtime artifacts are generated into Codex target locations, not treated as source assets.
+- Runtime artifacts are generated into official Codex target locations, not treated as source assets.
 
 ### Step 4: Implement Contexta Pack Model
 
@@ -233,7 +242,7 @@ Deliverable:
 
 Exit condition:
 
-- `contexta export codex` reads `.contexta/packs/**` and writes Codex runtime artifacts.
+- `contexta export codex` reads `.contexta/packs/**` and writes only upstream-confirmed Codex surfaces.
 - Codex-specific file format logic is isolated under `apps/contexta/src/exporters/codex/`.
 
 ### Step 6: Define Docwarden Consumption

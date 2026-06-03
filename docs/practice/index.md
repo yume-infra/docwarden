@@ -10,6 +10,7 @@
 - [[docs/practice/target-layer-shape|target-layer-shape]]
 - [[docs/practice/contexta-pack-model|contexta-pack-model]]
 - [[docs/practice/codex-export-boundary|codex-export-boundary]]
+- [[docs/practice/codex-runtime-targets|codex-runtime-targets]]
 
 ## Acceptance Checklist
 
