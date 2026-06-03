@@ -1,6 +1,6 @@
 ---
 name: write-skill
-description: 
+description: Create or update a Codex native skill folder with SKILL.md, optional bundled resources, OpenAI UI metadata, and quick validation when the user asks to create, scaffold, revise, or validate an agent skill.
 ---
 
 # Write Skill

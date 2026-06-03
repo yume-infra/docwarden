@@ -230,15 +230,63 @@ export interface PrimitiveDiagnostic {
 }
 
 export interface PrimitiveSkillModel {
-  readonly capability: string | undefined
-  readonly trigger: string | undefined
+  readonly driftPressure: string | undefined
+  readonly pressureScenarios: readonly string[]
+  readonly intervention: string | undefined
+  readonly interventionMoves: readonly string[]
+  readonly activation: string | undefined
+  readonly activationTriggers: readonly string[]
+  readonly activationExclusions: readonly string[]
+  readonly judgmentSurface: readonly string[]
+  readonly deterministicBoundary: readonly string[]
+  readonly reviewGate: readonly string[]
+  readonly exportShape: readonly string[]
+  readonly confirmationGates: readonly string[]
+  readonly outputContract: readonly string[]
+  readonly antiPatterns: readonly string[]
   readonly semanticBasisLinks: readonly string[]
+  readonly references: readonly string[]
+  readonly scripts: readonly string[]
+  readonly assets: readonly string[]
+  readonly progressiveLoading: readonly string[]
+  readonly validation: readonly string[]
   readonly exportPosition: string | undefined
   readonly futureSkillExportRequirements: readonly string[]
 }
 
+export interface PrimitiveSkillExportDraft {
+  readonly artifact: 'codex-skill'
+  readonly skillName: string
+  readonly description: string | undefined
+  readonly readiness: 'ready' | 'blocked'
+  readonly missingForExport: readonly string[]
+  readonly frontmatter: {
+    readonly name: string
+    readonly description: string | undefined
+  }
+  readonly bodyOutline: readonly string[]
+  readonly driftPressure: string | undefined
+  readonly intervention: string | undefined
+  readonly judgmentSurface: readonly string[]
+  readonly deterministicBoundary: readonly string[]
+  readonly reviewGate: readonly string[]
+  readonly exportShape: readonly string[]
+  readonly pressureScenarios: readonly string[]
+  readonly antiPatterns: readonly string[]
+  readonly resources: {
+    readonly references: readonly string[]
+    readonly scripts: readonly string[]
+    readonly assets: readonly string[]
+  }
+  readonly progressiveLoading: readonly string[]
+  readonly validation: readonly string[]
+  readonly trace: readonly string[]
+}
+
 export interface PrimitiveSkillPlan {
-  readonly compiler: 'not-implemented-v0'
+  readonly compiler: 'draft-skill-v0'
+  readonly exportable: boolean
+  readonly missingForExport: readonly string[]
   readonly futureSkillExportRequirements: readonly string[]
 }
 
@@ -249,6 +297,7 @@ export interface PrimitiveSkillResult {
   readonly status: 'ready' | 'needs-work'
   readonly model: PrimitiveSkillModel
   readonly plan: PrimitiveSkillPlan
+  readonly exportDraft: PrimitiveSkillExportDraft
   readonly sourceMaterial: readonly string[]
   readonly requiredSections: readonly string[]
   readonly presentSections: readonly string[]

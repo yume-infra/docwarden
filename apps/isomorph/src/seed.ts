@@ -202,9 +202,9 @@ kind: concept
 
 ## Definition
 
-primitive-creator is the local primitive that creates new isomorph language primitives from semantic model material.
+primitive-creator is the local primitive that derives new isomorph language primitives or export drafts from semantic model material.
 
-It is not a generic scaffold generator. v0 first applies it to skill primitive material.
+It is not a generic scaffold generator. v0 first applies it to skill primitive material and keeps artifact materialization outside primitive analysis.
 `,
   },
   {
@@ -225,9 +225,11 @@ Aliases:
 
 ## Definition
 
-skill-primitive is a local isomorph primitive for modeling agent-consumable skill behavior before compiling a final SKILL.md artifact.
+skill-primitive is a local isomorph primitive for modeling a future skill as an agent behavior intervention.
 
-v0 keeps export position material visible but does not implement the final skill compiler.
+It starts from drift pressure: the repeated agent failure or default behavior the skill must correct. It then models intervention, activation, judgment surface, deterministic boundary, review gate, and export shape.
+
+v0 produces a codex-skill export draft from semantic material. It does not materialize the final SKILL.md artifact.
 `,
   },
   {
@@ -389,13 +391,18 @@ kind: policy
 
 ## Context
 
-This policy keeps v0 skill primitive material distinct from final skill artifact generation.
+This policy keeps v0 skill primitive material distinct from final skill artifact materialization.
 
 ## Policy
 
 - skill primitive MUST keep semantic basis visible.
-- skill primitive MUST keep export position visible.
-- skill primitive MUST NOT pretend v0 has a complete SKILL.md compiler.
+- skill primitive MUST start from drift pressure rather than purpose, capability, or file shape.
+- skill primitive MUST model the behavior intervention the future skill should apply to an agent.
+- skill primitive MUST distinguish judgment surface from deterministic boundary.
+- skill primitive MUST name the user review gate before export.
+- skill primitive MUST keep export shape and validation material visible.
+- skill primitive MAY produce a codex-skill export draft.
+- skill primitive MUST NOT directly materialize final SKILL.md artifacts in v0.
 `,
   },
   {
@@ -448,22 +455,57 @@ kind: skill-primitive
 
 # <skill-primitive-id>
 
-## Capability
+## Drift Pressure
 
-<Name the agent behavior this skill primitive models.>
+<Name the repeated agent failure, default drift, or behavior loss this future skill exists to correct.>
 
-## Trigger
+Pressure Scenarios:
 
-<Describe when the primitive should be considered.>
+- <Describe a concrete user request or working situation where the agent drifts without the skill.>
+
+## Intervention
+
+<Describe how the future skill changes agent behavior once it activates.>
+
+- <Describe the first behavior move the skill should force.>
+- <Describe the handoff, review, or validation move the skill should force.>
+
+## Activation
+
+Description: <Write the future skill description trigger in user-facing terms.>
+
+Triggers:
+
+- <Describe a concrete phrase, task, or request shape that should activate the skill.>
+
+Exclusions:
+
+- <Describe a nearby request shape that should not activate the skill.>
+
+## Judgment Surface
+
+- <Describe judgment, routing, review, or writing behavior the future skill should guide.>
+
+## Deterministic Boundary
+
+- <Describe validation, path, script, CLI, or filesystem constraints the future skill must defer to deterministic tooling.>
+
+## Review Gate
+
+- <Describe the smallest user-reviewable decision or artifact before materialization.>
+
+## Export Shape
+
+- <Describe what future SKILL.md description/body/references/scripts/assets export must preserve.>
 
 ## Semantic Basis
 
 - [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
 - [[mapping/bootstrap/modules/concept/primitive-creator|primitive-creator]]
 
-## Export Position
+## Validation
 
-<Describe what future SKILL.md export would need to preserve.>
+- <Describe the forward-test, script check, or review condition required before materializing a skill.>
 
 ## Diagnostics
 

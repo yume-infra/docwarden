@@ -52,6 +52,7 @@ export type {
   PinMetadata,
   PinStatus,
   PrimitiveDiagnostic,
+  PrimitiveSkillExportDraft,
   PrimitiveSkillModel,
   PrimitiveSkillPlan,
   PrimitiveSkillResult,

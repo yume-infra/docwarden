@@ -612,22 +612,63 @@ kind: skill-primitive
 
 # custom-skill-creator
 
-## Capability
+## Drift Pressure
 
-Create a local skill primitive from isomorph semantic basis.
+Agents turn skill creation into file scaffolding or generic capability prose before proving which behavior drift the skill corrects.
 
-## Trigger
+Pressure Scenarios:
 
-Use when a user asks to create a new skill primitive.
+- User asks to create a skill and the agent starts with directory layout instead of failure mode.
+- User asks to evolve skill-primitive and the agent treats CLI guardrails as skill behavior.
+
+## Intervention
+
+Force the agent to model the future skill as behavior correction before export.
+
+- Name the drift pressure.
+- Separate agent judgment from deterministic guardrails.
+- Produce an export draft only after review gate and validation material exist.
+
+## Activation
+
+Description: Use when creating or updating a Codex skill from isomorph primitive material, especially when the user needs the skill behavior theory before files are materialized.
+
+Triggers:
+
+- create a skill from this primitive
+- update skill-primitive
+
+Exclusions:
+
+- requests to run an existing skill validation script only.
+
+## Judgment Surface
+
+- Decide whether the skill exists to correct a real agent drift.
+- Decide which judgments belong in skill instructions.
+
+## Deterministic Boundary
+
+- Defer filesystem shape validation to deterministic skill validation scripts.
+- Do not materialize final SKILL.md artifacts from primitive analysis alone.
+
+## Review Gate
+
+- Ask the user to confirm the drift pressure and activation boundary before materializing the skill.
+
+## Export Shape
+
+- SKILL.md description must preserve activation terms.
+- SKILL.md body must preserve drift pressure, intervention, judgment surface, deterministic boundary, review gate, semantic basis, and validation.
 
 ## Semantic Basis
 
 - [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
 - [[mapping/bootstrap/modules/concept/primitive-creator|primitive-creator]]
 
-## Export Position
+## Validation
 
-Future SKILL.md export must preserve trigger, capability, and semantic basis.
+- Forward-test the materialized skill with a realistic user request.
 `, 'utf8')
 
     const result = await runIsomorph(runPrimitiveSkillEffect({
@@ -638,10 +679,26 @@ Future SKILL.md export must preserve trigger, capability, and semantic basis.
     expect(result.recognizedRole).toBe('skill-primitive')
     expect(result.status).toBe('ready')
     expect(result.model).toMatchObject({
-      capability: 'Create a local skill primitive from isomorph semantic basis.',
-      trigger: 'Use when a user asks to create a new skill primitive.',
+      driftPressure: 'Agents turn skill creation into file scaffolding or generic capability prose before proving which behavior drift the skill corrects.',
+      activation: 'Use when creating or updating a Codex skill from isomorph primitive material, especially when the user needs the skill behavior theory before files are materialized.',
     })
-    expect(result.plan.compiler).toBe('not-implemented-v0')
+    expect(result.plan.compiler).toBe('draft-skill-v0')
+    expect(result.plan.exportable).toBe(true)
+    expect(result.exportDraft).toMatchObject({
+      artifact: 'codex-skill',
+      skillName: 'custom-skill-creator',
+      readiness: 'ready',
+      frontmatter: {
+        name: 'custom-skill-creator',
+        description: 'Use when creating or updating a Codex skill from isomorph primitive material, especially when the user needs the skill behavior theory before files are materialized.',
+      },
+    })
+    expect(result.model.pressureScenarios).toContain('User asks to create a skill and the agent starts with directory layout instead of failure mode.')
+    expect(result.model.judgmentSurface).toContain('Decide whether the skill exists to correct a real agent drift.')
+    expect(result.model.deterministicBoundary).toContain('Defer filesystem shape validation to deterministic skill validation scripts.')
+    expect(result.model.interventionMoves).toContain('Produce an export draft only after review gate and validation material exist.')
+    expect(result.model.reviewGate).toContain('Ask the user to confirm the drift pressure and activation boundary before materializing the skill.')
+    expect(result.model.validation).toContain('Forward-test the materialized skill with a realistic user request.')
     expect(result.model.semanticBasisLinks).toContain('mapping/bootstrap/modules/concept/skill-primitive')
     expect(result.exportPosition.present).toBe(true)
     expect(result.sourceMaterial).toContain('mapping/bootstrap/templates/skill-primitive.md')
@@ -657,21 +714,55 @@ kind: skill-primitive
 
 # custom-skill-creator
 
-## Capability
+## Drift Pressure
 
-Create a local skill primitive.
+Agents turn skill creation into scaffolding before proving the behavior drift.
 
-## Trigger
+Pressure Scenarios:
 
-Use when needed.
+- User asks for a skill and the agent starts with files first.
+
+## Intervention
+
+Force the agent to model drift before export.
+
+- Name the drift pressure.
+
+## Activation
+
+Description: Use when creating a skill from primitive material.
+
+Triggers:
+
+- create a skill
+
+Exclusions:
+
+- run validation only.
+
+## Judgment Surface
+
+- Decide whether the skill exists to correct a real agent drift.
+
+## Deterministic Boundary
+
+- Defer filesystem shape validation to deterministic skill validation scripts.
+
+## Review Gate
+
+- Ask the user to confirm drift before materialization.
+
+## Export Shape
+
+- SKILL.md export must preserve model material.
 
 ## Semantic Basis
 
 - [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
 
-## Export Position
+## Validation
 
-Future SKILL.md export must preserve model material.
+- Forward-test the materialized skill.
 `, 'utf8')
 
     const result = await runIsomorph(runPrimitiveSkillEffect({
@@ -696,13 +787,47 @@ kind: skill-primitive
 
 # custom-skill-creator
 
-## Capability
+## Drift Pressure
 
-Create a local skill primitive.
+Agents turn skill creation into scaffolding before proving the behavior drift.
 
-## Trigger
+Pressure Scenarios:
 
-Use when needed.
+- User asks for a skill and the agent starts with files first.
+
+## Intervention
+
+Force the agent to model drift before export.
+
+- Name the drift pressure.
+
+## Activation
+
+Description: Use when creating a skill from primitive material.
+
+Triggers:
+
+- create a skill
+
+Exclusions:
+
+- run validation only.
+
+## Judgment Surface
+
+- Decide whether the skill exists to correct a real agent drift.
+
+## Deterministic Boundary
+
+- Defer filesystem shape validation to deterministic skill validation scripts.
+
+## Review Gate
+
+- Ask the user to confirm drift before materialization.
+
+## Export Shape
+
+- SKILL.md export must preserve model material.
 
 ## Semantic Basis
 
@@ -710,9 +835,9 @@ Use when needed.
 - [[mapping/bootstrap/modules/concept/primitive-creator|primitive-creator]]
 - [[mapping/bootstrap/modules/concept/missing|missing]]
 
-## Export Position
+## Validation
 
-Future SKILL.md export must preserve model material.
+- Forward-test the materialized skill.
 `, 'utf8')
 
     const result = await runIsomorph(runPrimitiveSkillEffect({
@@ -724,6 +849,83 @@ Future SKILL.md export must preserve model material.
     expect(result.diagnostics).toContainEqual({
       severity: 'warning',
       message: 'broken semantic basis link: mapping/bootstrap/modules/concept/missing',
+    })
+  })
+
+  it('blocks skill primitive export when placeholder material remains', async () => {
+    const workspace = await makeWorkspace()
+    await runIsomorph(runInitEffect({ root: workspace }))
+    const target = path.join(workspace, 'placeholder-skill.md')
+    await fs.writeFile(target, `---
+kind: skill-primitive
+---
+
+# placeholder-skill
+
+## Drift Pressure
+
+<Name the repeated agent failure this future skill exists to correct.>
+
+Pressure Scenarios:
+
+- User asks for a skill and the agent starts with files first.
+
+## Intervention
+
+Force the agent to model drift before export.
+
+- Name the drift pressure.
+
+## Activation
+
+Description: Use when creating a skill from primitive material.
+
+Triggers:
+
+- create a skill
+
+Exclusions:
+
+- run validation only.
+
+## Judgment Surface
+
+- Decide whether the skill exists to correct a real agent drift.
+
+## Deterministic Boundary
+
+- Defer filesystem shape validation to deterministic skill validation scripts.
+
+## Review Gate
+
+- Ask the user to confirm drift before materialization.
+
+## Export Shape
+
+- SKILL.md export must preserve model material.
+
+## Semantic Basis
+
+- [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
+- [[mapping/bootstrap/modules/concept/primitive-creator|primitive-creator]]
+
+## Validation
+
+- Forward-test the materialized skill.
+`, 'utf8')
+
+    const result = await runIsomorph(runPrimitiveSkillEffect({
+      root: workspace,
+      target,
+    }))
+
+    expect(result.status).toBe('needs-work')
+    expect(result.plan.exportable).toBe(false)
+    expect(result.plan.missingForExport).toContain('drift-pressure')
+    expect(result.exportDraft.readiness).toBe('blocked')
+    expect(result.diagnostics).toContainEqual({
+      severity: 'warning',
+      message: 'drift pressure contains placeholder material',
     })
   })
 
