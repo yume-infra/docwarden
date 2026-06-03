@@ -11,12 +11,14 @@
 - [[docs/practice/contexta-pack-model|contexta-pack-model]]
 - [[docs/practice/codex-export-boundary|codex-export-boundary]]
 - [[docs/practice/codex-runtime-targets|codex-runtime-targets]]
+- [[docs/practice/codex-worktree-operating-model|codex-worktree-operating-model]]
 
 ## Acceptance Checklist
 
 - 先确认概念文档与实践口径一致：`docs/concept/user.md`、`docs/concept/layers.md`。
 - 再按 `[[docs/practice/target-layer-shape|target-layer-shape]]` 的清单核对迁移完成度。
 - 最后执行 `[[docs/practice/main-architecture-refactor|main-architecture-refactor]]` 的最终验收项。
+- 长期并发工作按 `[[docs/practice/codex-worktree-operating-model|codex-worktree-operating-model]]` 区分 Local、permanent worktree 和 thread。
 
 ## Boundary
 
