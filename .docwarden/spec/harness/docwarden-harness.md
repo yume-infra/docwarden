@@ -17,9 +17,11 @@ kind: composition
 - `.docwarden/wiki/`：wiki and pick outputs.
 - `.docwarden/archive/`：archived tasks and obsolete generated artifacts.
 - `.docwarden/config.yaml`：runtime harness configuration.
+- `.docwarden/spec/harness/codex-worktree-operating-model.md`：Codex App Local / permanent worktree / thread coordination policy.
 
 ## Assertions
 
 - `.docwarden` MUST NOT be modeled as only the `apps/docwarden` product's local data.
 - `.docwarden/spec` MUST be generated from and maintained for the current monorepo's real assets.
 - Stable structure mapping for `.docwarden` belongs in `.isomorph/mapping/docwarden`.
+- Codex App worktree coordination for this repository belongs in `.docwarden/spec/harness`, not in temporary practice notes.

@@ -37,6 +37,7 @@
 - `harness/review-workflow.md`：review workflow materialization boundary。
 - `harness/review-surface.md`：review surface composition boundary。
 - `harness/promote-to-spec.md`：reviewed material to stable spec pipeline。
+- `harness/codex-worktree-operating-model.md`：Codex App Local / permanent worktree / thread coordination policy。
 
 ## Entry Rule
 
