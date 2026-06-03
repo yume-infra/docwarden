@@ -1,0 +1,19 @@
+pack: docwarden
+namespace: dw
+description: Docwarden context assets distributed through contexta.
+target: codex
+assets:
+  skill:
+    - review-doc
+  prompt:
+    - review-guidance
+  agent:
+    - doc-assistant
+  hook:
+    - bootstrap
+  workflow:
+    - review-workflow
+  profile:
+    - default
+  reference:
+    - glossary

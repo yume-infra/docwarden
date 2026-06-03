@@ -1,15 +1,15 @@
-import type { MappingListResult, MappingScopeSummary } from './domain.js'
+import type { SourceListResult, SourceScopeSummary } from './domain.js'
 import type { IsomorphError } from './errors.js'
 import type { IsomorphRuntimeServices } from './services.js'
 import { Effect } from 'effect'
 import { loadIsomorphModelEffect } from './local-model.js'
 import { resolveIsomorphRootEffect } from './root.js'
 
-export interface MappingListOptions {
+export interface SourceListOptions {
   readonly root?: string | undefined
 }
 
-export function runMappingListEffect(options: MappingListOptions): Effect.Effect<MappingListResult, IsomorphError, IsomorphRuntimeServices> {
+export function runSourceListEffect(options: SourceListOptions): Effect.Effect<SourceListResult, IsomorphError, IsomorphRuntimeServices> {
   return Effect.gen(function* () {
     const root = yield* resolveIsomorphRootEffect({ root: options.root })
     const model = yield* loadIsomorphModelEffect(root)
@@ -20,7 +20,7 @@ export function runMappingListEffect(options: MappingListOptions): Effect.Effect
     }>()
 
     for (const document of model.documents) {
-      const match = /^mapping\/([^/]+)\//.exec(document.isomorphPath)
+      const match = /^([^/]+)\//.exec(document.isomorphPath)
       if (!match) {
         continue
       }
@@ -34,17 +34,17 @@ export function runMappingListEffect(options: MappingListOptions): Effect.Effect
       if (document.kind !== undefined) {
         current.kinds.add(document.kind)
       }
-      const template = /^mapping\/[^/]+\/templates\/(.+)\.md$/.exec(document.isomorphPath)
+      const template = /^[^/]+\/[^/]+\/templates\/(.+)\.md$/.exec(document.isomorphPath)
       if (template) {
         current.templates.add(template[1]!)
       }
       summaries.set(scope, current)
     }
 
-    const scopes: MappingScopeSummary[] = [...summaries.entries()]
+    const scopes: SourceScopeSummary[] = [...summaries.entries()]
       .map(([scope, summary]) => ({
         scope,
-        path: `mapping/${scope}/`,
+        path: `${scope}/`,
         modules: summary.modules,
         kinds: [...summary.kinds].sort(),
         templates: [...summary.templates].sort(),

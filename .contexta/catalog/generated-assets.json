@@ -1,0 +1,62 @@
+{
+  "version": "0.1.0",
+  "generatedAt": "1970-01-01T00:00:00.000Z",
+  "assets": [
+    {
+      "id": "skill:dw/review-doc",
+      "kind": "skill",
+      "packId": "docwarden",
+      "namespace": "dw",
+      "name": "review-doc",
+      "sourcePath": ".contexta/packs/docwarden/skills/review-doc.md"
+    },
+    {
+      "id": "prompt:dw/review-guidance",
+      "kind": "prompt",
+      "packId": "docwarden",
+      "namespace": "dw",
+      "name": "review-guidance",
+      "sourcePath": ".contexta/packs/docwarden/prompts/review-guidance.md"
+    },
+    {
+      "id": "agent:dw/doc-assistant",
+      "kind": "agent",
+      "packId": "docwarden",
+      "namespace": "dw",
+      "name": "doc-assistant",
+      "sourcePath": ".contexta/packs/docwarden/agents/doc-assistant.toml"
+    },
+    {
+      "id": "hook:dw/bootstrap",
+      "kind": "hook",
+      "packId": "docwarden",
+      "namespace": "dw",
+      "name": "bootstrap",
+      "sourcePath": ".contexta/packs/docwarden/hooks/bootstrap.json"
+    },
+    {
+      "id": "workflow:dw/review-workflow",
+      "kind": "workflow",
+      "packId": "docwarden",
+      "namespace": "dw",
+      "name": "review-workflow",
+      "sourcePath": ".contexta/packs/docwarden/workflows/review-workflow.md"
+    },
+    {
+      "id": "profile:dw/default",
+      "kind": "profile",
+      "packId": "docwarden",
+      "namespace": "dw",
+      "name": "default",
+      "sourcePath": ".contexta/packs/docwarden/profiles/default.md"
+    },
+    {
+      "id": "reference:dw/glossary",
+      "kind": "reference",
+      "packId": "docwarden",
+      "namespace": "dw",
+      "name": "glossary",
+      "sourcePath": ".contexta/packs/docwarden/references/glossary.md"
+    }
+  ]
+}

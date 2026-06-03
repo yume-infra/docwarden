@@ -11,7 +11,7 @@ export const seedSchemaVersion = 1
 
 export const seedFiles: readonly SeedFile[] = [
   {
-    path: 'mapping/bootstrap/modules/concept/concept.md',
+    path: 'primitives/modules/concept/concept.md',
     content: `---
 kind: concept
 ---
@@ -28,7 +28,7 @@ concept is a named semantic object in local isomorph. It defines what an object 
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/policy.md',
+    path: 'primitives/modules/concept/policy.md',
     content: `---
 kind: concept
 ---
@@ -45,7 +45,7 @@ policy is a normative boundary for a semantic object. It uses rule language only
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/template.md',
+    path: 'primitives/modules/concept/template.md',
     content: `---
 kind: concept
 ---
@@ -62,7 +62,7 @@ template is a formatted md surface used to materialize a semantic object. It doe
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/signal.md',
+    path: 'primitives/modules/concept/signal.md',
     content: `---
 kind: concept
 ---
@@ -88,7 +88,7 @@ An emitted signal is not final review judgment.
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/semantic-lint.md',
+    path: 'primitives/modules/concept/semantic-lint.md',
     content: `---
 kind: concept
 ---
@@ -103,7 +103,7 @@ semantic-lint produces review-ready material, not final semantic judgment.
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/trigger.md',
+    path: 'primitives/modules/concept/trigger.md',
     content: `---
 kind: concept
 ---
@@ -118,7 +118,7 @@ Trigger material can inspect path, frontmatter, headings, sections, OFM links, l
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/confidence.md',
+    path: 'primitives/modules/concept/confidence.md',
     content: `---
 kind: concept
 ---
@@ -131,7 +131,7 @@ confidence is an implementation-side strength marker for recognition or signal a
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/locator.md',
+    path: 'primitives/modules/concept/locator.md',
     content: `---
 kind: concept
 ---
@@ -146,7 +146,7 @@ v0 locator marker form is \`^<prefix>-<number>\`.
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/magic-word.md',
+    path: 'primitives/modules/concept/magic-word.md',
     content: `---
 kind: concept
 ---
@@ -159,7 +159,7 @@ magic-word is a token role that can be consumed by recognition or semantic-lint.
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/mapping.md',
+    path: 'primitives/modules/concept/mapping.md',
     content: `---
 kind: concept
 ---
@@ -174,7 +174,7 @@ Mapping is an important input to recognition, but recognition is not only mappin
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/recognition-primitive.md',
+    path: 'primitives/modules/concept/recognition-primitive.md',
     content: `---
 kind: concept
 ---
@@ -193,7 +193,7 @@ frontmatter, path, headings, sections, links, and locator markers are features. 
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/primitive-creator.md',
+    path: 'primitives/modules/concept/primitive-creator.md',
     content: `---
 kind: concept
 ---
@@ -208,7 +208,7 @@ It is not a generic scaffold generator. v0 first applies it to skill primitive m
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/skill-primitive.md',
+    path: 'primitives/modules/concept/skill-primitive.md',
     content: `---
 kind: concept
 ---
@@ -231,7 +231,7 @@ v0 keeps export position material visible but does not implement the final skill
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/workflow.md',
+    path: 'primitives/modules/concept/workflow.md',
     content: `---
 kind: concept
 ---
@@ -248,7 +248,7 @@ workflow is structured material that describes state, moves, transitions, and ex
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/architecture.md',
+    path: 'primitives/modules/concept/architecture.md',
     content: `---
 kind: concept
 ---
@@ -265,7 +265,7 @@ architecture is structure material that describes layers, relations, boundaries,
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/example.md',
+    path: 'primitives/modules/concept/example.md',
     content: `---
 kind: concept
 ---
@@ -282,7 +282,7 @@ example is concrete sample material. It illustrates behavior or surface shape bu
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/concept/composition.md',
+    path: 'primitives/modules/concept/composition.md',
     content: `---
 kind: concept
 ---
@@ -299,7 +299,7 @@ composition is structure material that names a stable whole, its parts, and the 
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/recognition/default.md',
+    path: 'lint/modules/recognition/default.md',
     content: `---
 kind: recognition-primitive
 ---
@@ -315,12 +315,12 @@ When:
 - \`frontmatter.kind is local kind\`
 
 Basis:
-- [[mapping/bootstrap/modules/concept/recognition-primitive|recognition-primitive]]
-- [[mapping/bootstrap/modules/concept/mapping|mapping]]
+- [[primitives/modules/concept/recognition-primitive|recognition-primitive]]
+- [[primitives/modules/concept/mapping|mapping]]
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/magic-word/locator-marker.md',
+    path: 'grammars/modules/magic-word/locator-marker.md',
     content: `---
 kind: magic-word
 ---
@@ -329,8 +329,8 @@ kind: magic-word
 
 ## Consumer
 
-- [[mapping/bootstrap/modules/concept/locator|locator]]
-- [[mapping/bootstrap/modules/concept/semantic-lint|semantic-lint]]
+- [[primitives/modules/concept/locator|locator]]
+- [[primitives/modules/concept/semantic-lint|semantic-lint]]
 
 ## Token Role
 
@@ -342,7 +342,7 @@ locator marker form for a stable assertion address.
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/policy/signal-boundary.md',
+    path: 'grammars/modules/policy/signal-boundary.md',
     content: `---
 kind: policy
 ---
@@ -362,7 +362,7 @@ This policy constrains signal and signal definition responsibility.
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/policy/template-boundary.md',
+    path: 'grammars/modules/policy/template-boundary.md',
     content: `---
 kind: policy
 ---
@@ -380,7 +380,7 @@ This policy keeps template modules from owning workflow lifecycle.
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/policy/skill-primitive-boundary.md',
+    path: 'grammars/modules/policy/skill-primitive-boundary.md',
     content: `---
 kind: policy
 ---
@@ -399,7 +399,7 @@ This policy keeps v0 skill primitive material distinct from final skill artifact
 `,
   },
   {
-    path: 'mapping/bootstrap/templates/concept.md',
+    path: 'exports/templates/concept.md',
     content: `---
 kind: concept
 ---
@@ -420,7 +420,7 @@ Canonical: \`<concept-id>\`
 `,
   },
   {
-    path: 'mapping/bootstrap/templates/policy.md',
+    path: 'exports/templates/policy.md',
     content: `---
 kind: policy
 ---
@@ -441,7 +441,7 @@ kind: policy
 `,
   },
   {
-    path: 'mapping/bootstrap/templates/skill-primitive.md',
+    path: 'exports/templates/skill-primitive.md',
     content: `---
 kind: skill-primitive
 ---
@@ -458,8 +458,8 @@ kind: skill-primitive
 
 ## Semantic Basis
 
-- [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
-- [[mapping/bootstrap/modules/concept/primitive-creator|primitive-creator]]
+- [[primitives/modules/concept/skill-primitive|skill-primitive]]
+- [[primitives/modules/concept/primitive-creator|primitive-creator]]
 
 ## Export Position
 
@@ -471,7 +471,7 @@ kind: skill-primitive
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/signal/concept-as-policy.md',
+    path: 'lint/modules/signal/concept-as-policy.md',
     content: `---
 kind: signal
 ---
@@ -494,13 +494,13 @@ This signal protects the boundary between naming a semantic object and imposing 
 
 ## Basis
 
-- [[mapping/bootstrap/modules/concept/concept|concept]]
-- [[mapping/bootstrap/modules/concept/policy|policy]]
-- [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
+- [[primitives/modules/concept/concept|concept]]
+- [[primitives/modules/concept/policy|policy]]
+- [[grammars/modules/policy/signal-boundary|signal-boundary]]
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/signal/workflow-as-policy.md',
+    path: 'lint/modules/signal/workflow-as-policy.md',
     content: `---
 kind: signal
 ---
@@ -523,12 +523,12 @@ This signal protects workflow material from losing state, move, and transition s
 
 ## Basis
 
-- [[mapping/bootstrap/modules/concept/policy|policy]]
-- [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
+- [[primitives/modules/concept/policy|policy]]
+- [[grammars/modules/policy/signal-boundary|signal-boundary]]
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/signal/template-owns-lifecycle.md',
+    path: 'lint/modules/signal/template-owns-lifecycle.md',
     content: `---
 kind: signal
 ---
@@ -545,19 +545,19 @@ This signal protects the lifecycle authority boundary so templates stay formatte
 
 ## Trigger
 
-- \`path matches mapping/*/templates/*.md\`
+- \`path matches */templates/*.md\`
 - \`section contains source / review / pick / update / write / lifecycle terms\`
 - \`section contains MUST / SHOULD / MUST NOT with concrete subject\`
 
 ## Basis
 
-- [[mapping/bootstrap/modules/concept/template|template]]
-- [[mapping/bootstrap/modules/policy/template-boundary|template-boundary]]
-- [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
+- [[primitives/modules/concept/template|template]]
+- [[grammars/modules/policy/template-boundary|template-boundary]]
+- [[grammars/modules/policy/signal-boundary|signal-boundary]]
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/signal/architecture-as-responsibility-card.md',
+    path: 'lint/modules/signal/architecture-as-responsibility-card.md',
     content: `---
 kind: signal
 ---
@@ -580,12 +580,12 @@ This signal protects architecture material from collapsing into an ownership car
 
 ## Basis
 
-- [[mapping/bootstrap/modules/concept/policy|policy]]
-- [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
+- [[primitives/modules/concept/policy|policy]]
+- [[grammars/modules/policy/signal-boundary|signal-boundary]]
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/signal/example-as-kind.md',
+    path: 'lint/modules/signal/example-as-kind.md',
     content: `---
 kind: signal
 ---
@@ -607,12 +607,12 @@ This signal protects the distinction between a concrete example and the semantic
 
 ## Basis
 
-- [[mapping/bootstrap/modules/concept/concept|concept]]
-- [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
+- [[primitives/modules/concept/concept|concept]]
+- [[grammars/modules/policy/signal-boundary|signal-boundary]]
 `,
   },
   {
-    path: 'mapping/bootstrap/modules/signal/composition-as-list.md',
+    path: 'lint/modules/signal/composition-as-list.md',
     content: `---
 kind: signal
 ---
@@ -635,12 +635,12 @@ This signal protects composition material from losing its stable whole / part bo
 
 ## Basis
 
-- [[mapping/bootstrap/modules/concept/policy|policy]]
-- [[mapping/bootstrap/modules/policy/signal-boundary|signal-boundary]]
+- [[primitives/modules/concept/policy|policy]]
+- [[grammars/modules/policy/signal-boundary|signal-boundary]]
 `,
   },
   {
-    path: 'mapping/bootstrap/structures/pipeline/semantic-lint.md',
+    path: 'grammars/structures/pipeline/semantic-lint.md',
     content: `---
 kind: pipeline
 ---

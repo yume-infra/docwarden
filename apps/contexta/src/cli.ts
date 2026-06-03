@@ -1,11 +1,22 @@
-import type { ContextaCapabilityDefinition, ContextaInstallResult, ContextaInstallTarget, ContextaRuntimePaths } from './domain.js'
+import type {
+  ContextaAssetExportResult,
+  ContextaExportCodexResult,
+  ContextaListAssetsResult,
+} from './domain.js'
 import process from 'node:process'
 import * as NodeServices from '@effect/platform-node/NodeServices'
 import { Effect, Option } from 'effect'
 import * as Argument from 'effect/unstable/cli/Argument'
 import * as Command from 'effect/unstable/cli/Command'
 import * as Flag from 'effect/unstable/cli/Flag'
-import { activationResult, capabilityResult, contextaInfraPackage, installCapability, listCapabilityDefinitions, resolveContextaPaths } from './runtime.js'
+import { ContextaError } from './domain.js'
+
+import {
+  contextaInfraPackage,
+  exportCodexAssets,
+  listAssets,
+  resolveContextaPaths,
+} from './runtime.js'
 
 export const version = '0.0.0'
 
@@ -24,202 +35,112 @@ class ContextaCliError extends Error {
 }
 
 const rootFlag = Flag.string('root').pipe(
-  Flag.withDescription('Workspace root or .contexta path'),
+  Flag.withDescription('Project root containing .contexta'),
   Flag.withDefault(''),
 )
+
 const jsonFlag = Flag.boolean('json').pipe(
   Flag.withDescription('Print machine-readable JSON'),
 )
-const targetFlag = Flag.string('target').pipe(
-  Flag.withDescription('Install target: codex-project or codex-user'),
-  Flag.withDefault('codex-project'),
-)
+
 const targetDirFlag = Flag.string('target-dir').pipe(
-  Flag.withDescription('Explicit install directory for materialized assets'),
+  Flag.withDescription('Explicit target root override for Codex exports'),
   Flag.withDefault(''),
 )
-const forceFlag = Flag.boolean('force').pipe(
-  Flag.withDescription('Replace an existing materialized skill'),
-)
+
 const dryRunFlag = Flag.boolean('dry-run').pipe(
-  Flag.withDescription('Preview install paths without writing files'),
+  Flag.withDescription('Preview export output paths without writing files'),
+)
+
+const forceFlag = Flag.boolean('force').pipe(
+  Flag.withDescription('Overwrite existing Codex targets'),
 )
 
 const contexta = Command.make('contexta').pipe(
   Command.withSharedFlags({
     root: rootFlag,
   }),
-  Command.withDescription('Context infra CLI for capability/catalog/install/activation entrypoints'),
+  Command.withDescription('Pack-first context source and Codex export CLI'),
 )
 
-const capability = Command.make('capability', {
+const assets = Command.make('assets', {
   json: jsonFlag,
 }, ({ json }) =>
   Effect.gen(function* () {
     const context = yield* contexta
-    const root = context.root
-    const workspace = yield* resolveWorkspace(root)
-    const payload = {
-      command: 'capability' as const,
-      root: workspace,
-    }
+    const workspace = resolveWorkspace(context.root)
+    const payload = runContextaEffect(() => listAssets(workspace)).pipe(
+      Effect.map((catalog): ContextaListAssetsResult => ({
+        command: 'assets',
+        workspaceRoot: workspace,
+        contextaRoot: resolveContextaPaths(workspace).contextaRoot,
+        catalog,
+      })),
+    )
     yield* runCli(
-      Effect.succeed(json ? capabilityResult(payload) : formatCapability(payload, resolveContextaPaths(workspace))),
-      result => ({
-        output: result,
-        exitCode: 0,
-      }),
+      payload,
+      payload => runAssetsResult(payload, json),
     )
   })).pipe(
-  Command.withDescription('Enter the capability surface definitions'),
+  Command.withDescription('List discovered assets from .contexta/packs/**'),
 )
 
-const catalog = Command.make('catalog', {
-  json: jsonFlag,
-}, ({ json }) =>
-  Effect.gen(function* () {
-    const context = yield* contexta
-    const root = context.root
-    const workspace = yield* resolveWorkspace(root)
-    const payload = {
-      command: 'catalog' as const,
-      root: workspace,
-    }
-    const catalog = listCapabilityDefinitions(workspace)
-    yield* runCli(
-      Effect.succeed(json ? formatJson(catalog) : formatCatalog(payload, resolveContextaPaths(workspace), catalog.items)),
-      result => ({
-        output: result,
-        exitCode: 0,
-      }),
-    )
-  })).pipe(
-  Command.withDescription('Resolve catalog locations for infra-backed assets'),
-)
-
-const installPlan = Command.make('plan', {
-  capability: Argument.string('capability'),
-  target: targetFlag,
-  targetDir: targetDirFlag,
-  json: jsonFlag,
-}, ({ capability, json, target, targetDir }) =>
-  Effect.gen(function* () {
-    const context = yield* contexta
-    const root = context.root
-    const workspace = yield* resolveWorkspace(root)
-    const resolvedTarget = yield* parseInstallTarget(target)
-    yield* runCli(
-      Effect.tryPromise({
-        try: () => installCapability({
-          capability,
-          dryRun: true,
-          force: false,
-          root: workspace,
-          target: resolvedTarget,
-          targetDir,
-        }),
-        catch: toContextaCliError,
-      }),
-      result => ({
-        output: json ? formatJson(result) : formatInstallResult(result),
-        exitCode: 0,
-      }),
-    )
-  })).pipe(
-  Command.withDescription('Preview capability install paths without writing files'),
-)
-
-const installRoot = Command.make('install', {
-  capability: Argument.string('capability').pipe(
+const exportCodex = Command.make('codex', {
+  all: Flag.boolean('all').pipe(
+    Flag.withDescription('Export all assets'),
+    Flag.withDefault(false),
+  ),
+  assetOrPackId: Argument.string('asset-or-pack-id').pipe(
     Argument.optional,
   ),
-  target: targetFlag,
   targetDir: targetDirFlag,
-  force: forceFlag,
   dryRun: dryRunFlag,
+  force: forceFlag,
   json: jsonFlag,
-}, ({ capability, dryRun, force, json, target, targetDir }) =>
+}, ({ all, assetOrPackId, targetDir, dryRun, force, json }) =>
   Effect.gen(function* () {
     const context = yield* contexta
-    const root = context.root
-    const workspace = yield* resolveWorkspace(root)
-    const resolvedTarget = yield* parseInstallTarget(target)
-    const capabilityId = Option.isSome(capability) ? capability.value : ''
+    const workspace = resolveWorkspace(context.root)
+    const selectors = Option.isSome(assetOrPackId)
+      ? [assetOrPackId.value]
+      : []
+
+    if (!all && selectors.length === 0) {
+      yield* runCli(
+        Effect.fail(new ContextaCliError('missing export selector. use --all or pass <asset-or-pack-id>')),
+        result => runExportCodexResult(result, json),
+      )
+      return
+    }
+    if (all && selectors.length > 0) {
+      yield* runCli(
+        Effect.fail(new ContextaCliError('do not pass both --all and <asset-or-pack-id>')),
+        result => runExportCodexResult(result, json),
+      )
+      return
+    }
+
     yield* runCli(
-      capabilityId.trim().length === 0
-        ? Effect.fail(new ContextaCliError('missing capability argument for install'))
-        : Effect.tryPromise({
-            try: () => installCapability({
-              capability: capabilityId,
-              dryRun,
-              force,
-              root: workspace,
-              target: resolvedTarget,
-              targetDir,
-            }),
-            catch: toContextaCliError,
-          }),
-      result => ({
-        output: json ? formatJson(result) : formatInstallResult(result),
-        exitCode: 0,
-      }),
+      runContextaEffect(() => exportCodexAssets({
+        workspaceRoot: workspace,
+        selectors,
+        all,
+        dryRun,
+        force,
+        targetDir,
+      })),
+      result => runExportCodexResult(result, json),
     )
   })).pipe(
-  Command.withDescription('Install capability by identifier for the infra context'),
-  Command.withSubcommands([installPlan]),
+  Command.withDescription('Export contexta assets to Codex'),
 )
 
-const activation = Command.make('activation', {
-  mode: Argument.string('mode').pipe(
-    Argument.optional,
-  ),
-  json: jsonFlag,
-}, ({ mode, json }) =>
-  Effect.gen(function* () {
-    const context = yield* contexta
-    const root = context.root
-    const workspace = yield* resolveWorkspace(root)
-    const resolvedMode = Option.getOrElse(mode, () => 'runtime')
-    const payload = {
-      command: 'activation' as const,
-      mode: resolvedMode,
-      root: workspace,
-    }
-    yield* runCli(
-      Effect.succeed(json ? activationResult(payload) : formatActivation(payload, resolveContextaPaths(workspace))),
-      result => ({
-        output: result,
-        exitCode: 0,
-      }),
-    )
-  })).pipe(
-  Command.withDescription('Resolve activation entrypoint for a mode'),
-)
-
-const asset = Command.make('asset', {
-  json: jsonFlag,
-}, ({ json }) =>
-  Effect.gen(function* () {
-    const context = yield* contexta
-    const root = context.root
-    const workspace = yield* resolveWorkspace(root)
-    const payload = {
-      command: 'asset' as const,
-      root: workspace,
-    }
-    yield* runCli(
-      Effect.succeed(json ? JSON.stringify(payload, null, 2) : formatAsset(payload, resolveContextaPaths(workspace))),
-      result => ({
-        output: result,
-        exitCode: 0,
-      }),
-    )
-  })).pipe(
-  Command.withDescription('Show capability asset location'),
+const exportCommand = Command.make('export').pipe(
+  Command.withSubcommands([exportCodex]),
 )
 
 const command = contexta.pipe(
-  Command.withSubcommands([capability, catalog, installRoot, activation, asset]),
+  Command.withSubcommands([assets, exportCommand]),
 )
 
 export const main: Effect.Effect<void, unknown> = Command.run(command, {
@@ -228,7 +149,14 @@ export const main: Effect.Effect<void, unknown> = Command.run(command, {
   Effect.provide(NodeServices.layer),
 )
 
-function runCli<A>(run: Effect.Effect<A, unknown>, onSuccess: (result: A) => CliSuccess): Effect.Effect<void, never> {
+function runContextaEffect<T>(run: () => Promise<T>): Effect.Effect<T, ContextaError | ContextaCliError, never> {
+  return Effect.tryPromise({
+    try: () => run(),
+    catch: toContextaError,
+  })
+}
+
+function runCli<A>(run: Effect.Effect<A, ContextaError | ContextaCliError, never>, onSuccess: (result: A) => CliSuccess): Effect.Effect<void, never> {
   return run.pipe(
     Effect.matchEffect({
       onFailure: error => writeStderr(`contexta error: ${formatError(error)}`).pipe(
@@ -244,21 +172,93 @@ function runCli<A>(run: Effect.Effect<A, unknown>, onSuccess: (result: A) => Cli
   )
 }
 
+function runAssetsResult(payload: ContextaListAssetsResult, json: boolean): CliSuccess {
+  if (json) {
+    return {
+      output: formatJson(payload),
+      exitCode: 0,
+    }
+  }
+
+  return {
+    output: formatAssets(payload),
+    exitCode: 0,
+  }
+}
+
+function runExportCodexResult(result: ContextaExportCodexResult, json: boolean): CliSuccess {
+  if (json) {
+    return {
+      output: formatJson(result),
+      exitCode: 0,
+    }
+  }
+
+  return {
+    output: formatExportResult(result),
+    exitCode: 0,
+  }
+}
+
+function formatAssets(input: ContextaListAssetsResult): string {
+  const lines = [
+    contextaInfraPackage,
+    `contextaRoot: ${input.contextaRoot}`,
+    `workspaceRoot: ${input.workspaceRoot}`,
+    `packs: ${input.catalog.packs.length}`,
+    `assets: ${input.catalog.assets.length}`,
+    'assetIds:',
+  ]
+
+  for (const asset of input.catalog.assets) {
+    lines.push(`- ${asset.id} -> ${asset.sourcePath}`)
+  }
+
+  return lines.join('\n')
+}
+
+function formatExportResult(result: ContextaExportCodexResult): string {
+  const lines = [
+    contextaInfraPackage,
+    `command: ${result.command}`,
+    `target: ${result.target}`,
+    `targetRoot: ${result.targetRoot}`,
+    `dryRun: ${String(result.dryRun)}`,
+    `items: ${result.items.length}`,
+  ]
+  for (const item of result.items) {
+    lines.push(`- ${formatExportItem(item)}`)
+  }
+  return lines.join('\n')
+}
+
+function formatExportItem(item: ContextaAssetExportResult): string {
+  const status = item.skipped ? 'skip' : 'write'
+  return `${item.kind} ${item.assetId} -> ${item.destinationPaths.join(', ')} (${status})`
+}
+
+function formatJson(value: unknown): string {
+  return JSON.stringify(value, null, 2)
+}
+
+function toContextaError(error: unknown): ContextaError | ContextaCliError {
+  if (error instanceof ContextaError) {
+    return error
+  }
+  if (error instanceof ContextaCliError) {
+    return error
+  }
+  if (error instanceof Error) {
+    return new ContextaError(error.message)
+  }
+  return new ContextaError(String(error))
+}
+
 function formatError(error: unknown): string {
   if (error instanceof Error) {
     return error.message
   }
   return String(error)
-}
-
-function toContextaCliError(error: unknown): ContextaCliError {
-  if (error instanceof ContextaCliError) {
-    return error
-  }
-  if (error instanceof Error) {
-    return new ContextaCliError(error.message)
-  }
-  return new ContextaCliError(String(error))
 }
 
 function writeStdout(message: string): Effect.Effect<void> {
@@ -279,68 +279,6 @@ function setExitCode(exitCode: number): Effect.Effect<void> {
   })
 }
 
-function resolveWorkspace(root: string): Effect.Effect<string> {
-  return Effect.sync(() => root.trim().length === 0 ? process.cwd() : root)
-}
-
-function parseInstallTarget(target: string): Effect.Effect<ContextaInstallTarget, ContextaCliError> {
-  if (target === 'codex-project' || target === 'codex-user') {
-    return Effect.succeed(target)
-  }
-  return Effect.fail(new ContextaCliError(`invalid install target '${target}'. Expected codex-project or codex-user.`))
-}
-
-function formatJson(value: unknown): string {
-  return JSON.stringify(value, null, 2)
-}
-
-function formatCapability(payload: { command: string }, paths: ContextaRuntimePaths): string {
-  return [
-    contextaInfraPackage,
-    `command: ${payload.command}`,
-    `contextaRoot: ${paths.contextaRoot}`,
-    `capabilityRoot: ${paths.capabilityRoot}`,
-    `catalogRoot: ${paths.catalogRoot}`,
-  ].join('\n')
-}
-
-function formatCatalog(payload: { command: string }, paths: ContextaRuntimePaths, items: readonly ContextaCapabilityDefinition[]): string {
-  return [
-    contextaInfraPackage,
-    `command: ${payload.command}`,
-    `catalogRoot: ${paths.catalogRoot}`,
-    'capabilities:',
-    ...items.map(item => `- ${item.id} -> ${item.kind}:${item.materializedName}`),
-  ].join('\n')
-}
-
-function formatInstallResult(result: ContextaInstallResult): string {
-  return [
-    contextaInfraPackage,
-    `command: ${result.command}`,
-    `capability: ${result.capability}`,
-    `kind: ${result.kind}`,
-    `materializedName: ${result.materializedName}`,
-    `sourcePath: ${result.sourcePath}`,
-    `targetPath: ${result.targetPath}`,
-    `status: ${result.dryRun ? 'dry-run' : 'installed'}`,
-    `overwritten: ${String(result.overwritten)}`,
-  ].join('\n')
-}
-
-function formatActivation(payload: { command: string, mode: string }, paths: ContextaRuntimePaths): string {
-  return [
-    contextaInfraPackage,
-    `command: ${payload.command}`,
-    `mode: ${payload.mode}`,
-    `activationRoot: ${paths.contextaRoot}`,
-  ].join('\n')
-}
-
-function formatAsset(payload: { command: string }, paths: ContextaRuntimePaths): string {
-  return [
-    contextaInfraPackage,
-    `command: ${payload.command}`,
-    `assetRoot: ${paths.assetRoot}`,
-  ].join('\n')
+function resolveWorkspace(root: string): string {
+  return root.trim().length === 0 ? process.cwd() : root
 }

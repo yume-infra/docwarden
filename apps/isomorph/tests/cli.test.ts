@@ -212,8 +212,8 @@ Use when needed.
 
 ## Semantic Basis
 
-- [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
-- [[mapping/bootstrap/modules/concept/primitive-creator|primitive-creator]]
+- [[primitives/modules/concept/skill-primitive|skill-primitive]]
+- [[primitives/modules/concept/primitive-creator|primitive-creator]]
 
 ## Export Position
 
@@ -241,26 +241,32 @@ Create a local skill primitive.
     expect(needsWorkJson.status).toBe('needs-work')
   })
 
-  it('lists mapping scopes, kinds, and templates', async () => {
+  it('lists local source layers, kinds, and templates', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(['--root', workspace, 'init'], repoRoot)
 
-    const result = await runIsomorph(['--root', workspace, 'mapping', '--json'], repoRoot)
+    const result = await runIsomorph(['--root', workspace, 'source', 'list', '--json'], repoRoot)
     const output = JSON.parse(result.stdout)
 
     expect(result.exitCode).toBe(0)
     expect(result.stderr).toBe('')
-    expect(output.scopes.map((scope: { scope: string }) => scope.scope)).toContain('bootstrap')
-    const bootstrap = output.scopes.find((scope: { scope: string }) => scope.scope === 'bootstrap')
-    expect(bootstrap.path).toBe('mapping/bootstrap/')
-    expect(bootstrap.kinds).toContain('concept')
-    expect(bootstrap.templates).toContain('concept')
-    expect(bootstrap.templates).toContain('policy')
+    const scopes = output.scopes.map((scope: { scope: string }) => scope.scope)
+    expect(scopes).toContain('primitives')
+    expect(scopes).toContain('grammars')
+    expect(scopes).toContain('lint')
+    expect(scopes).toContain('exports')
+    const primitives = output.scopes.find((scope: { scope: string }) => scope.scope === 'primitives')
+    const exports = output.scopes.find((scope: { scope: string }) => scope.scope === 'exports')
+    expect(primitives.path).toBe('primitives/')
+    expect(primitives.kinds).toContain('concept')
+    expect(exports.path).toBe('exports/')
+    expect(exports.templates).toContain('concept')
+    expect(exports.templates).toContain('policy')
 
-    const plain = await runIsomorph(['--root', workspace, 'mapping'], repoRoot)
+    const plain = await runIsomorph(['--root', workspace, 'source', 'list'], repoRoot)
     expect(plain.exitCode).toBe(0)
-    expect(plain.stdout).toContain('isomorph mapping')
-    expect(plain.stdout).toContain('## bootstrap')
+    expect(plain.stdout).toContain('isomorph source list')
+    expect(plain.stdout).toContain('## primitives')
   })
 
   it('reports pinned upgrade status and malformed pin parse errors', async () => {

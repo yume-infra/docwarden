@@ -3,8 +3,8 @@ import { collectOfmLinksFromText, extractListItems, findSection, firstNonEmptyLi
 
 const defaultRequiredSections = ['Capability', 'Trigger', 'Semantic Basis', 'Export Position'] as const
 const requiredSemanticBasisTargets = [
-  'mapping/bootstrap/modules/concept/skill-primitive',
-  'mapping/bootstrap/modules/concept/primitive-creator',
+  'primitives/modules/concept/skill-primitive',
+  'primitives/modules/concept/primitive-creator',
 ] as const
 
 export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkillResult {

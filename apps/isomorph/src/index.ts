@@ -24,9 +24,9 @@ export {
   runDoctorRepairEffect,
   runInitEffect,
   runLintEffect,
-  runMappingListEffect,
   runPrimitiveSkillEffect,
   runRecognitionEffect,
+  runSourceListEffect,
   runUpgradeStatusEffect,
   toIsomorphError,
 } from './runtime.js'
@@ -47,8 +47,6 @@ export type {
   IsomorphRuntimeServices,
   LintResult,
   LintSignal,
-  MappingListResult,
-  MappingScopeSummary,
   PinMetadata,
   PinStatus,
   PrimitiveDiagnostic,
@@ -61,6 +59,8 @@ export type {
   ResolveOptions,
   RuntimeErrorKind,
   SignalCandidate,
+  SourceListResult,
+  SourceScopeSummary,
   TriggerHit,
   UpgradeStatusResult,
 } from './runtime.js'

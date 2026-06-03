@@ -18,6 +18,7 @@ const testRoot = path.dirname(fileURLToPath(import.meta.url))
 const packageRoot = path.resolve(testRoot, '..')
 const repoRoot = path.resolve(packageRoot, '../..')
 const contextaBin = path.join(packageRoot, 'dist/index.js')
+const sourceContextaRoot = path.join(repoRoot, '.contexta')
 
 function runProcess(command: string, args: readonly string[], cwd: string): Promise<ProcessResult> {
   return new Promise((resolve, reject) => {
@@ -47,108 +48,173 @@ async function makeWorkspace(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'contexta-cli-test-'))
 }
 
+async function makeWorkspaceWithContexta(): Promise<string> {
+  const workspace = await makeWorkspace()
+  await fs.cp(sourceContextaRoot, path.join(workspace, '.contexta'), {
+    recursive: true,
+  })
+  return workspace
+}
+
 describe('contexta CLI contract', () => {
-  it('prints command entrypoints', async () => {
+  it('reports new command surface and removes old contracts', async () => {
     const result = await runContexta(['--help'], repoRoot)
+    const exportHelp = await runContexta(['export', '--help'], repoRoot)
 
     expect(result.exitCode).toBe(0)
     expect(result.stdout).toContain('contexta')
-    expect(result.stdout).toContain(' capability ')
-    expect(result.stdout).toContain(' catalog ')
-    expect(result.stdout).toContain(' install ')
-    expect(result.stdout).toContain(' activation ')
-    expect(result.stdout).toContain(' asset ')
+    expect(result.stdout).toContain(' assets ')
+    expect(result.stdout).toContain(' export ')
+    expect(exportHelp.exitCode).toBe(0)
+    expect(exportHelp.stdout).toContain('codex')
+    expect(result.stdout).not.toContain(' capability ')
+    expect(result.stdout).not.toContain(' catalog ')
+    expect(result.stdout).not.toContain(' install ')
+    expect(result.stdout).not.toContain(' activation ')
+    expect(result.stdout).not.toContain(' asset ')
   })
 
-  it('resolves capability entry in json mode', async () => {
-    const workspace = await makeWorkspace()
-    const result = await runContexta(['--root', workspace, 'capability', '--json'], repoRoot)
+  it('lists discovered assets and writes generated catalogs', async () => {
+    const workspace = await makeWorkspaceWithContexta()
+    const result = await runContexta(['--root', workspace, 'assets', '--json'], workspace)
 
     expect(result.exitCode).toBe(0)
-    const output = JSON.parse(result.stdout)
-    expect(output).toMatchObject({
-      command: 'capability',
-    })
+    const output = JSON.parse(result.stdout) as {
+      readonly command: string
+      readonly contextaRoot: string
+      readonly catalog: {
+        readonly packs: readonly { readonly id: string }[]
+        readonly assets: readonly { readonly id: string }[]
+      }
+    }
+    expect(output.command).toBe('assets')
     expect(output.contextaRoot).toBe(path.join(workspace, '.contexta'))
+    expect(output.catalog.packs).toContainEqual(expect.objectContaining({ id: 'docwarden' }))
+    expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'skill:dw/review-doc' }))
+    expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'prompt:dw/review-guidance' }))
+    expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'agent:dw/doc-assistant' }))
+    expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'hook:dw/bootstrap' }))
+
+    const generatedAssets = JSON.parse(
+      await fs.readFile(path.join(workspace, '.contexta/catalog/generated-assets.json'), 'utf8'),
+    ) as { readonly assets: readonly unknown[] }
+    const generatedPacks = JSON.parse(
+      await fs.readFile(path.join(workspace, '.contexta/catalog/generated-packs.json'), 'utf8'),
+    ) as { readonly packs: readonly unknown[] }
+    expect(generatedAssets.assets).toHaveLength(7)
+    expect(generatedPacks.packs).toHaveLength(1)
   })
 
-  it('resolves catalog and activation entrypoints', async () => {
-    const workspace = await makeWorkspace()
-    const catalog = await runContexta(['--root', workspace, 'catalog'], repoRoot)
-    const activation = await runContexta(['--root', workspace, 'activation', 'runtime'], repoRoot)
-
-    expect(catalog.exitCode).toBe(0)
-    expect(catalog.stdout).toContain('catalogRoot:')
-    expect(catalog.stdout).toContain('ym:write-skill')
-    expect(activation.exitCode).toBe(0)
-    expect(activation.stdout).toContain('mode: runtime')
-  })
-
-  it('lists the first ym-dispatched skill in catalog json', async () => {
-    const workspace = await makeWorkspace()
-    const result = await runContexta(['--root', workspace, 'catalog', '--json'], repoRoot)
+  it('exports a full pack to explicit target dir', async () => {
+    const workspace = await makeWorkspaceWithContexta()
+    const target = path.join(workspace, 'codex-target')
+    const result = await runContexta([
+      '--root',
+      workspace,
+      'export',
+      'codex',
+      'docwarden',
+      '--target-dir',
+      target,
+      '--json',
+    ], workspace)
 
     expect(result.exitCode).toBe(0)
-    const output = JSON.parse(result.stdout)
+    const output = JSON.parse(result.stdout) as {
+      readonly command: 'export'
+      readonly target: 'codex'
+      readonly targetRoot: string
+      readonly items: readonly { readonly kind: string, readonly assetId: string, readonly destinationPaths: readonly string[] }[]
+    }
+
+    expect(output.command).toBe('export')
+    expect(output.target).toBe('codex')
+    expect(output.targetRoot).toBe(target)
     expect(output.items).toContainEqual(expect.objectContaining({
-      id: 'ym:write-skill',
-      kind: 'codex-skill',
-      materializedName: 'write-skill',
-      namespace: 'ym',
+      kind: 'skill',
+      assetId: 'skill:dw/review-doc',
+      destinationPaths: [path.join(target, 'skills', 'review-doc', 'SKILL.md')],
     }))
+    expect(output.items).toContainEqual(expect.objectContaining({
+      kind: 'prompt',
+      assetId: 'prompt:dw/review-guidance',
+      destinationPaths: [path.join(target, 'prompts', 'review-guidance.md')],
+    }))
+    expect(output.items).toContainEqual(expect.objectContaining({
+      kind: 'agent',
+      assetId: 'agent:dw/doc-assistant',
+      destinationPaths: [path.join(target, 'agents', 'doc-assistant.toml')],
+    }))
+    expect(output.items).toContainEqual(expect.objectContaining({
+      kind: 'hook',
+      assetId: 'hooks',
+      destinationPaths: [path.join(target, 'hooks.json')],
+    }))
+
+    await expect(fs.readFile(path.join(target, 'skills', 'review-doc', 'SKILL.md'), 'utf8')).resolves.toContain('name: review-doc')
+    await expect(fs.readFile(path.join(target, 'agents', 'doc-assistant.toml'), 'utf8')).resolves.toContain('[agent]')
+    await expect(fs.access(path.join(target, 'hooks.json'))).resolves.toBeUndefined()
   })
 
-  it('plans ym:write-skill installation without writing files', async () => {
-    const workspace = await makeWorkspace()
-    const targetDir = path.join(workspace, 'materialized-skills')
+  it('supports dry-run and keeps destination untouched', async () => {
+    const workspace = await makeWorkspaceWithContexta()
+    const target = path.join(workspace, 'codex-target')
     const result = await runContexta([
       '--root',
-      repoRoot,
-      'install',
-      'plan',
-      'ym:write-skill',
+      workspace,
+      'export',
+      'codex',
+      'skill:dw/review-doc',
       '--target-dir',
-      targetDir,
+      target,
+      '--dry-run',
       '--json',
-    ], repoRoot)
+    ], workspace)
 
     expect(result.exitCode).toBe(0)
-    const output = JSON.parse(result.stdout)
-    expect(output).toMatchObject({
-      capability: 'ym:write-skill',
-      dryRun: true,
-      installed: false,
-      materializedName: 'write-skill',
-    })
-    await expect(fs.access(path.join(targetDir, 'write-skill'))).rejects.toThrow()
+    const output = JSON.parse(result.stdout) as {
+      readonly dryRun: boolean
+      readonly items: readonly { readonly skipped: boolean, readonly assetId: string }[]
+    }
+    expect(output.dryRun).toBe(true)
+    expect(output.items).toContainEqual(expect.objectContaining({
+      skipped: true,
+      assetId: 'skill:dw/review-doc',
+    }))
+    await expect(fs.access(path.join(target, 'skills', 'review-doc', 'SKILL.md'))).rejects.toThrow()
   })
 
-  it('installs ym:write-skill as a Codex-native skill directory', async () => {
-    const workspace = await makeWorkspace()
-    const targetDir = path.join(workspace, 'materialized-skills')
+  it('supports export --all for full pack space', async () => {
+    const workspace = await makeWorkspaceWithContexta()
+    const target = path.join(workspace, 'codex-target')
     const result = await runContexta([
       '--root',
-      repoRoot,
-      'install',
-      'ym:write-skill',
+      workspace,
+      'export',
+      'codex',
+      '--all',
       '--target-dir',
-      targetDir,
+      target,
       '--json',
-    ], repoRoot)
+    ], workspace)
 
     expect(result.exitCode).toBe(0)
-    const output = JSON.parse(result.stdout)
-    const installedSkill = path.join(targetDir, 'write-skill')
-    expect(output).toMatchObject({
-      capability: 'ym:write-skill',
-      dryRun: false,
-      installed: true,
-      targetPath: installedSkill,
-    })
-
-    const skill = await fs.readFile(path.join(installedSkill, 'SKILL.md'), 'utf8')
-    expect(skill).toContain('name: write-skill')
-    expect(skill).toContain('description:')
-    await expect(fs.access(path.join(installedSkill, 'scripts', 'quick_validate.py'))).resolves.toBeUndefined()
+    const output = JSON.parse(result.stdout) as {
+      readonly targetRoot: string
+      readonly items: readonly { readonly kind: string, readonly assetId: string }[]
+    }
+    expect(output.targetRoot).toBe(target)
+    expect(output.items).toContainEqual(expect.objectContaining({
+      kind: 'workflow',
+      assetId: 'workflow:dw/review-workflow',
+    }))
+    expect(output.items).toContainEqual(expect.objectContaining({
+      kind: 'profile',
+      assetId: 'profile:dw/default',
+    }))
+    expect(output.items).toContainEqual(expect.objectContaining({
+      kind: 'reference',
+      assetId: 'reference:dw/glossary',
+    }))
   })
 })

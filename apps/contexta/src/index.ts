@@ -5,30 +5,32 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import * as NodeRuntime from '@effect/platform-node/NodeRuntime'
-
 import { main } from './cli.js'
 
 export { main, version } from './cli.js'
-export {
-  activationResult,
-  capabilityResult,
-  contextaInfraPackage,
-  getCapabilityDefinition,
-  installCapability,
-  installCapabilityResult,
-  listCapabilityDefinitions,
-  resolveContextaPaths,
-} from './runtime.js'
+export type {
+  ContextaAsset,
+  ContextaAssetExportResult,
+  ContextaAssetKind,
+  ContextaCatalog,
+  ContextaCodexTargetConfig,
+  ContextaExportCodexOptions,
+  ContextaExportCodexResult,
+  ContextaListAssetsResult,
+  ContextaPackManifest,
+  ContextaPackSummary,
+  ContextaRuntimePaths,
+} from './domain.js'
 
 export type {
-  ContextaActivationPayload,
-  ContextaCapabilityDefinition,
-  ContextaCapabilityPayload,
-  ContextaInstallOptions,
-  ContextaInstallPayload,
-  ContextaInstallResult,
-  ContextaInstallTarget,
-  ContextaRuntimePaths,
+  ContextaError,
+} from './domain.js'
+
+export {
+  contextaInfraPackage,
+  exportCodexAssets,
+  listAssets,
+  resolveContextaPaths,
 } from './runtime.js'
 
 function isMain(): boolean {

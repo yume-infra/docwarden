@@ -1,0 +1,3 @@
+[agent]
+name = "doc-assistant"
+entrypoint = "docs/workflow/index"

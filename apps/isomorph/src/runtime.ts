@@ -30,8 +30,6 @@ export type {
   IsomorphRoot,
   LintResult,
   LintSignal,
-  MappingListResult,
-  MappingScopeSummary,
   PinMetadata,
   PinStatus,
   PrimitiveDiagnostic,
@@ -43,8 +41,10 @@ export type {
   RecognitionRunResult,
   ResolveOptions,
   SignalCandidate,
+  SourceListResult,
   SourceMetadata,
   SourceReference,
+  SourceScopeSummary,
   TriggerHit,
   UpgradeStatusResult,
 } from './domain.js'
@@ -60,7 +60,7 @@ export {
   runInitEffect,
 } from './init.js'
 export {
-  runMappingListEffect,
+  runSourceListEffect,
 } from './mapping.js'
 export { readPinEffect } from './pin.js'
 export { resolveIsomorphRootEffect } from './root.js'

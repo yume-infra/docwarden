@@ -76,7 +76,7 @@ owner: test
 
 agent MUST keep the marker. ^def-1
 
-See [[mapping/bootstrap/modules/concept/concept|concept]].
+See [[primitives/modules/concept/concept|concept]].
 `, 'sample.md')
 
     expect(surface.frontmatter).toEqual({
@@ -87,7 +87,7 @@ See [[mapping/bootstrap/modules/concept/concept|concept]].
     expect(surface.sections.find(section => section.heading.text === 'Definition')?.text).toContain('agent MUST')
     expect(surface.locatorMarkers[0]?.marker).toBe('^def-1')
     expect(surface.ofmLinks[0]).toMatchObject({
-      target: 'mapping/bootstrap/modules/concept/concept',
+      target: 'primitives/modules/concept/concept',
       label: 'concept',
     })
   })
@@ -192,7 +192,7 @@ kind: not-local
   it('does not let arbitrary local frontmatter.kind become recognition authority', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const localFile = path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/local/foo.md')
+    const localFile = path.join(workspace, '.isomorph', 'local/foo.md')
     await fs.mkdir(path.dirname(localFile), { recursive: true })
     await fs.writeFile(localFile, `---
 kind: foo
@@ -219,7 +219,7 @@ kind: foo
   it('fails recognition when local recognition authority is missing', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    await fs.rm(path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/recognition'), { recursive: true })
+    await fs.rm(path.join(workspace, '.isomorph', 'lint', 'modules', 'recognition'), { recursive: true })
     const target = path.join(workspace, 'concept.md')
     await fs.writeFile(target, `---
 kind: concept
@@ -239,7 +239,7 @@ kind: concept
   it('fails recognition when local recognition trigger is unsupported', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const recognitionFile = path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/recognition/default.md')
+    const recognitionFile = path.join(workspace, '.isomorph', 'lint/modules/recognition/default.md')
     const original = await fs.readFile(recognitionFile, 'utf8')
     await fs.writeFile(recognitionFile, original.replace('frontmatter.kind is local kind', 'unsupported trigger syntax'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -261,7 +261,7 @@ kind: concept
   it('lets local recognition material change recognition output', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const recognitionFile = path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/recognition/default.md')
+    const recognitionFile = path.join(workspace, '.isomorph', 'lint/modules/recognition/default.md')
     const original = await fs.readFile(recognitionFile, 'utf8')
     await fs.writeFile(recognitionFile, original.replace('Role: $frontmatter.kind', 'Role: locally-overridden'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -283,7 +283,7 @@ kind: concept
   it('applies concept signals from recognized role instead of raw frontmatter.kind', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const recognitionFile = path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/recognition/default.md')
+    const recognitionFile = path.join(workspace, '.isomorph', 'lint/modules/recognition/default.md')
     const original = await fs.readFile(recognitionFile, 'utf8')
     await fs.writeFile(recognitionFile, original.replace('Role: $frontmatter.kind', 'Role: locally-overridden'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -314,7 +314,7 @@ agent MUST treat this as a rule.
   it('applies concept signals when recognition comes from a non-frontmatter rule', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const recognitionFile = path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/recognition/default.md')
+    const recognitionFile = path.join(workspace, '.isomorph', 'lint/modules/recognition/default.md')
     const original = await fs.readFile(recognitionFile, 'utf8')
     await fs.writeFile(
       recognitionFile,
@@ -343,7 +343,7 @@ agent MUST treat this as a rule.
   it('lets local kind material add a recognized role without changing TypeScript', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const localKind = path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/concept/decision.md')
+    const localKind = path.join(workspace, '.isomorph', 'primitives/modules/concept/decision.md')
     await fs.writeFile(localKind, `---
 kind: concept
 ---
@@ -373,7 +373,7 @@ kind: decision
   it('uses edited local signal definitions during lint', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const signalFile = path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/signal/concept-as-policy.md')
+    const signalFile = path.join(workspace, '.isomorph', 'lint/modules/signal/concept-as-policy.md')
     const original = await fs.readFile(signalFile, 'utf8')
     await fs.writeFile(signalFile, original.replace('section contains MUST / SHOULD / MUST NOT', 'section contains impossible-token'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -402,7 +402,7 @@ agent MUST treat this as a rule.
   it('surfaces missing signal loss model as a lint diagnostic', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const signalFile = path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/signal/concept-as-policy.md')
+    const signalFile = path.join(workspace, '.isomorph', 'lint/modules/signal/concept-as-policy.md')
     const original = await fs.readFile(signalFile, 'utf8')
     await fs.writeFile(signalFile, original.replace(/## Loss Model\n\n[\s\S]*?\n## Trigger/, '## Trigger'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -420,14 +420,14 @@ kind: concept
 
     expect(result.diagnostics).toContainEqual(expect.objectContaining({
       code: 'missing-signal-loss-model',
-      target: 'mapping/bootstrap/modules/signal/concept-as-policy.md',
+      target: 'lint/modules/signal/concept-as-policy.md',
     }))
   })
 
   it('surfaces unsupported signal triggers as lint diagnostics', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const signalFile = path.join(workspace, '.isomorph', 'mapping/bootstrap/modules/signal/concept-as-policy.md')
+    const signalFile = path.join(workspace, '.isomorph', 'lint/modules/signal/concept-as-policy.md')
     const original = await fs.readFile(signalFile, 'utf8')
     await fs.writeFile(signalFile, original.replace('section contains MUST / SHOULD / MUST NOT', 'unsupported signal trigger'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -481,7 +481,7 @@ agent MUST follow this instruction.
     },
     {
       signal: 'template-owns-lifecycle',
-      positivePath: 'mapping/custom/templates/bad-template.md',
+      positivePath: 'custom/templates/bad-template.md',
       positive: `---
 kind: template
 ---
@@ -492,7 +492,7 @@ kind: template
 
 template MUST own source review lifecycle.
 `,
-      negativePath: 'mapping/custom/templates/good-template.md',
+      negativePath: 'custom/templates/good-template.md',
       negative: `---
 kind: template
 ---
@@ -622,8 +622,8 @@ Use when a user asks to create a new skill primitive.
 
 ## Semantic Basis
 
-- [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
-- [[mapping/bootstrap/modules/concept/primitive-creator|primitive-creator]]
+- [[primitives/modules/concept/skill-primitive|skill-primitive]]
+- [[primitives/modules/concept/primitive-creator|primitive-creator]]
 
 ## Export Position
 
@@ -642,9 +642,9 @@ Future SKILL.md export must preserve trigger, capability, and semantic basis.
       trigger: 'Use when a user asks to create a new skill primitive.',
     })
     expect(result.plan.compiler).toBe('not-implemented-v0')
-    expect(result.model.semanticBasisLinks).toContain('mapping/bootstrap/modules/concept/skill-primitive')
+    expect(result.model.semanticBasisLinks).toContain('primitives/modules/concept/skill-primitive')
     expect(result.exportPosition.present).toBe(true)
-    expect(result.sourceMaterial).toContain('mapping/bootstrap/templates/skill-primitive.md')
+    expect(result.sourceMaterial).toContain('exports/templates/skill-primitive.md')
   })
 
   it('reports missing skill primitive semantic basis links as needs-work', async () => {
@@ -667,7 +667,7 @@ Use when needed.
 
 ## Semantic Basis
 
-- [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
+- [[primitives/modules/concept/skill-primitive|skill-primitive]]
 
 ## Export Position
 
@@ -682,7 +682,7 @@ Future SKILL.md export must preserve model material.
     expect(result.status).toBe('needs-work')
     expect(result.diagnostics).toContainEqual({
       severity: 'warning',
-      message: 'missing semantic basis link: mapping/bootstrap/modules/concept/primitive-creator',
+      message: 'missing semantic basis link: primitives/modules/concept/primitive-creator',
     })
   })
 
@@ -706,9 +706,9 @@ Use when needed.
 
 ## Semantic Basis
 
-- [[mapping/bootstrap/modules/concept/skill-primitive|skill-primitive]]
-- [[mapping/bootstrap/modules/concept/primitive-creator|primitive-creator]]
-- [[mapping/bootstrap/modules/concept/missing|missing]]
+- [[primitives/modules/concept/skill-primitive|skill-primitive]]
+- [[primitives/modules/concept/primitive-creator|primitive-creator]]
+- [[primitives/modules/concept/missing|missing]]
 
 ## Export Position
 
@@ -723,7 +723,7 @@ Future SKILL.md export must preserve model material.
     expect(result.status).toBe('needs-work')
     expect(result.diagnostics).toContainEqual({
       severity: 'warning',
-      message: 'broken semantic basis link: mapping/bootstrap/modules/concept/missing',
+      message: 'broken semantic basis link: primitives/modules/concept/missing',
     })
   })
 
@@ -750,7 +750,7 @@ Future SKILL.md export must preserve model material.
   it('treats source metadata as an origin instance instead of a missing packaged baseline', async () => {
     const workspace = await makeWorkspace()
     const isomorphRoot = path.join(workspace, '.isomorph')
-    const concept = path.join(isomorphRoot, 'mapping/bootstrap/modules/concept/concept.md')
+    const concept = path.join(isomorphRoot, 'primitives/modules/concept/concept.md')
     await fs.mkdir(path.dirname(concept), { recursive: true })
     await writeSourceMetadata(workspace)
     await fs.writeFile(concept, `---

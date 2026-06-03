@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",
-    "effect": "catalog:"
+    "effect": "catalog:",
+    "yaml": "catalog:"
   }
 }

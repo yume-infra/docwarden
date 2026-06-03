@@ -1,11 +1,11 @@
-import type { DoctorInspectResult, DoctorRepairResult, InitResult, IsomorphError, IsomorphRuntimeServices, LintResult, MappingListResult, PrimitiveSkillResult, RecognitionRunResult, UpgradeStatusResult } from './runtime.js'
+import type { DoctorInspectResult, DoctorRepairResult, InitResult, IsomorphError, IsomorphRuntimeServices, LintResult, PrimitiveSkillResult, RecognitionRunResult, SourceListResult, UpgradeStatusResult } from './runtime.js'
 
 import process from 'node:process'
 import { Effect, Option } from 'effect'
 import * as Argument from 'effect/unstable/cli/Argument'
 import * as Command from 'effect/unstable/cli/Command'
 import * as Flag from 'effect/unstable/cli/Flag'
-import { IsomorphConfigError, isomorphLiveLayer, runDoctorInspectEffect, runDoctorRepairEffect, runInitEffect, runLintEffect, runMappingListEffect, runPrimitiveSkillEffect, runRecognitionEffect, runUpgradeStatusEffect, toIsomorphError } from './runtime.js'
+import { IsomorphConfigError, isomorphLiveLayer, runDoctorInspectEffect, runDoctorRepairEffect, runInitEffect, runLintEffect, runPrimitiveSkillEffect, runRecognitionEffect, runSourceListEffect, runUpgradeStatusEffect, toIsomorphError } from './runtime.js'
 
 export const version = '0.0.0'
 
@@ -116,20 +116,24 @@ const primitive = Command.make('primitive').pipe(
   Command.withSubcommands([primitiveSkill]),
 )
 
-const mapping = Command.make('mapping', {
+const source = Command.make('source').pipe(
+  Command.withDescription('List canonical sources and runtime layers for local .isomorph material'),
+)
+
+const sourceList = Command.make('list', {
   json: jsonFlag,
 }, ({ json }) =>
   Effect.gen(function* () {
     const root = yield* isomorph
     yield* runCli(
-      runMappingListEffect({ root: root.root }),
+      runSourceListEffect({ root: root.root }),
       result => ({
-        output: json ? formatJson(result) : formatMapping(result),
+        output: json ? formatJson(result) : formatSourceList(result),
         exitCode: 0,
       }),
     )
   })).pipe(
-  Command.withDescription('List local isomorph mapping scopes, content kinds, and templates'),
+  Command.withDescription('List local isomorph sources and materialized layers'),
 )
 
 const upgrade = Command.make('upgrade', {
@@ -204,7 +208,7 @@ const doctor = Command.make('doctor', {
 )
 
 const command = isomorph.pipe(
-  Command.withSubcommands([init, recognize, lint, primitive, mapping, upgrade, doctor]),
+  Command.withSubcommands([init, recognize, lint, primitive, source.pipe(Command.withSubcommands([sourceList])), upgrade, doctor]),
 )
 
 export const main: Effect.Effect<void, unknown> = Command.run(command, {
@@ -382,9 +386,9 @@ function formatPrimitiveSkill(result: PrimitiveSkillResult): string {
   ].join('\n')
 }
 
-function formatMapping(result: MappingListResult): string {
+function formatSourceList(result: SourceListResult): string {
   const lines = [
-    'isomorph mapping',
+    'isomorph source list',
     `root: ${result.root.isomorphRoot}`,
     `scopes: ${result.scopes.length}`,
   ]

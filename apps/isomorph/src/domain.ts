@@ -137,7 +137,7 @@ export interface IsomorphModel {
   readonly skillPrimitiveMaterial: readonly IsomorphDocument[]
 }
 
-export interface MappingScopeSummary {
+export interface SourceScopeSummary {
   readonly scope: string
   readonly path: string
   readonly modules: number
@@ -145,9 +145,9 @@ export interface MappingScopeSummary {
   readonly templates: readonly string[]
 }
 
-export interface MappingListResult {
+export interface SourceListResult {
   readonly root: IsomorphRoot
-  readonly scopes: readonly MappingScopeSummary[]
+  readonly scopes: readonly SourceScopeSummary[]
 }
 
 export interface TriggerHit {

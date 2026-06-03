@@ -420,7 +420,7 @@ function applyAdoptPackagedBaseline(root: IsomorphRoot, snapshot: VendorSnapshot
 function applyInstallDefaultRecognitionPrimitive(root: IsomorphRoot, snapshot: VendorSnapshot): Effect.Effect<readonly string[], IsomorphError, FileSystem.FileSystem | Path.Path> {
   return Effect.gen(function* () {
     const path = yield* Path.Path
-    const file = snapshot.files.find(file => file.path === 'mapping/bootstrap/modules/recognition/default.md')
+    const file = snapshot.files.find(file => file.path === 'lint/modules/recognition/default.md')
     if (file === undefined) {
       return yield* Effect.fail(new IsomorphConfigError({
         message: 'packaged baseline has no default recognition primitive',
