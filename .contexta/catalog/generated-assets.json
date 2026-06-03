@@ -11,6 +11,14 @@
       "sourcePath": ".contexta/packs/docwarden/skills/review-doc.md"
     },
     {
+      "id": "skill:dw/pick",
+      "kind": "skill",
+      "packId": "docwarden",
+      "namespace": "dw",
+      "name": "pick",
+      "sourcePath": ".contexta/packs/docwarden/skills/pick"
+    },
+    {
       "id": "prompt:dw/review-guidance",
       "kind": "prompt",
       "packId": "docwarden",
@@ -57,6 +65,14 @@
       "namespace": "dw",
       "name": "glossary",
       "sourcePath": ".contexta/packs/docwarden/references/glossary.md"
+    },
+    {
+      "id": "skill:iso/skill-creator",
+      "kind": "skill",
+      "packId": "isomorph-authoring",
+      "namespace": "iso",
+      "name": "skill-creator",
+      "sourcePath": ".contexta/packs/isomorph-authoring/skills/skill-creator"
     }
   ]
 }

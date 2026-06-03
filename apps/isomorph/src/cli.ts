@@ -368,17 +368,66 @@ function formatPrimitiveSkill(result: PrimitiveSkillResult): string {
     `export position: ${result.exportPosition.present ? 'present' : 'missing'}`,
     ...(result.exportPosition.excerpt === undefined ? [] : [`export excerpt: ${result.exportPosition.excerpt}`]),
     'model:',
-    ...(result.model.capability === undefined ? ['- capability: missing'] : [`- capability: ${result.model.capability}`]),
-    ...(result.model.trigger === undefined ? ['- trigger: missing'] : [`- trigger: ${result.model.trigger}`]),
+    ...(result.model.driftPressure === undefined ? ['- drift pressure: missing'] : [`- drift pressure: ${result.model.driftPressure}`]),
+    ...(result.model.pressureScenarios.length === 0
+      ? ['- pressure scenario: none']
+      : result.model.pressureScenarios.map(item => `- pressure scenario: ${item}`)),
+    ...(result.model.intervention === undefined ? ['- intervention: missing'] : [`- intervention: ${result.model.intervention}`]),
+    ...(result.model.interventionMoves.length === 0
+      ? ['- intervention move: none']
+      : result.model.interventionMoves.map(item => `- intervention move: ${item}`)),
+    ...(result.model.activation === undefined ? ['- activation: missing'] : [`- activation: ${result.model.activation}`]),
+    ...(result.model.activationTriggers.length === 0
+      ? ['- activation trigger: none']
+      : result.model.activationTriggers.map(item => `- activation trigger: ${item}`)),
+    ...(result.model.activationExclusions.length === 0
+      ? ['- activation exclusion: none']
+      : result.model.activationExclusions.map(item => `- activation exclusion: ${item}`)),
+    ...(result.model.judgmentSurface.length === 0
+      ? ['- judgment surface: none']
+      : result.model.judgmentSurface.map(item => `- judgment surface: ${item}`)),
+    ...(result.model.deterministicBoundary.length === 0
+      ? ['- deterministic boundary: none']
+      : result.model.deterministicBoundary.map(item => `- deterministic boundary: ${item}`)),
+    ...(result.model.reviewGate.length === 0
+      ? ['- review gate: none']
+      : result.model.reviewGate.map(item => `- review gate: ${item}`)),
+    ...(result.model.exportShape.length === 0
+      ? ['- export shape: none']
+      : result.model.exportShape.map(item => `- export shape: ${item}`)),
     ...(result.model.semanticBasisLinks.length === 0
       ? ['- semantic basis links: none']
       : result.model.semanticBasisLinks.map(link => `- semantic basis: ${link}`)),
+    ...(result.model.references.length === 0
+      ? ['- references: none']
+      : result.model.references.map(item => `- reference: ${item}`)),
+    ...(result.model.scripts.length === 0
+      ? ['- scripts: none']
+      : result.model.scripts.map(item => `- script: ${item}`)),
+    ...(result.model.assets.length === 0
+      ? ['- assets: none']
+      : result.model.assets.map(item => `- asset: ${item}`)),
+    ...(result.model.validation.length === 0
+      ? ['- validation: none']
+      : result.model.validation.map(item => `- validation: ${item}`)),
     ...(result.model.exportPosition === undefined ? ['- export position: missing'] : [`- export position: ${result.model.exportPosition}`]),
     'plan:',
     `- compiler: ${result.plan.compiler}`,
+    `- exportable: ${String(result.plan.exportable)}`,
+    ...(result.plan.missingForExport.length === 0
+      ? ['- missing for export: none']
+      : result.plan.missingForExport.map(item => `- missing for export: ${item}`)),
     ...(result.plan.futureSkillExportRequirements.length === 0
       ? ['- future skill export requirements: none']
       : result.plan.futureSkillExportRequirements.map(item => `- future skill export requirement: ${item}`)),
+    'export draft:',
+    `- artifact: ${result.exportDraft.artifact}`,
+    `- skill name: ${result.exportDraft.skillName}`,
+    ...(result.exportDraft.description === undefined ? ['- description: missing'] : [`- description: ${result.exportDraft.description}`]),
+    `- readiness: ${result.exportDraft.readiness}`,
+    ...(result.exportDraft.bodyOutline.length === 0
+      ? ['- body outline: none']
+      : result.exportDraft.bodyOutline.map(item => `- body outline: ${item}`)),
     'diagnostics:',
     ...(result.diagnostics.length === 0
       ? ['- none']

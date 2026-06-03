@@ -1,0 +1,8 @@
+pack: isomorph-authoring
+namespace: iso
+description: Isomorph authoring context assets distributed through contexta.
+targets:
+  - codex
+assets:
+  skill:
+    - skill-creator

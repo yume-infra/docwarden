@@ -34,11 +34,11 @@ Observed moving areas include:
 
 - `apps/isomorph/src/**`
 - `apps/isomorph/tests/**`
-- `.isomorph/mapping/bootstrap/modules/concept/primitive-creator.md`
-- `.isomorph/mapping/bootstrap/modules/concept/skill-primitive.md`
-- `.isomorph/mapping/bootstrap/modules/policy/skill-primitive-boundary.md`
-- `.isomorph/mapping/bootstrap/templates/skill-primitive.md`
-- `skills/primitive/write-skill/SKILL.md`
+- `.isomorph/primitives/modules/concept/primitive-creator.md`
+- `.isomorph/primitives/modules/concept/skill-primitive.md`
+- `.isomorph/grammars/modules/policy/skill-primitive-boundary.md`
+- `.isomorph/exports/templates/skill-primitive.md`
+- `.contexta/packs/isomorph-authoring/skills/skill-creator/SKILL.md`
 
 This branch may touch overlapping paths when the architecture migration requires it. The responsibility boundary is not a file ban; it is a merge judgment.
 

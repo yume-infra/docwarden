@@ -1,10 +1,12 @@
 pack: docwarden
 namespace: dw
 description: Docwarden context assets distributed through contexta.
-target: codex
+targets:
+  - codex
 assets:
   skill:
     - review-doc
+    - pick
   prompt:
     - review-guidance
   agent:

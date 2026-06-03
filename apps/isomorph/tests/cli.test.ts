@@ -202,22 +202,57 @@ kind: skill-primitive
 
 # ready-skill
 
-## Capability
+## Drift Pressure
 
-Create a local skill primitive.
+Agents turn skill creation into generic scaffolding before naming the behavior drift.
 
-## Trigger
+Pressure Scenarios:
 
-Use when needed.
+- User asks for a skill and the agent starts with files first.
+
+## Intervention
+
+Force the agent to model the future skill as behavior correction before export.
+
+- Name the drift pressure.
+- Separate agent judgment from deterministic guardrails.
+
+## Activation
+
+Description: Use when creating or updating a Codex skill from primitive material.
+
+Triggers:
+
+- create a skill from primitive material
+
+Exclusions:
+
+- run an existing validation script only.
+
+## Judgment Surface
+
+- Decide whether the skill corrects a real agent drift.
+
+## Deterministic Boundary
+
+- Run deterministic validation scripts before accepting the skill.
+
+## Review Gate
+
+- Ask the user to confirm drift pressure before materialization.
+
+## Export Shape
+
+- SKILL.md export must preserve drift, activation, judgment surface, deterministic boundary, review gate, semantic basis, and validation.
 
 ## Semantic Basis
 
 - [[primitives/modules/concept/skill-primitive|skill-primitive]]
 - [[primitives/modules/concept/primitive-creator|primitive-creator]]
 
-## Export Position
+## Validation
 
-Future SKILL.md export must preserve model material.
+- Run quick_validate.py on the materialized skill.
 `, 'utf8')
     await fs.writeFile(needsWork, `---
 kind: skill-primitive

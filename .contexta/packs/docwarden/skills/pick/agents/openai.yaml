@@ -1,0 +1,4 @@
+interface:
+  display_name: DW Pick
+  short_description: Preserve docwarden pick signals
+  default_prompt: Use $dw-pick to review this task outcome and prepare the smallest pick candidate before running the docwarden CLI.

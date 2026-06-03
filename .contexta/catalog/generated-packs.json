@@ -7,7 +7,20 @@
       "namespace": "dw",
       "manifestPath": ".contexta/packs/docwarden/contexta.yaml",
       "packPath": ".contexta/packs/docwarden",
-      "description": "Docwarden context assets distributed through contexta."
+      "description": "Docwarden context assets distributed through contexta.",
+      "targets": [
+        "codex"
+      ]
+    },
+    {
+      "id": "isomorph-authoring",
+      "namespace": "iso",
+      "manifestPath": ".contexta/packs/isomorph-authoring/contexta.yaml",
+      "packPath": ".contexta/packs/isomorph-authoring",
+      "description": "Isomorph authoring context assets distributed through contexta.",
+      "targets": [
+        "codex"
+      ]
     }
   ]
 }

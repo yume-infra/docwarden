@@ -34,7 +34,7 @@ export function runSourceListEffect(options: SourceListOptions): Effect.Effect<S
       if (document.kind !== undefined) {
         current.kinds.add(document.kind)
       }
-      const template = /^[^/]+\/[^/]+\/templates\/(.+)\.md$/.exec(document.isomorphPath)
+      const template = /(?:^|\/)templates\/(.+)\.md$/.exec(document.isomorphPath)
       if (template) {
         current.templates.add(template[1]!)
       }

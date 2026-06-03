@@ -94,7 +94,10 @@ describe('contexta CLI contract', () => {
     expect(output.command).toBe('assets')
     expect(output.contextaRoot).toBe(path.join(workspace, '.contexta'))
     expect(output.catalog.packs).toContainEqual(expect.objectContaining({ id: 'docwarden' }))
+    expect(output.catalog.packs).toContainEqual(expect.objectContaining({ id: 'isomorph-authoring' }))
     expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'skill:dw/review-doc' }))
+    expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'skill:dw/pick' }))
+    expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'skill:iso/skill-creator' }))
     expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'prompt:dw/review-guidance' }))
     expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'agent:dw/doc-assistant' }))
     expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'hook:dw/bootstrap' }))
@@ -105,8 +108,8 @@ describe('contexta CLI contract', () => {
     const generatedPacks = JSON.parse(
       await fs.readFile(path.join(workspace, '.contexta/catalog/generated-packs.json'), 'utf8'),
     ) as { readonly packs: readonly unknown[] }
-    expect(generatedAssets.assets).toHaveLength(7)
-    expect(generatedPacks.packs).toHaveLength(1)
+    expect(generatedAssets.assets).toHaveLength(9)
+    expect(generatedPacks.packs).toHaveLength(2)
   })
 
   it('exports selected skill to repo-skill runtime root', async () => {
