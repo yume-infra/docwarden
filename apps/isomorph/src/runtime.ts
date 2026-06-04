@@ -3,6 +3,9 @@ import type { IsomorphError } from './errors.js'
 import type { IsomorphRuntimeServices } from './services.js'
 
 export {
+  runFrameworkListEffect,
+} from './application/framework.js'
+export {
   runLintEffect,
 } from './application/lint.js'
 export {
@@ -23,6 +26,9 @@ export type {
   DoctorRepairOptions,
   DoctorRepairPlan,
   DoctorRepairResult,
+  FrameworkListResult,
+  FrameworkSummary,
+  FrameworkVocabularyTerm,
   InitOptions,
   InitResult,
   IsomorphDiagnostic,

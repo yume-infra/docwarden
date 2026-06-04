@@ -75,9 +75,9 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[bootstrap/primitives/concept/skill-primitive|skill-primitive]]
-- [[basis/primitives/concept/lead-review|lead-review]]
-- [[bootstrap/primitives/concept/primitive-creator|primitive-creator]]
+- [[contract/skill-primitive/concept|skill-primitive]]
+- [[loop/lead-review/concept|lead-review]]
+- [[contract/primitive-creator/concept|primitive-creator]]
 
 ## Validation
 

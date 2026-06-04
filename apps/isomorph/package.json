@@ -16,8 +16,11 @@
     "isomorph": "dist/index.js"
   },
   "files": [
+    "contract",
     "dist",
-    "isomorph-source"
+    "framework",
+    "language",
+    "loop"
   ],
   "engines": {
     "node": ">=22.22.1"

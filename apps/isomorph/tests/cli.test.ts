@@ -23,6 +23,10 @@ async function makeWorkspace(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'isomorph-cli-test-'))
 }
 
+async function copyDirectory(source: string, destination: string): Promise<void> {
+  await fs.cp(source, destination, { recursive: true })
+}
+
 function runProcess(command: string, args: readonly string[], cwd: string): Promise<ProcessResult> {
   return new Promise((resolve, reject) => {
     const child = spawn(command, [...args], {
@@ -244,8 +248,8 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[bootstrap/primitives/concept/skill-primitive|skill-primitive]]
-- [[bootstrap/primitives/concept/primitive-creator|primitive-creator]]
+- [[contract/skill-primitive/concept|skill-primitive]]
+- [[contract/primitive-creator/concept|primitive-creator]]
 
 ## Validation
 
@@ -274,7 +278,7 @@ Create a local skill primitive.
     expect(needsWorkJson.status).toBe('needs-work')
   })
 
-  it('lists local source layers, kinds, and templates', async () => {
+  it('lists local source abilities, kinds, and templates', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(['--root', workspace, 'init'], repoRoot)
 
@@ -284,20 +288,66 @@ Create a local skill primitive.
     expect(result.exitCode).toBe(0)
     expect(result.stderr).toBe('')
     const scopes = output.scopes.map((scope: { scope: string }) => scope.scope)
-    expect(scopes).toContain('basis')
-    expect(scopes).toContain('bootstrap')
-    const basis = output.scopes.find((scope: { scope: string }) => scope.scope === 'basis')
-    const bootstrap = output.scopes.find((scope: { scope: string }) => scope.scope === 'bootstrap')
-    expect(basis.path).toBe('basis/')
-    expect(basis.kinds).toContain('concept')
-    expect(bootstrap.path).toBe('bootstrap/')
-    expect(bootstrap.templates).toContain('skill-primitive')
+    expect(scopes).toEqual(expect.arrayContaining(['language', 'framework', 'contract', 'loop']))
+    const language = output.scopes.find((scope: { scope: string }) => scope.scope === 'language')
+    const contract = output.scopes.find((scope: { scope: string }) => scope.scope === 'contract')
+    const framework = output.scopes.find((scope: { scope: string }) => scope.scope === 'framework')
+    const loop = output.scopes.find((scope: { scope: string }) => scope.scope === 'loop')
+    expect(language.path).toBe('language/')
+    expect(language.kinds).toContain('concept')
+    expect(contract.path).toBe('contract/')
+    expect(contract.templates).toContain('skill-primitive/template')
+    expect(framework.path).toBe('framework/')
+    expect(framework.templates).toContain('semantic-framework')
+    expect(loop.path).toBe('loop/')
 
     const plain = await runIsomorph(['--root', workspace, 'source', 'list'], repoRoot)
     expect(plain.exitCode).toBe(0)
     expect(plain.stdout).toContain('isomorph source list')
-    expect(plain.stdout).toContain('## basis')
-    expect(plain.stdout).toContain('## bootstrap')
+    expect(plain.stdout).toContain('## language')
+    expect(plain.stdout).toContain('## framework')
+    expect(plain.stdout).toContain('## contract')
+    expect(plain.stdout).toContain('## loop')
+  })
+
+  it('dogfoods a project framework vocabulary through CLI framework and lint commands', async () => {
+    const workspace = await makeWorkspace()
+    const exampleRoot = path.join(repoRoot, 'examples/isomorph-link-vocabulary')
+    await runIsomorph(['--root', workspace, 'init'], repoRoot)
+    await copyDirectory(
+      path.join(exampleRoot, '.isomorph/framework'),
+      path.join(workspace, '.isomorph/framework'),
+    )
+    await copyDirectory(
+      path.join(exampleRoot, 'content'),
+      path.join(workspace, 'content'),
+    )
+
+    const framework = await runIsomorph(['--root', workspace, 'framework', 'list', '--json'], repoRoot)
+    const frameworkJson = JSON.parse(framework.stdout)
+    expect(framework.exitCode).toBe(0)
+    expect(framework.stderr).toBe('')
+    expect(frameworkJson.frameworks[0]).toMatchObject({
+      id: 'link-vocabulary',
+      signals: ['short-ofm-link'],
+    })
+    expect(frameworkJson.frameworks[0].vocabularyTerms.map((term: { id: string }) => term.id)).toContain('link-example')
+
+    const shortLink = path.join(workspace, 'content/short-link.md')
+    const pathAliasLink = path.join(workspace, 'content/path-alias-link.md')
+    const shortLint = await runIsomorph(['--root', workspace, 'lint', shortLink, '--json'], repoRoot)
+    const shortLintJson = JSON.parse(shortLint.stdout)
+    expect(shortLint.exitCode).toBe(1)
+    expect(shortLint.stderr).toBe('')
+    expect(shortLintJson.recognition.recognizedRole).toBe('link-example')
+    expect(shortLintJson.signals[0]).toMatchObject({
+      signal: 'short-ofm-link',
+    })
+
+    const pathAliasLint = await runIsomorph(['--root', workspace, 'lint', pathAliasLink], repoRoot)
+    expect(pathAliasLint.exitCode).toBe(0)
+    expect(pathAliasLint.stderr).toBe('')
+    expect(pathAliasLint.stdout).toContain('signals: 0')
   })
 
   it('reports pinned upgrade status and malformed pin parse errors', async () => {

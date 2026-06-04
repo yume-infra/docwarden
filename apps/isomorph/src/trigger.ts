@@ -137,6 +137,24 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
     }
   }
 
+  const ofmLinkTarget = /^ofm link target is (short|path[- ]alias)$/.exec(raw)
+  if (ofmLinkTarget !== null) {
+    const mode = ofmLinkTarget[1] ?? ''
+    const hit = mode === 'short'
+      ? surface.ofmLinks.find(link => isShortOfmTarget(link.target))
+      : surface.ofmLinks.find(link => isPathAliasOfmTarget(link.target, link.label))
+    return {
+      raw,
+      known: true,
+      matched: hit !== undefined,
+      evidence: hit === undefined
+        ? `no OFM ${mode} link target`
+        : `OFM ${mode} link target: ${hit.raw}`,
+      context: hit?.raw,
+      source: 'surface',
+    }
+  }
+
   const directoryName = /^directory name == ([\w.-]+)$/.exec(raw)
   if (directoryName !== null) {
     const expected = directoryName[1] ?? ''
@@ -252,6 +270,16 @@ function stripListMarker(line: string): string {
 
 function stripWrappingSlash(value: string): string {
   return value.replace(/^\/+/, '').replace(/\/+$/, '')
+}
+
+function isShortOfmTarget(target: string): boolean {
+  const pathTarget = target.split('#')[0]?.trim() ?? ''
+  return pathTarget.length > 0 && !pathTarget.includes('/')
+}
+
+function isPathAliasOfmTarget(target: string, label: string | undefined): boolean {
+  const pathTarget = target.split('#')[0]?.trim() ?? ''
+  return pathTarget.includes('/') && label !== undefined && label.trim().length > 0
 }
 
 function escapeRegExp(value: string): string {

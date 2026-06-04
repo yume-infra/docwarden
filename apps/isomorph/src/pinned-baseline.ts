@@ -8,53 +8,67 @@ export interface BaselineFile {
   readonly content: string
 }
 
-export const isomorphSourceLayers = {
-  basis: 'basis',
-  bootstrap: 'bootstrap',
-  init: 'init',
+export const isomorphSourceAbilities = {
+  language: 'language',
+  framework: 'framework',
+  contract: 'contract',
+  loop: 'loop',
 } as const
 
-export type IsomorphSourceLayer = (typeof isomorphSourceLayers)[keyof typeof isomorphSourceLayers]
+export type IsomorphSourceAbility = (typeof isomorphSourceAbilities)[keyof typeof isomorphSourceAbilities]
 
 export const pinnedBaselineVendor = 'isomorph'
 export const pinnedBaselineRef = 'isomorph-origin-v0'
 export const pinnedBaselineSchemaVersion = 1
 
+export const initSeedFiles: readonly BaselineFile[] = [{
+  path: 'README.md',
+  content: `---
+status: active
+updated: 2026-06-04T00:00:00.000Z
+---
+
+# Initialized isomorph project workspace
+
+This workspace is initialized by the isomorph CLI.
+
+- Keep project-specific semantic framework material under this .isomorph tree.
+- Keep vocabulary, relations, boundaries, loss models, examples and usage contracts owned by this project.
+- The isomorph CLI reads pinned package authority from language, framework, contract and loop source abilities.
+- Package-owned source material does not belong in this .isomorph tree.
+`,
+}]
+
 export function readPinnedBaselineFiles(): readonly BaselineFile[] {
-  const isomorphRoot = resolveBaselineSourceRoot()
+  const isomorphRoot = resolvePackageRoot()
   const files: BaselineFile[] = []
-  walkMarkdownFiles(isomorphRoot, isomorphRoot, files)
+  for (const ability of Object.values(isomorphSourceAbilities)) {
+    walkMarkdownFiles(isomorphRoot, path.join(isomorphRoot, ability), files)
+  }
   return files.sort((a, b) => a.path.localeCompare(b.path))
 }
 
-export function readPinnedBaselineFilesForLayer(layer: IsomorphSourceLayer): readonly BaselineFile[] {
-  return readPinnedBaselineFiles().filter(file => layerOfPath(file.path) === layer)
+export function readPinnedBaselineFilesForAbility(ability: IsomorphSourceAbility): readonly BaselineFile[] {
+  return readPinnedBaselineFiles().filter(file => abilityOfPath(file.path) === ability)
 }
 
-export function readPinnedBaselineFilesForLayers(layers: readonly IsomorphSourceLayer[]): readonly BaselineFile[] {
-  const layerSet = new Set(layers)
-  return readPinnedBaselineFiles().filter(file => layerSet.has(layerOfPath(file.path)))
+export function readPinnedBaselineFilesForAbilities(abilities: readonly IsomorphSourceAbility[]): readonly BaselineFile[] {
+  const abilitySet = new Set(abilities)
+  return readPinnedBaselineFiles().filter(file => abilitySet.has(abilityOfPath(file.path)))
 }
 
-export function layerOfPath(filePath: string): IsomorphSourceLayer {
+export function abilityOfPath(filePath: string): IsomorphSourceAbility {
   const prefix = filePath.includes('/') ? filePath.slice(0, filePath.indexOf('/')) : filePath
-  if (prefix === isomorphSourceLayers.basis || prefix === isomorphSourceLayers.bootstrap || prefix === isomorphSourceLayers.init) {
+  if (
+    prefix === isomorphSourceAbilities.language
+    || prefix === isomorphSourceAbilities.framework
+    || prefix === isomorphSourceAbilities.contract
+    || prefix === isomorphSourceAbilities.loop
+  ) {
     return prefix
   }
 
-  throw new Error(`unknown isomorph source layer: ${filePath}`)
-}
-
-export function initOutputPath(filePath: string): string {
-  const prefix = `${isomorphSourceLayers.init}/`
-  if (!filePath.startsWith(prefix)) {
-    throw new Error(`init output path requires init layer file: ${filePath}`)
-  }
-  const outputPath = filePath.slice(prefix.length)
-  if (outputPath.length === 0) {
-    throw new Error(`init output path is empty: ${filePath}`)
-  }
-  return outputPath
+  throw new Error(`unknown isomorph source ability: ${filePath}`)
 }
 
 export function computeBaselineDigest(files: readonly BaselineFile[]): string {
@@ -68,15 +82,21 @@ export function computeBaselineDigest(files: readonly BaselineFile[]): string {
   return `sha256:${hash.digest('hex')}`
 }
 
-function resolveBaselineSourceRoot(): string {
+function resolvePackageRoot(): string {
   const moduleDirectory = path.dirname(fileURLToPath(import.meta.url))
   const candidates = [
-    path.resolve(moduleDirectory, '..', 'isomorph-source'),
+    path.resolve(moduleDirectory, '..'),
   ]
 
-  const match = candidates.find(candidate => existsSync(candidate) && statSync(candidate).isDirectory())
+  const match = candidates.find(candidate =>
+    existsSync(candidate)
+    && statSync(candidate).isDirectory()
+    && Object.values(isomorphSourceAbilities).every((ability) => {
+      const abilityRoot = path.join(candidate, ability)
+      return existsSync(abilityRoot) && statSync(abilityRoot).isDirectory()
+    }))
   if (match === undefined) {
-    throw new Error('cannot resolve pinned isomorph baseline: missing packaged isomorph-source')
+    throw new Error('cannot resolve pinned isomorph baseline: missing packaged source abilities')
   }
   return match
 }

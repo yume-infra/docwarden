@@ -12,13 +12,13 @@ const defaultRequiredSections = [
   'Validation',
 ] as const
 const requiredSemanticBasisTargets = [
-  'bootstrap/primitives/concept/skill-primitive',
-  'bootstrap/primitives/concept/primitive-creator',
+  'contract/skill-primitive/concept',
+  'contract/primitive-creator/concept',
 ] as const
 
 export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkillResult {
   const material = run.model.skillPrimitiveMaterial
-  const template = material.find(document => document.isomorphPath === 'bootstrap/templates/skill-primitive.md')
+  const template = material.find(document => document.isomorphPath === 'contract/skill-primitive/template.md')
   const requiredSections = template === undefined
     ? [...defaultRequiredSections]
     : template.surface.headings

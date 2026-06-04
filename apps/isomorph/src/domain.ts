@@ -105,6 +105,7 @@ export interface ResolveOptions {
 export interface IsomorphDocument {
   readonly absolutePath: string
   readonly isomorphPath: string
+  readonly source: 'local' | 'pinned'
   readonly surface: MarkdownSurface
   readonly title: string
   readonly kind: string | undefined
@@ -148,6 +149,25 @@ export interface SourceScopeSummary {
 export interface SourceListResult {
   readonly root: IsomorphRoot
   readonly scopes: readonly SourceScopeSummary[]
+}
+
+export interface FrameworkVocabularyTerm {
+  readonly id: string
+  readonly term: string
+  readonly source: string
+}
+
+export interface FrameworkSummary {
+  readonly id: string
+  readonly path: string
+  readonly domain: string | undefined
+  readonly vocabularyTerms: readonly FrameworkVocabularyTerm[]
+  readonly signals: readonly string[]
+}
+
+export interface FrameworkListResult {
+  readonly root: IsomorphRoot
+  readonly frameworks: readonly FrameworkSummary[]
 }
 
 export interface TriggerHit {

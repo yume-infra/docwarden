@@ -34,9 +34,9 @@ export function runSourceListEffect(options: SourceListOptions): Effect.Effect<S
       if (document.kind !== undefined) {
         current.kinds.add(document.kind)
       }
-      const template = /(?:^|\/)templates\/(.+)\.md$/.exec(document.isomorphPath)
-      if (template) {
-        current.templates.add(template[1]!)
+      const template = templateName(document.isomorphPath)
+      if (template !== undefined) {
+        current.templates.add(template)
       }
       summaries.set(scope, current)
     }
@@ -56,4 +56,18 @@ export function runSourceListEffect(options: SourceListOptions): Effect.Effect<S
       scopes,
     }
   })
+}
+
+function templateName(isomorphPath: string): string | undefined {
+  const templateDirectoryMatch = /(?:^|\/)template\/(.+)\.md$/.exec(isomorphPath)
+  if (templateDirectoryMatch !== null) {
+    return templateDirectoryMatch[1]!
+  }
+
+  const templateFileMatch = /^([^/]+)\/(.+)\/template\.md$/.exec(isomorphPath)
+  if (templateFileMatch !== null) {
+    return `${templateFileMatch[2]!}/template`
+  }
+
+  return undefined
 }

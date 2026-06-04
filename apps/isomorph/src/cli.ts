@@ -1,11 +1,11 @@
-import type { DoctorInspectResult, DoctorRepairResult, InitResult, IsomorphError, IsomorphRuntimeServices, LintResult, PrimitiveSkillResult, RecognitionRunResult, SourceListResult, UpgradeStatusResult } from './runtime.js'
+import type { DoctorInspectResult, DoctorRepairResult, FrameworkListResult, InitResult, IsomorphError, IsomorphRuntimeServices, LintResult, PrimitiveSkillResult, RecognitionRunResult, SourceListResult, UpgradeStatusResult } from './runtime.js'
 
 import process from 'node:process'
 import { Effect, Option } from 'effect'
 import * as Argument from 'effect/unstable/cli/Argument'
 import * as Command from 'effect/unstable/cli/Command'
 import * as Flag from 'effect/unstable/cli/Flag'
-import { IsomorphConfigError, isomorphLiveLayer, runDoctorInspectEffect, runDoctorRepairEffect, runInitEffect, runLintEffect, runPrimitiveSkillEffect, runRecognitionEffect, runSourceListEffect, runUpgradeStatusEffect, toIsomorphError } from './runtime.js'
+import { IsomorphConfigError, isomorphLiveLayer, runDoctorInspectEffect, runDoctorRepairEffect, runFrameworkListEffect, runInitEffect, runLintEffect, runPrimitiveSkillEffect, runRecognitionEffect, runSourceListEffect, runUpgradeStatusEffect, toIsomorphError } from './runtime.js'
 
 export const version = '0.0.0'
 
@@ -116,6 +116,26 @@ const primitive = Command.make('primitive').pipe(
   Command.withSubcommands([primitiveSkill]),
 )
 
+const framework = Command.make('framework').pipe(
+  Command.withDescription('Inspect local project semantic frameworks'),
+)
+
+const frameworkList = Command.make('list', {
+  json: jsonFlag,
+}, ({ json }) =>
+  Effect.gen(function* () {
+    const root = yield* isomorph
+    yield* runCli(
+      runFrameworkListEffect({ root: root.root }),
+      result => ({
+        output: json ? formatJson(result) : formatFrameworkList(result),
+        exitCode: 0,
+      }),
+    )
+  })).pipe(
+  Command.withDescription('List local project framework workspaces'),
+)
+
 const source = Command.make('source').pipe(
   Command.withDescription('List canonical sources and runtime layers for local .isomorph material'),
 )
@@ -208,7 +228,7 @@ const doctor = Command.make('doctor', {
 )
 
 const command = isomorph.pipe(
-  Command.withSubcommands([init, recognize, lint, primitive, source.pipe(Command.withSubcommands([sourceList])), upgrade, doctor]),
+  Command.withSubcommands([init, recognize, lint, primitive, framework.pipe(Command.withSubcommands([frameworkList])), source.pipe(Command.withSubcommands([sourceList])), upgrade, doctor]),
 )
 
 export const main: Effect.Effect<void, unknown> = Command.run(command, {
@@ -429,6 +449,25 @@ function formatPrimitiveSkill(result: PrimitiveSkillResult): string {
       ? ['- none']
       : result.diagnostics.map(diagnostic => `- ${diagnostic.severity}: ${diagnostic.message}`)),
   ].join('\n')
+}
+
+function formatFrameworkList(result: FrameworkListResult): string {
+  const lines = [
+    'isomorph framework list',
+    `root: ${result.root.isomorphRoot}`,
+    `frameworks: ${result.frameworks.length}`,
+  ]
+
+  for (const framework of result.frameworks) {
+    lines.push('')
+    lines.push(`## ${framework.id}`)
+    lines.push(`path: ${framework.path}`)
+    lines.push(`domain: ${framework.domain ?? '(missing)'}`)
+    lines.push(`terms: ${framework.vocabularyTerms.length === 0 ? '(none)' : framework.vocabularyTerms.map(term => term.id).join(', ')}`)
+    lines.push(`signals: ${framework.signals.length === 0 ? '(none)' : framework.signals.join(', ')}`)
+  }
+
+  return lines.join('\n')
 }
 
 function formatSourceList(result: SourceListResult): string {

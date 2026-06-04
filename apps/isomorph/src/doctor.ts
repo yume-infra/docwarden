@@ -21,7 +21,7 @@ import { loadIsomorphModelEffect } from './local-model.js'
 import { collectOfmLinksFromText, findSection } from './markdown-helpers.js'
 import { parseMarkdownSurface } from './markdown.js'
 import { pinMetadataPath, readPinEffect } from './pin.js'
-import { initOutputPath, isomorphSourceLayers, readPinnedBaselineFilesForLayer } from './pinned-baseline.js'
+import { initSeedFiles } from './pinned-baseline.js'
 import { evaluateRecognitionTriggerLine, recognizeSurfaceEffect } from './recognition.js'
 import { pathExists, resolveIsomorphRootEffect } from './root.js'
 import { VendorSnapshotProvider } from './services.js'
@@ -203,13 +203,12 @@ function inspectBaselineMaterial(root: IsomorphRoot): Effect.Effect<readonly Doc
     const path = yield* Path.Path
     const missing: string[] = []
     const conflicting: string[] = []
-    const expectedFiles = readPinnedBaselineFilesForLayer(isomorphSourceLayers.init)
+    const expectedFiles = initSeedFiles
 
     for (const file of expectedFiles) {
-      const outputPath = initOutputPath(file.path)
-      const destination = path.join(root.isomorphRoot, outputPath)
+      const destination = path.join(root.isomorphRoot, file.path)
       if (!(yield* pathExists(destination))) {
-        missing.push(outputPath)
+        missing.push(file.path)
         continue
       }
       const content = yield* fs.readFileString(destination, 'utf8').pipe(
@@ -218,7 +217,7 @@ function inspectBaselineMaterial(root: IsomorphRoot): Effect.Effect<readonly Doc
         })),
       )
       if (content !== file.content) {
-        conflicting.push(outputPath)
+        conflicting.push(file.path)
       }
     }
 
@@ -382,10 +381,8 @@ function applyAdoptPinnedBaseline(root: IsomorphRoot, snapshot: VendorSnapshot, 
       }
     }
 
-    const initFiles = readPinnedBaselineFilesForLayer(isomorphSourceLayers.init)
-    for (const file of initFiles) {
-      const outputPath = initOutputPath(file.path)
-      const destination = path.join(root.isomorphRoot, outputPath)
+    for (const file of initSeedFiles) {
+      const destination = path.join(root.isomorphRoot, file.path)
       if (yield* pathExists(destination)) {
         continue
       }
@@ -395,7 +392,7 @@ function applyAdoptPinnedBaseline(root: IsomorphRoot, snapshot: VendorSnapshot, 
         })),
       )
       yield* writeAtomicString(destination, file.content)
-      actions.push(`write missing baseline file: ${outputPath}`)
+      actions.push(`write missing baseline file: ${file.path}`)
     }
 
     if (!pinExists) {
