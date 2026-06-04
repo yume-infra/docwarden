@@ -1,6 +1,7 @@
 # User Position
 
 > 记录来源：2026-06-03 与 sayori 关于 isomorph、contexta、docwarden、skill-primitive 和分层架构的讨论。
+> 2026-06-04 补充：isomorph 的 root primitives 被重新确认为 bootstrap primitives；用户或项目自己的体系命名为 semantic framework。
 >
 > 本文记录用户最终口径（不保留兼容迁移层，不保留中间状态口径）。
 
@@ -24,13 +25,17 @@
 
 ## Isomorph
 
-`isomorph` 是用户的语义机制。
+`isomorph` 是 bootstrap semantic authority。
 
-它的目标是稳定用户自己的 DSL、primitive、magic word 和语义判断方式。此前设计的 `module`、`assertion`、magic word 和分层机制，都是为了让这套语义体系稳定成立。
+它的目标不是预先定义某个项目的全部语义，而是提供建构 semantic framework 所需的最小元语言和 agent-use 能力。
+
+root primitives 是 isomorph 的自举层。它们始终成立，因为它们描述的是语义对象、命名、关系、basis、grammar、signal、loss 和 export shape 如何成立，而不是 docwarden 或其他项目的领域词。
+
+用户或项目自己的体系应命名为 `semantic framework`。`vocabulary` 是 semantic framework 的命名表面；领域可以通过 vocabulary、magic word 和 trigger phrase 让 agent 更稳定地理解 intent 与 failure mode。
 
 `skill-primitive` 属于 `isomorph` 语境。它更像写 skill 时可复用的理论词表，不是模板库。
 
-当前需要反思 `mapping` 设计。`isomorph` 的定位主要是语义和 primitive 设计，不应错误承担过多 mapping 实例职责。
+当前需要反思 `mapping` 设计。`mapping` 原来的问题是因果倒置：不是在 `isomorph` 里定义 docwarden，而是 docwarden 需要建构自己的 semantic framework，然后借用 `isomorph` 的能力。`isomorph` 可以定义 `mapping` 作为 semantic relation，但不应承担 docwarden、contexta 或 runtime artifact 的 mapping authority。
 
 ## Contexta
 
@@ -65,15 +70,18 @@ pack 表示一组共同服务某个能力、工作流或产品语境的上下文
 
 用户期望 `docwarden` 是一个和具体 workflow 无关的文档管理机制。实现后，它应可以被引入任何项目，利用项目已有资产，维护出属于该项目自己的文档体系。
 
-`docwarden` 与 `isomorph` 的关系来自文档维护过程中会遇到语义 lint 问题。`isomorph` 提供语义 authority 和 lint 能力，`docwarden` 可以借用这些能力实现 lint，从而更好地维护文档。
+`docwarden` 应拥有自己的 semantic framework。它与 `isomorph` 的关系来自文档维护过程中会遇到语义识别和 semantic-lint 问题。`isomorph` 提供 bootstrap、recognition、lint 和 export shape 能力，`docwarden` 可以借用这些能力定义并检查自己的文档语义。
 
 `docwarden` 与 `contexta` 的关系相对较弱，但仍然存在。`docwarden` 后续也会设计成一套 skill 模式 + CLI。对 `dw:` skill 族来说，`contexta` 最好可以作为分发引擎，负责分发 docwarden 相关 skill 资产。
 
-后续讨论确认：当前不需要引入 `docwarden/adoption/bindings/` 作为外层目录。`docwarden` 在本轮架构中只需要被定义为 consumer：消费 `isomorph` 的 lint / authority，必要时通过 `contexta` 分发自己的 context pack。
+后续讨论确认：当前不需要引入 `docwarden/adoption/bindings/` 作为外层目录。`docwarden` 在本轮架构中应作为拥有自己 semantic framework 的 consumer：借用 `isomorph` 的能力，必要时通过 `contexta` 分发自己的 context pack。
 
 ## Resolved Decisions
 
 - `mapping` 不继续作为 `.isomorph` 的主目录职责。
+- `semantic framework` 是用户或项目自定义语义体系的正式命名。
+- root primitives 是 isomorph bootstrap primitives，不是 docwarden 或其他项目的领域词表。
+- docwarden 应拥有自己的 semantic framework，而不是被 root `.isomorph` 定义。
 - `.isomorph/mapping/**` 应迁移为 primitives、grammars、lint、exports 等更明确的语义目录。
 - `contexta` 的资产源是 `.contexta/`。
 - `.contexta` 采用 pack-first，而不是全局 type-first 或 `families/`。
@@ -82,8 +90,11 @@ pack 表示一组共同服务某个能力、工作流或产品语境的上下文
 - `contexta` asset 的组织采用三层语义：`namespace`（`dw`、`iso`、`ym`）+ `pack`（业务语境）+ `asset kind`（skill / prompt / agent / hook / workflow / profile / reference）。
 - `Codex` 是本轮唯一 runtime 目标，projection/export 只实现 `contexta export codex` 与其 materialization 逻辑，不做其他兼容桥接。
 - 本轮明确不保留 compatibility mode，不保留旧架构映射的 shadow behavior。
+- 当前 agent-use contract 可暂定为 `recognize -> basis -> loss -> export shape`，但该层是 working contract，后续允许重新设计。
 
-## Finalized Decisions, No Open Questions
+## Current Carryover
 
 - `.isomorph/mapping/**` 的 canonical 归属已由本轮迁移实施移入 `.isomorph/primitives`、`.isomorph/grammars`、`.isomorph/lint`、`.isomorph/exports`。
 - `.contexta/packs/**/contexta.yaml`、`contexta export codex` 覆盖范围、`docwarden` 对 isomorph/contexta 的消费边界，均按对应 practice 文档的最终验收清单落地并在 merge 时复核。
+- docwarden semantic framework 的 canonical source 尚未在本文件中定稿；当前只确认它不应由 root `.isomorph` 反向定义。
+- agent-use 层当前只保留 working contract，后续会重新设计。

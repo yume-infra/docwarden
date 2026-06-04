@@ -6,16 +6,17 @@
 
 ## First Principles
 
-真实 agent 使用场景里至少存在四类不可混淆的对象：
+真实 agent 使用场景里至少存在五类不可混淆的对象：
 
 ```text
-语义如何成立
+语义体系如何被自举
+项目或用户自己的 semantic framework 如何成立
 上下文资产如何组织
 上下文资产如何变成某个 agent runtime 能加载的格式
 agent runtime 实际读到什么
 ```
 
-因此，`contexta` 不能同时承担资产系统和所有 runtime 格式适配；`isomorph` 也不能因为定义 `mapping` 概念，就承担所有 mapping 实例职责。  
+因此，`isomorph` 不能因为拥有 primitives，就替项目定义完整领域体系；`contexta` 不能同时承担资产系统和所有 runtime 格式适配；`isomorph` 也不能因为定义 `mapping` 概念，就承担所有 mapping 实例职责。  
 本轮为激进迁移，禁止 compatibility / middle state，不保留旧命令到新架构的过渡桥接。
 
 ## Terminology
@@ -29,6 +30,12 @@ pack
 
 asset kind
   skill / prompt / agent / hook / workflow / profile / reference
+
+semantic framework
+  用户或项目为某个领域建构的语义体系；它定义稳定 name、relation、basis、boundary、loss model 和 agent-use surface
+
+vocabulary
+  semantic framework 的命名表面；它让领域术语成为 agent 可识别的 magic word / trigger phrase
 ```
 
 关系边界：
@@ -41,7 +48,7 @@ asset kind
 
 ```text
 isomorph
-  semantic authority
+  bootstrap semantic authority
 
 contexta
   agent context asset system
@@ -53,30 +60,35 @@ runtime artifacts
   files actually loaded by the target agent runtime
 
 docwarden
-  document management consumer / application
+  document management consumer / application with its own semantic framework
 ```
 
 `harness / validation` 是横切验证层，不是主业务层。
 
 ## Isomorph
 
-`isomorph` 是语义机制层。
+`isomorph` 是 bootstrap semantic authority。
 
-它负责定义用户自己的 DSL 和语义本体，包括：
+它负责建构“语义体系如何成立”的最小元语言，并让用户或项目可以用这套元语言定义自己的 `semantic framework`。
 
-- primitive
-- concept
-- policy
-- structure
-- relation
-- module
-- assertion
-- magic word
-- recognition primitive
-- semantic-lint signal
-- grammar / format 约束
+root `.isomorph` 的 primitives 是 bootstrap primitives。它们始终成立，因为它们不是某个项目的领域词，而是用于定义语义对象、关系、边界和 loss 的元语义。
 
-`isomorph` 可以定义 `mapping` 是什么，但不应默认管理所有 contexta、docwarden 或 runtime artifact 的 mapping 实例。
+最小职责：
+
+- 定义 bootstrap primitives，例如 name、kind、relation、basis、grammar、signal、loss、export shape。
+- 定义 grammar，让语义对象可以被命名、组合、引用和保持边界。
+- 定义 semantic-lint signal，让 agent 能识别 drift 并说明 loss model。
+- 定义 export shape，让稳定语义可以被压成 agent-use contract。
+
+`isomorph` 可以定义 `mapping` 是什么，但不应默认管理所有 contexta、docwarden 或 runtime artifact 的 mapping 实例。更重要的是，`isomorph` 不应先定义 docwarden；docwarden 应建构自己的 semantic framework，然后借用 `isomorph` 的 bootstrap、recognition、semantic-lint 和 export shape 能力。
+
+当前最小 agent-use contract 暂定为：
+
+```text
+recognize -> basis -> loss -> export shape
+```
+
+这个 contract 是当前工作层，不是最终理论。后续 agent-use 层可以重新设计，但不得反向污染 bootstrap primitives 或项目自己的 semantic framework。
 
 ### Not Responsible For
 
@@ -84,6 +96,7 @@ docwarden
 - Codex / Claude / Cursor / OpenCode runtime 文件格式适配
 - docwarden 文档管理流程
 - contexta pack catalog / export
+- 为 docwarden 或其他项目预先拥有领域 semantic framework
 
 ## Contexta
 
@@ -231,6 +244,8 @@ runtime artifact 不承担语义 authority。它只是 agent 实际消费的结�
 
 它是 `docs/` 中文档体系理论的实现，目标是可引入任意项目，利用项目已有资产维护项目自己的文档体系。
 
+`docwarden` 应拥有自己的 semantic framework。它不是 root `.isomorph` 定义出来的下游对象，而是借用 `isomorph` 的能力来定义、识别和检查自己的文档语义。
+
 `docwarden` 可以消费：
 
 - `isomorph` 的 semantic authority 和 semantic-lint 能力。
@@ -258,7 +273,8 @@ runtime artifact 不承担语义 authority。它只是 agent 实际消费的结�
 ## Boundary Summary
 
 ```text
-isomorph defines semantics.
+isomorph bootstraps semantic framework construction.
+project semantic frameworks define domain semantics.
 contexta manages agent context assets.
 projection exports assets to runtime artifacts.
 runtime artifacts are loaded by Codex.

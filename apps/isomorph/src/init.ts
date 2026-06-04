@@ -33,18 +33,18 @@ export function runInitEffect(options: InitOptions = {}): Effect.Effect<InitResu
       })),
     )
 
-    const writeSeed = Effect.gen(function* () {
+    const writePinnedBaseline = Effect.gen(function* () {
       for (const file of snapshot.files) {
         const destination = path.join(isomorphRoot, file.path)
-        yield* assertInside(isomorphRoot, destination, `seed path escapes .isomorph: ${file.path}`)
+        yield* assertInside(isomorphRoot, destination, `pinned baseline path escapes .isomorph: ${file.path}`)
         yield* fs.makeDirectory(path.dirname(destination), { recursive: true }).pipe(
           Effect.mapError(error => new IsomorphRuntimeError({
-            message: `failed to create seed directory: ${path.dirname(destination)}: ${formatUnknownCause(error)}`,
+            message: `failed to create pinned baseline directory: ${path.dirname(destination)}: ${formatUnknownCause(error)}`,
           })),
         )
         yield* fs.writeFileString(destination, file.content).pipe(
           Effect.mapError(error => new IsomorphRuntimeError({
-            message: `failed to write seed file: ${destination}: ${formatUnknownCause(error)}`,
+            message: `failed to write pinned baseline file: ${destination}: ${formatUnknownCause(error)}`,
           })),
         )
       }
@@ -74,7 +74,7 @@ export function runInitEffect(options: InitOptions = {}): Effect.Effect<InitResu
       }
     })
 
-    return yield* writeSeed.pipe(
+    return yield* writePinnedBaseline.pipe(
       Effect.catch((error: IsomorphError) =>
         fs.remove(isomorphRoot, { force: true, recursive: true }).pipe(
           Effect.catch(() => Effect.void),

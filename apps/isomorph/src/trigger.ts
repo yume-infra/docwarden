@@ -20,6 +20,20 @@ export function evaluateSurfaceTriggerLine(rawLine: string, surface: MarkdownSur
     }
   }
 
+  const frontmatterExists = /^frontmatter\.([\w.-]+)\s+exists$/.exec(raw)
+  if (frontmatterExists !== null) {
+    const key = frontmatterExists[1] ?? ''
+    const matched = surface.frontmatter[key] !== undefined
+    return {
+      raw,
+      known: true,
+      matched,
+      evidence: matched ? `frontmatter.${key} exists` : `frontmatter.${key} is missing`,
+      context: undefined,
+      source: 'surface',
+    }
+  }
+
   const headingMatch = /^heading in \[(.+)\]$/.exec(raw)
   if (headingMatch !== null) {
     const expected = splitTerms(headingMatch[1] ?? '')

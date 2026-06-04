@@ -12,8 +12,8 @@ const defaultRequiredSections = [
   'Validation',
 ] as const
 const requiredSemanticBasisTargets = [
-  'primitives/modules/concept/skill-primitive',
-  'primitives/modules/concept/primitive-creator',
+  'primitives/concept/skill-primitive',
+  'primitives/concept/primitive-creator',
 ] as const
 
 export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkillResult {

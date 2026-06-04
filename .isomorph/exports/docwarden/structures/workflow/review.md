@@ -1,9 +1,7 @@
 ---
 kind: workflow
 id: dw:review
-mapping: docwarden
 structure: workflow
-status: draft
 ---
 
 # review
@@ -38,3 +36,4 @@ status: draft
 - `review.mode`、`cleanup` 策略、`review_surface.files` 等属于 docwarden 使用层 runtime config，不属于这个 definition 的内容。
 - `docwarden init` 与 `.docwarden` 内项目配置决定运行时可选项（如 review 模式、pending 标记、清理策略等）。
 - 本文件仅定义 workflow 的语义结构（state / move / transition）。
+- 本文件不是 `.docwarden` runtime state，也不是 contexta pack asset 或 Codex runtime artifact。

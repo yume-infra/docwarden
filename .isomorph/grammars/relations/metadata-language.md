@@ -6,17 +6,17 @@ kind: relation
 
 ## Network
 
-本 relation file 维护 [[primitives/modules/concept/metadata/kind|kind]] 与 [[primitives/modules/concept/metadata|metadata]] 之间的 metadata language 连接。
+本 relation file 维护 [[primitives/concept/metadata/kind|kind]] 与 [[primitives/concept/metadata|metadata]] 之间的 metadata language 连接。
 
 ## `metadata-field-of`
 
 From:
 
-- [[primitives/modules/concept/metadata/kind|kind]]
+- [[primitives/concept/metadata/kind|kind]]
 
 To:
 
-- [[primitives/modules/concept/metadata|metadata]]
+- [[primitives/concept/metadata|metadata]]
 
 Reading:
 
@@ -28,5 +28,5 @@ kind 是 metadata field，但不是 metadata subtype tree。
 
 Read next:
 
-- Definition: [[primitives/modules/concept/metadata#Definition|metadata#Definition]], [[primitives/modules/concept/metadata/kind#Definition|kind#Definition]]
-- Constraint: [[grammars/modules/policy/kind-boundary|kind-boundary]]
+- Definition: [[primitives/concept/metadata#Definition|metadata#Definition]], [[primitives/concept/metadata/kind#Definition|kind#Definition]]
+- Constraint: [[grammars/policy/kind-boundary|kind-boundary]]

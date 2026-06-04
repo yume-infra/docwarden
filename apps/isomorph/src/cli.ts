@@ -48,7 +48,7 @@ const init = Command.make('init', {
       }),
     )
   })).pipe(
-  Command.withDescription('Materialize a local .isomorph instance from the packaged seed snapshot'),
+  Command.withDescription('Materialize a local .isomorph instance from the pinned baseline'),
 )
 
 const recognize = Command.make('recognize', {

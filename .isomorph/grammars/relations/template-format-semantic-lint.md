@@ -6,49 +6,49 @@ kind: relation
 
 ## Network
 
-本 relation file 维护 [[primitives/modules/concept/template|template]]、[[primitives/modules/concept/format|format]]、[[primitives/modules/concept/semantic-lint|semantic-lint]]、[[primitives/modules/concept/module|module]] 与 [[primitives/modules/concept/signal|signal]] 之间的生成、保持和检测连接。
+本 relation file 维护 [[primitives/concept/template|template]]、[[primitives/concept/format|format]]、[[primitives/concept/semantic-lint|semantic-lint]]、[[primitives/concept/module|module]] 与 [[primitives/concept/signal|signal]] 之间的生成、保持和检测连接。
 
 ## `initializes`
 
 From:
 
-- [[primitives/modules/concept/template|template]]
+- [[primitives/concept/template|template]]
 
 To:
 
-- [[primitives/modules/concept/module|module]]
+- [[primitives/concept/module|module]]
 
 Reading:
 
 沿 `initializes` 读取时，template 只负责 0->1 的初始 module 骨架。
 
-`0->1` 在这里按 [[grammars/modules/magic-word/transition|transition]] registry 读取，不作为独立 phase concept。
+`0->1` 在这里按 [[grammars/magic-word/transition|transition]] registry 读取，不作为独立 phase concept。
 
 ## `preserves`
 
 From:
 
-- [[primitives/modules/concept/format|format]]
+- [[primitives/concept/format|format]]
 
 To:
 
-- [[primitives/modules/concept/module|module]]
+- [[primitives/concept/module|module]]
 
 Reading:
 
 沿 `preserves` 读取时，format 只负责 1->2 时保持 md 可消费形态。
 
-`1->2` 在这里按 [[grammars/modules/magic-word/transition|transition]] registry 读取，不作为独立 phase concept。
+`1->2` 在这里按 [[grammars/magic-word/transition|transition]] registry 读取，不作为独立 phase concept。
 
 ## `consumes`
 
 From:
 
-- [[primitives/modules/concept/semantic-lint|semantic-lint]]
+- [[primitives/concept/semantic-lint|semantic-lint]]
 
 To:
 
-- [[primitives/modules/concept/format|format]]
+- [[primitives/concept/format|format]]
 
 Reading:
 
@@ -58,11 +58,11 @@ Reading:
 
 From:
 
-- [[primitives/modules/concept/semantic-lint|semantic-lint]]
+- [[primitives/concept/semantic-lint|semantic-lint]]
 
 To:
 
-- [[primitives/modules/concept/signal|signal]]
+- [[primitives/concept/signal|signal]]
 
 Reading:
 
@@ -72,7 +72,7 @@ review-ready lint result 不是 review judgment。它只是尽量贴近 review s
 
 Read next:
 
-- Definition: [[primitives/modules/concept/template#Definition|template#Definition]], [[primitives/modules/concept/format#Definition|format#Definition]], [[primitives/modules/concept/semantic-lint#Definition|semantic-lint#Definition]], [[primitives/modules/concept/module#Definition|module#Definition]], [[primitives/modules/concept/signal#Definition|signal#Definition]], [[primitives/modules/concept/magic-word#Definition|magic-word#Definition]]
-- Magic words: [[grammars/modules/magic-word/transition|transition]]
+- Definition: [[primitives/concept/template#Definition|template#Definition]], [[primitives/concept/format#Definition|format#Definition]], [[primitives/concept/semantic-lint#Definition|semantic-lint#Definition]], [[primitives/concept/module#Definition|module#Definition]], [[primitives/concept/signal#Definition|signal#Definition]], [[primitives/concept/magic-word#Definition|magic-word#Definition]]
+- Magic words: [[grammars/magic-word/transition|transition]]
 - Pipeline: [[grammars/structures/pipeline/semantic-lint|semantic-lint pipeline]]
-- Constraint: [[grammars/modules/policy/template-boundary|template-boundary]], [[grammars/modules/policy/semantic-lint-boundary|semantic-lint-boundary]]
+- Constraint: [[grammars/policy/template-boundary|template-boundary]], [[grammars/policy/semantic-lint-boundary|semantic-lint-boundary]]

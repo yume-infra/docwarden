@@ -53,13 +53,15 @@ plugins/
 
 `.isomorph` 是语义源资产。它回答语义如何成立。
 
+更准确地说，root `.isomorph` 是 bootstrap semantic authority。它提供 primitives、grammars、lint 和 export shape，用来建构 semantic framework；它不默认拥有 docwarden 或其他项目的领域语义。
+
 `.contexta` 是 agent context 源资产。它回答用户有哪些上下文资产、这些资产如何组合、要分发到哪些 runtime。
 
 `apps/contexta` 是工具实现。它读取 `.contexta`，生成 runtime artifact。
 
 `apps/isomorph` 是语义 runtime 实现。它读取 `.isomorph`。
 
-`apps/docwarden` 是文档管理机制实现。它消费 isomorph 和 contexta，不拥有它们的职责。
+`apps/docwarden` 是文档管理机制实现。它消费 isomorph 和 contexta，不拥有它们的职责；但 docwarden 应拥有自己的 semantic framework，而不是由 root `.isomorph` 替它定义。
 
 ## Final Acceptance Gate
 
@@ -72,6 +74,10 @@ plugins/
   - `.contexta/targets/`
   - `.contexta/catalog/`
 - `.contexta` 仅保留 pack-first 组织；
+- root `.isomorph` 只承载 bootstrap primitives、grammar、semantic-lint 和 export shape；
+- `apps/isomorph` 不维护 TypeScript 内置 baseline material；derived `.isomorph` 通过 `.isomorph-pin.json` pin 到当前 `.isomorph` baseline digest；
+- 必要模板维护在 `.isomorph/exports/templates/**`，不复制到 runtime 常量；
+- docwarden-shaped `.isomorph/exports/docwarden/**` 若存在，只能视为迁移期材料、dogfood 样本或待降级候选，不能作为 docwarden framework 的 canonical source；
 - `docwarden/adoption/bindings/` 与 `contexta/distribution/`、`.contexta/families/` 均不存在于实施路径；
 - `contexta` 到 Codex 的 materialization 只允许 `apps/contexta/src/exporters/codex/`，并必须写入官方确认的 Codex surfaces；
 - `contexta` 仅保留 `assets` 与 `export codex` 的命令口径，不再保留 capability/catalog/install/activation/asset alias。
@@ -109,6 +115,14 @@ docwarden/adoption/bindings/
 ```
 
 docwarden 本轮只是 consumer。后续实现接入优先进入 `apps/docwarden/src/integrations/*`；项目本地状态才进入 `.docwarden/`。
+
+不采用：
+
+```text
+.isomorph/exports/docwarden/
+```
+
+作为 docwarden semantic framework 的 canonical source。docwarden 需要自建 framework，并借用 isomorph 能力，而不是被 root `.isomorph` 反向定义。
 
 不采用：
 

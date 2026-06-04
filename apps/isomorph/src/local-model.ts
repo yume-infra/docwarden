@@ -100,7 +100,7 @@ function collectLocalKinds(documents: readonly IsomorphDocument[]): ReadonlySet<
 }
 
 function readRecognitionRules(document: IsomorphDocument): readonly RecognitionRule[] {
-  if (document.kind !== 'recognition-primitive' && !document.isomorphPath.includes('/modules/recognition/')) {
+  if (document.kind !== 'recognition-primitive' && !document.isomorphPath.includes('/recognition/')) {
     return []
   }
 
@@ -126,7 +126,7 @@ function readRecognitionRules(document: IsomorphDocument): readonly RecognitionR
 }
 
 function readSignalDefinition(document: IsomorphDocument): readonly SignalDefinition[] {
-  if (document.kind !== 'signal' && !document.isomorphPath.includes('/modules/signal/')) {
+  if (document.kind !== 'signal' && !document.isomorphPath.includes('/signal/')) {
     return []
   }
   return [{

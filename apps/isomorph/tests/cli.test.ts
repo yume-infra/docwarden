@@ -242,8 +242,8 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[primitives/modules/concept/skill-primitive|skill-primitive]]
-- [[primitives/modules/concept/primitive-creator|primitive-creator]]
+- [[primitives/concept/skill-primitive|skill-primitive]]
+- [[primitives/concept/primitive-creator|primitive-creator]]
 
 ## Validation
 
@@ -292,6 +292,7 @@ Create a local skill primitive.
     expect(exports.path).toBe('exports/')
     expect(exports.templates).toContain('concept')
     expect(exports.templates).toContain('policy')
+    expect(exports.templates).toContain('semantic-framework')
 
     const plain = await runIsomorph(['--root', workspace, 'source', 'list'], repoRoot)
     expect(plain.exitCode).toBe(0)
@@ -349,9 +350,9 @@ Create a local skill primitive.
 
     expect(inspect.exitCode).toBe(2)
     expect(inspectJson.issues.map((issue: { code: string }) => issue.code)).toContain('missing-pin-metadata')
-    expect(inspectJson.repairPlans.map((plan: { id: string }) => plan.id)).toContain('adopt-packaged-baseline')
+    expect(inspectJson.repairPlans.map((plan: { id: string }) => plan.id)).toContain('adopt-pinned-baseline')
 
-    const repair = await runIsomorph(['--root', workspace, 'doctor', 'repair', '--plan', 'adopt-packaged-baseline', '--json'], repoRoot)
+    const repair = await runIsomorph(['--root', workspace, 'doctor', 'repair', '--plan', 'adopt-pinned-baseline', '--json'], repoRoot)
     const repairJson = JSON.parse(repair.stdout)
     expect(repair.exitCode).toBe(0)
     expect(repair.stderr).toBe('')

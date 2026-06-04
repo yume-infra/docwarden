@@ -1,21 +1,24 @@
-import type { SeedFile } from './seed.js'
+import type { IsomorphError } from './errors.js'
+import type { BaselineFile } from './pinned-baseline.js'
 import process from 'node:process'
 import * as NodeServices from '@effect/platform-node/NodeServices'
 import { Context, Effect, Layer } from 'effect'
+import { formatUnknownCause, IsomorphRuntimeError } from './errors.js'
 import {
-  computeSeedDigest,
-  seedFiles,
-  seedRef,
-  seedSchemaVersion,
-  seedVendor,
-} from './seed.js'
+
+  computeBaselineDigest,
+  pinnedBaselineRef,
+  pinnedBaselineSchemaVersion,
+  pinnedBaselineVendor,
+  readPinnedBaselineFiles,
+} from './pinned-baseline.js'
 
 export interface VendorSnapshot {
   readonly schemaVersion: number
   readonly vendor: string
   readonly ref: string
   readonly digest: string
-  readonly files: readonly SeedFile[]
+  readonly files: readonly BaselineFile[]
 }
 
 export interface CurrentWorkingDirectoryService {
@@ -23,7 +26,7 @@ export interface CurrentWorkingDirectoryService {
 }
 
 export interface VendorSnapshotProviderService {
-  readonly current: Effect.Effect<VendorSnapshot>
+  readonly current: Effect.Effect<VendorSnapshot, IsomorphError>
 }
 
 export const CurrentWorkingDirectory: Context.Service<CurrentWorkingDirectoryService, CurrentWorkingDirectoryService> = Context.Service<CurrentWorkingDirectoryService, CurrentWorkingDirectoryService>('isomorph/services/CurrentWorkingDirectory')
@@ -40,12 +43,20 @@ const CurrentWorkingDirectoryLive: Layer.Layer<CurrentWorkingDirectoryService> =
 const VendorSnapshotProviderLive: Layer.Layer<VendorSnapshotProviderService> = Layer.succeed(
   VendorSnapshotProvider,
   VendorSnapshotProvider.of({
-    current: Effect.succeed({
-      schemaVersion: seedSchemaVersion,
-      vendor: seedVendor,
-      ref: seedRef,
-      digest: computeSeedDigest(),
-      files: seedFiles,
+    current: Effect.try({
+      try: () => {
+        const files = readPinnedBaselineFiles()
+        return {
+          schemaVersion: pinnedBaselineSchemaVersion,
+          vendor: pinnedBaselineVendor,
+          ref: pinnedBaselineRef,
+          digest: computeBaselineDigest(files),
+          files,
+        }
+      },
+      catch: error => new IsomorphRuntimeError({
+        message: `failed to read pinned isomorph baseline: ${formatUnknownCause(error)}`,
+      }),
     }),
   }),
 )

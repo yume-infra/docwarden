@@ -12,7 +12,7 @@ kind: policy
 
 Applies to:
 
-- [[primitives/modules/concept/<concept-id>|<concept-id>]]
+- [[primitives/concept/<concept-id>|<concept-id>]]
 
 适用条件：
 
