@@ -1,0 +1,11 @@
+mode: task
+review_id: 20260604070850919-task-28-docwarden-v1-skills-cli-dogfood
+status: review-surface-ready
+created_at: 2026-06-04T07:08:50.920Z
+review_dir: /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/review/20260604070850919-task-28-docwarden-v1-skills-cli-dogfood
+config_path: /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/config.yaml
+task_id: 28-docwarden-v1-skills-cli-dogfood
+source_files:
+  - /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/task/28-docwarden-v1-skills-cli-dogfood/index.md
+  - /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/task/28-docwarden-v1-skills-cli-dogfood/plan.md
+  - /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/task/28-docwarden-v1-skills-cli-dogfood/log.md

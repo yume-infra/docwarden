@@ -1,7 +1,7 @@
 ---
 status: accepted
 created: 2026-05-13
-updated: 2026-06-02
+updated: 2026-06-04
 owner: sayori
 ---
 
@@ -22,12 +22,13 @@ owner: sayori
 
 当前 active task：
 
-- `.docwarden/task/26-docwarden-artifact-quality-loop/`：基于已收口的 spec target 口径，修正 review / promote / pick 产物质量。
+- `.docwarden/task/28-docwarden-v1-skills-cli-dogfood/`：尽快实现 docwarden v1 repo-local skills + CLI dogfood 形态。
 
-最近完成：
+最近完成并归档：
 
-- `.docwarden/task/25-docwarden-v0-dogfood-workflow/`：按原始理论在当前仓库 dogfood docwarden v0 workflow，已形成 v0 可运行基线。
-- `.docwarden/task/27-docwarden-spec-layer-definition/`：定义 docwarden spec 层级划分，解除 task26 的产物语义阻塞。
+- `.docwarden/archive/task/25-docwarden-v0-dogfood-workflow/`：按原始理论在当前仓库 dogfood docwarden v0 workflow，已形成 v0 可运行基线。
+- `.docwarden/archive/task/26-docwarden-artifact-quality-loop/`：基于已收口的 spec target 口径，修正 review / promote / pick 产物质量；最终 stable 写入选择 log-only / no-op。
+- `.docwarden/archive/task/27-docwarden-spec-layer-definition/`：定义 docwarden spec 层级划分，解除 task26 的产物语义阻塞。
 
 当前 blocked：
 
@@ -61,9 +62,12 @@ owner: sayori
 - `.docwarden/archive/task/22-contexta-dogfood-baseline/`：新基线留档，已归档。
 - `.docwarden/archive/task/23-symphony-dogfood-planning/`：symphony dogfood 规划工作面，已归档；当前不再作为主线前置。
 - `.docwarden/archive/task/24-docwarden-workflow-planning/`：docwarden workflow 旧规划工作面，已归档；后续由 task 25 承接。
+- `.docwarden/archive/task/25-docwarden-v0-dogfood-workflow/`：docwarden v0 可运行 workflow 基线，已归档。
+- `.docwarden/archive/task/26-docwarden-artifact-quality-loop/`：artifact quality loop，已归档。
+- `.docwarden/archive/task/27-docwarden-spec-layer-definition/`：spec layer definition blocker，已归档。
 
 ## 当前入口
 
 当前 active task：
 
-- `.docwarden/task/26-docwarden-artifact-quality-loop/`
+- `.docwarden/task/28-docwarden-v1-skills-cli-dogfood/`

@@ -1,14 +1,14 @@
 ---
-name: dw-pick
-description: Use when deciding, preparing, reviewing, or executing docwarden
-  dw:pick after review/promote, especially to preserve user-level assets such as
+name: pick
+description: Use when deciding, preparing, reviewing, or executing pick after
+  review/promote, especially to preserve user-level assets such as
   corrections, preferences, ADRs, terminology, project-history judgments, or
   reusable side knowledge that promote would hide. Do not use for mainline
   spec/guide/wiki promotion, raw task logging, docs edits, or deterministic CLI
   validation alone.
 ---
 
-# DW Pick
+# Pick
 
 Use pick as post-promote information-loss control. It preserves compoundable user-level assets that would otherwise disappear when task material is compressed, promoted, and cleaned up.
 
@@ -16,7 +16,7 @@ Pick is not a second mainline promotion path, a harvest of interesting task note
 
 ## Drift Pressure
 
-Agents tend to either drop reusable side signals as disposable conversation, or over-promote user preferences and correction patterns into project rules. `dw:pick` keeps that material in the user-level asset lane.
+Agents tend to either drop reusable side signals as disposable conversation, or over-promote user preferences and correction patterns into project rules. Pick keeps that material in the user-level asset lane.
 
 ## Workflow
 
@@ -53,12 +53,12 @@ Use skill judgment for:
 Use CLI for hard constraints and writes:
 
 ```bash
-rtk apps/docwarden/dist/index.js --root "$WORKSPACE_ROOT" review --task "$TASK_ID" --json
-rtk apps/docwarden/dist/index.js --root "$WORKSPACE_ROOT" promote --task "$TASK_ID" --to spec --target "$SPEC_TARGET" --kind "$SPEC_KIND" --json
-rtk apps/docwarden/dist/index.js --root "$WORKSPACE_ROOT" pick --task "$TASK_ID" --to wiki --json
+rtk pnpm exec docwarden --root "$WORKSPACE_ROOT" review --task "$TASK_ID" --json
+rtk pnpm exec docwarden --root "$WORKSPACE_ROOT" promote --task "$TASK_ID" --to spec --target "$SPEC_TARGET" --kind "$SPEC_KIND" --json
+rtk pnpm exec docwarden --root "$WORKSPACE_ROOT" pick --task "$TASK_ID" --to wiki --json
 ```
 
-The current CLI pick path only materializes task-sourced wiki picks. It owns required `--task`, destination constraints, artifact paths, and task log updates. If the dist binary may be stale, rebuild or run the package-local test loop before treating output as valid.
+The current CLI pick path only materializes task-sourced wiki picks. It owns required `--task`, destination constraints, artifact paths, and task log updates. If the repo-local bin may be stale, rebuild or run the package-local test loop before treating output as valid.
 
 Do not manually write `.docwarden/wiki` pick artifacts when the CLI path is available. Do not edit `docs/` unless the user explicitly asks for a concrete docs file edit.
 
@@ -77,8 +77,8 @@ If the signal is only one weak correction, present it as a pick signal and keep 
 Before treating this skill as usable, run:
 
 ```bash
-rtk apps/isomorph/dist/index.js primitive skill .isomorph/primitives/modules/skill-primitive/dw-pick.md --json
-rtk python3 .contexta/packs/isomorph-authoring/skills/skill-creator/scripts/quick_validate.py .contexta/packs/docwarden/skills/pick
+rtk python3 .agents/skills/iso-skill-creator/scripts/quick_validate.py .agents/skills/pick
+rtk pnpm exec docwarden --help
 ```
 
 Forward-test with a real correction signal. The skill must produce a route decision before any CLI command.

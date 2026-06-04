@@ -1,13 +1,26 @@
 ---
-status: active
-workspace_status: working
+status: closed
+workspace_status: closed
 created: 2026-06-01
-updated: 2026-06-02
+updated: 2026-06-04
 title: Docwarden Artifact Quality Loop
 id: 26-docwarden-artifact-quality-loop
 ---
 
 # Docwarden Artifact Quality Loop
+
+## Closed
+
+本 task 已收口。
+
+已完成：
+
+- `review --task` 的 lead/backing/state 生成从泛化摘要推进到最小审核面。
+- `promote` / `pick` 写入稳定层前必须存在同 task 的 review gate。
+- `promote --to spec` 必须指向具体 `<asset-group>/<module>` target。
+- CLI contract tests 覆盖基础 artifact 质量和 review gate 行为。
+
+本轮 dogfood 结论：task26 的最新 review surface 已生成；用户确认不为了满足旧验收而机械写入 spec/wiki。当前没有新的精确 stable spec assertion 或 wiki pick，因此收口为 log-only / no-op。
 
 ## Context
 

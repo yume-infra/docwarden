@@ -1,0 +1,4 @@
+interface:
+  display_name: Pick
+  short_description: Preserve side-signal picks
+  default_prompt: Use $pick to review this task outcome and prepare the smallest pick candidate before running the docwarden CLI.

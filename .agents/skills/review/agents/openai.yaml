@@ -1,0 +1,4 @@
+interface:
+  display_name: Review
+  short_description: Review document-maintenance changes
+  default_prompt: Use $review to reduce this document-maintenance change to the smallest user-review unit.
