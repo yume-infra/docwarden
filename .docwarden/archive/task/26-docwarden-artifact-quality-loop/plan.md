@@ -1,7 +1,7 @@
 ---
-status: active
+status: closed
 created: 2026-06-01
-updated: 2026-06-02
+updated: 2026-06-04
 owner: sayori
 ---
 
@@ -48,7 +48,7 @@ Status: done
 
 ## Step 3: 重写 promote / pick 产物形态
 
-Status: working
+Status: done
 
 目标：promote/pick 生成稳定层候选时，不再只是 raw excerpt。
 
@@ -59,9 +59,15 @@ Status: working
 - `promote --to wiki` 与 `pick --to wiki` 产物像长期知识节点。
 - 每个产物都保留来源 trace。
 
+收口判断：
+
+- 当前 CLI 已将 spec promote 改为具体 module assertion 写入，并保留 source trace。
+- guide/wiki/pick 产物已脱离 frontmatter/raw markdown 搬运的旧形态。
+- task26 自身没有新的精确 stable assertion 或 side signal，因此不再机械写入新的 spec/wiki artifact。
+
 ## Step 4: 增加质量 contract 测试
 
-Status: working
+Status: done
 
 目标：用测试锁住基础质量，不只测文件存在。
 
@@ -73,9 +79,14 @@ Status: working
 - 测试覆盖 spec/wiki 产物不包含未整理的 frontmatter/raw markdown 搬运。
 - 测试覆盖 promote/pick 仍只写 `.docwarden`。
 
+收口判断：
+
+- docwarden CLI 测试已覆盖 review lead 的具体判断字段、spec target 必填、spec module 输出、wiki pick 基础结构和 review gate。
+- `pnpm test` 下 docwarden 测试通过。
+
 ## Step 5: 再次 dogfood
 
-Status: working
+Status: done
 
 目标：对 task26 自己运行新链路。
 
@@ -85,3 +96,9 @@ Status: working
 - 生成或更新至少一个具体 `.docwarden/spec/<target>.md`。
 - 生成至少一个更像长期知识节点的 wiki pick。
 - task log 记录本轮结果。
+
+收口判断：
+
+- 已生成新的 task review artifact：`.docwarden/review/20260603101156487-task-26-docwarden-artifact-quality-loop/`。
+- 用户确认本轮 dogfood 不为了旧验收机械生成 spec/wiki；没有精确 stable delta 时应选择 log-only / no-op。
+- task log 已记录实现、review 产物和最终收口判断。

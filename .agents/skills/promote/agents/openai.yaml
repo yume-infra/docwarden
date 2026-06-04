@@ -1,0 +1,4 @@
+interface:
+  display_name: Promote
+  short_description: Promote reviewed task material
+  default_prompt: Use $promote to decide whether this reviewed task material should enter spec, guide, or wiki.
