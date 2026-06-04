@@ -14,7 +14,7 @@ Created: 2026-06-04T09:28:42.615Z
 - [ ] Step 4: Define init contract
 - [ ] Step 5: Design migration route
 - [ ] Step 6: Review with user before implementation
-- [ ] Step 7: Implement only the accepted smallest baseline
+- [ ] Step 7: Implement accepted breaking migration in one pass
 
 ## Confirmed Starting Point
 
@@ -25,6 +25,7 @@ Created: 2026-06-04T09:28:42.615Z
 - 现在的 `primitives`、`grammars`、`exports` 层级没有设计好。
 - 必须区分“在哪里都要带到的理论 primitive 层”和“只服务于本理论自举的 vocabulary”。
 - 必须区分 repo source 中的 isomorph 自身资产，和 `isomorph init` 后出现在用户 codebase 里的 `.isomorph`。
+- 用户讨厌中间态；本轮是 breaking change，要求一次做到位。
 
 ## Target Taxonomy Draft
 
@@ -152,6 +153,8 @@ Created: 2026-06-04T09:28:42.615Z
 
 ## Implementation Guard
 
+定义阶段可以慢，但实现阶段不能慢慢迁。
+
 进入实现前必须先得到一个 accepted lead：
 
 ```text
@@ -159,11 +162,23 @@ lead: 用户项目 init 后的 .isomorph 不等于 isomorph source .isomorph。
 backing: primitives/grammars/exports 当前混层；portable primitive 与 bootstrap vocabulary 需要拆分；projection/export 不反向定义 source theory。
 ```
 
-实现第一步只允许选择一个最小 baseline，例如：
+一旦进入 implementation，必须满足：
 
-- 新增 layer taxonomy module。
-- 新增 init contract fixture。
-- 移动/重命名 `.isomorph/exports/**` 的一小部分。
-- 拆出 bootstrap vocabulary path。
+- 一次性完成 accepted target tree。
+- 一次性更新 CLI/init contract、fixtures、tests、catalog/export paths 和 dogfood references。
+- 删除或迁移旧 canonical path，不能留下旧层级作为 fallback source。
+- 不保留双 source of truth。
+- 不新增 compatibility shim，除非它在同一次 commit 中只用于 migration command 并且不会成为长期 runtime path。
+- 验证必须覆盖 init 后用户 `.isomorph` 的最终形态，而不只是 repo source tree。
 
-不要一次性重排所有目录。
+如果无法一次做到位，就停在 design/review 阶段，不进入 implementation。
+
+## Breaking Change Acceptance
+
+本轮验收需要同时成立：
+
+- Source `.isomorph` 和 initialized project `.isomorph` 的职责分界在文件树和 CLI 行为上都成立。
+- Portable theory primitives 与 isomorph bootstrap vocabulary 不再共享一个模糊 root category。
+- `.isomorph/exports/**` 不再作为 root stable layer 或 project framework canonical source。
+- 用户 init 后不会得到 isomorph source-only dogfood、plugin output、contexta runtime output 或 authoring-only vocabulary。
+- Existing tests 更新到新 contract；旧路径失败是预期 breaking behavior，而不是 fallback。

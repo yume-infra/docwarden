@@ -29,6 +29,7 @@ id: 30-isomorph-source-init-layer-split
 - 本 task 不把 isomorph 自举 vocabulary 默认带入所有用户项目。
 - 本 task 不让 contexta/plugin/runtime material 反向定义 isomorph bootstrap language。
 - 本 task 的核心验收不是文件移动数量，而是 source asset 与 initialized project asset 的职责分界是否清楚。
+- 本轮 implementation 是 breaking change；进入执行后必须一次做到位，不能留下双轨 source、兼容旧层级、半迁移目录或需要后续再清理的中间态。
 
 ## Next Entry
 - plan.md

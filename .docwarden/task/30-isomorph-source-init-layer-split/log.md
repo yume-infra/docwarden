@@ -11,3 +11,4 @@ id: 30-isomorph-source-init-layer-split
 - [20260604092842615] task created: isomorph source init layer split (30-isomorph-source-init-layer-split)
 - [20260604172842] captured user correction: current `primitives`, `grammars`, and `exports` hierarchy is still wrong; the next model must distinguish portable theory primitives from isomorph self-bootstrap vocabulary and from the `.isomorph` that appears in a user codebase after init.
 - [20260604172842] drafted target taxonomy: isomorph source assets, portable theory primitives, isomorph bootstrap vocabulary, initialized project `.isomorph`, and projection/export/materialization.
+- [20260604173000] captured implementation preference: user dislikes intermediate states; this round is a breaking change and must be implemented in one pass after review, with no dual source of truth, fallback old hierarchy, or half-migrated directory state.
