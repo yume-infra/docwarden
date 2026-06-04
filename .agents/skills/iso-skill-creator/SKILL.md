@@ -17,20 +17,23 @@ Do not start from folder shape, generic capability prose, or a command wrapper. 
 Common pressure scenarios:
 
 - The agent generates skill files before proving why the skill should exist.
+- The agent starts from Codex runtime folders, plugin export shape, or generic scaffolding instead of first taking over the isomorph primitive material that should drive the skill.
 - The agent puts hard constraints into prose instead of deterministic scripts.
 - The agent mirrors CLI commands, directories, or internal workflow nodes instead of user-facing behavior.
 - A skill passes structural validation but lacks trigger boundary, review gate, pressure scenario, or forward-test surface.
 
 ## Workflow
 
-1. Read source material and any existing skill resources before editing.
-2. State the drift pressure in one concrete sentence.
-3. Decide whether the request needs a skill, docs, prompt, CLI, script, reference, or asset.
-4. Define activation: user phrases that should trigger the skill and nearby requests that should not.
-5. Separate judgment surface from deterministic boundary.
-6. Choose the smallest review gate if the drift, trigger, or skill-vs-CLI boundary is uncertain.
-7. Materialize `SKILL.md` and only the bundled resources that directly support the skill.
-8. Run deterministic validation before treating the skill as usable.
+1. If isomorph primitive material exists or the user is building from theory, take over that primitive first and treat it as the semantic source.
+2. Use the primitive as the basic derivation unit before materializing `SKILL.md`, repo-skill output, or plugin-distributed skill output.
+3. Read any existing skill resources before editing.
+4. State the drift pressure in one concrete sentence.
+5. Decide whether the request needs a skill, docs, prompt, CLI, script, reference, or asset.
+6. Define activation: user phrases that should trigger the skill and nearby requests that should not.
+7. Separate judgment surface from deterministic boundary.
+8. Choose the smallest review gate if the drift, trigger, or skill-vs-CLI boundary is uncertain.
+9. Materialize `SKILL.md` and only the bundled resources that directly support the skill.
+10. Run deterministic validation before treating the skill as usable.
 
 If the user already confirmed the direction or the source material makes it clear, proceed with a reversible baseline and report validation instead of asking broad permission questions.
 

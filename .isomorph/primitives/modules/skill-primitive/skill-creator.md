@@ -11,6 +11,7 @@ Create or update Codex native skills as behavior interventions, requiring the ag
 Pressure Scenarios:
 
 - A user asks to create or update a skill and the agent starts by generating files instead of naming the agent failure the skill should prevent.
+- A user expects skill work to start from isomorph primitive material, and the agent instead starts from Codex runtime folders, plugin export shape, or generic skill scaffolding.
 - A user distinguishes hard constraints from soft workflow judgment and the agent encodes both as prose instructions.
 - A user asks for a skill family from theory and the agent mirrors CLI commands, directory structure, or internal workflow nodes.
 - A skill draft passes structural validation but still lacks a trigger boundary, workflow review move, pressure scenario, or forward-test surface.
@@ -53,6 +54,8 @@ Exclusions:
 
 ## Workflow
 
+- Take over the relevant isomorph skill-primitive material first; treat it as the semantic source for the future skill.
+- Use the primitive as the basic derivation unit before materializing `SKILL.md`, repo-skill output, or plugin-distributed skill output.
 - Name the pressure scenario before naming the skill capability.
 - Separate skill-guided judgment from deterministic CLI or script guardrails.
 - Treat frontmatter description as the trigger surface, not a summary.
