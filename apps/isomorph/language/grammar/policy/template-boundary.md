@@ -15,7 +15,7 @@ kind: policy
 Applies to:
 
 - [[language/primitive/concept/template|template]]
-- [[primitives/concept/module|module]]
+- [[language/primitive/concept/module|module]]
 - [[language/primitive/concept/assertion|assertion]]
 - [[language/grammar/concept/metadata/kind|kind]]
 

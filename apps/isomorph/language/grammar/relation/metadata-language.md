@@ -29,4 +29,4 @@ kind 是 metadata field，但不是 metadata subtype tree。
 Read next:
 
 - Definition: [[language/grammar/concept/metadata#Definition|metadata#Definition]], [[language/grammar/concept/metadata/kind#Definition|kind#Definition]]
-- Constraint: [[grammars/policy/kind-boundary|kind-boundary]]
+- Constraint: [[language/grammar/policy/kind-boundary|kind-boundary]]

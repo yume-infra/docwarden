@@ -21,7 +21,7 @@ kind: signal
 
 ## Basis
 
-- [[primitives/concept/example|example]]
+- [[language/primitive/concept/example|example]]
 - [[language/grammar/concept/metadata/kind|kind]]
-- [[grammars/policy/kind-boundary|kind-boundary]]
-- [[grammars/policy/signal-boundary|signal-boundary]]
+- [[language/grammar/policy/kind-boundary|kind-boundary]]
+- [[language/grammar/policy/signal-boundary|signal-boundary]]

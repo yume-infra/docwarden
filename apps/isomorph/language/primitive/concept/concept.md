@@ -26,4 +26,4 @@ concept 的 `Canonical` 是 semantic-lint 可直接消费的 primary magic word�
 
 concept 的 `Aliases` 只是 fallback token，不能替代 canonical 的判断强度。
 
-primary magic word 和 fallback token 的消费角色由 [[primitives/concept/magic-word|magic-word]] 维护。
+primary magic word 和 fallback token 的消费角色由 [[language/recognition/concept/magic-word|magic-word]] 维护。

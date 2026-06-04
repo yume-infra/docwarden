@@ -7,13 +7,13 @@ kind: magic-word
 ## Consumer
 
 - [[language/primitive/concept/template|template]]
-- [[primitives/concept/format|format]]
+- [[language/primitive/concept/format|format]]
 - [[language/semantic-lint/concept/semantic-lint|semantic-lint]]
-- [[grammars/relations/template-format-semantic-lint|template-format-semantic-lint]]
+- [[language/semantic-lint/relation/template-format|template-format-semantic-lint]]
 
 ## Source
 
-- [[grammars/relations/template-format-semantic-lint|template-format-semantic-lint]]
+- [[language/semantic-lint/relation/template-format|template-format-semantic-lint]]
 
 ## `0->1`
 

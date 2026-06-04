@@ -12,7 +12,7 @@ kind: policy
 
 Applies to:
 
-- [[primitives/concept/<concept-id>|<concept-id>]]
+- [[language/primitive/concept/<concept-id>|<concept-id>]]
 
 适用条件：
 

@@ -15,7 +15,7 @@ kind: policy
 Applies to:
 
 - [[language/primitive/concept/relation|relation]]
-- [[primitives/concept/concept|concept]]
+- [[language/primitive/concept/concept|concept]]
 - [[language/grammar/concept/metadata/kind|kind]]
 
 适用条件：
@@ -66,8 +66,8 @@ agent 想在 workflow concept module 里加入一整节 `Concept Relations`。
 ```md
 ## Concept Relations
 
-- [[primitives/concept/structure|structure]]：workflow 是 structure 的一种。
-- [[primitives/concept/structure/pipeline|pipeline]]：workflow 与 pipeline 相邻。
+- [[language/structure/concept/structure|structure]]：workflow 是 structure 的一种。
+- [[language/structure/concept/pipeline|pipeline]]：workflow 与 pipeline 相邻。
 - [[language/primitive/concept/template|template]]：workflow 有 template。
 ```
 
@@ -85,7 +85,7 @@ workflow 与 structure 的稳定网络关系应由 relation 体系集中承接�
 ### Negative
 
 ```md
-| [[primitives/concept/structure|structure]] | workflow 属于 structure。 |
+| [[language/structure/concept/structure|structure]] | workflow 属于 structure。 |
 ```
 
 这不是 concept Definition。它只是把 relation 伪装成正文说明。
@@ -93,7 +93,7 @@ workflow 与 structure 的稳定网络关系应由 relation 体系集中承接�
 ### Borderline
 
 ```md
-| [[primitives/concept/structure/pipeline|pipeline]] | workflow 表达推进；pipeline 表达转换。 |
+| [[language/structure/concept/pipeline|pipeline]] | workflow 表达推进；pipeline 表达转换。 |
 ```
 
 这可以作为后续 signal 或 example 的判断材料，但不应作为 concept 标准章节保留。

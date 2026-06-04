@@ -16,7 +16,7 @@ kind: policy
 
 Applies to:
 
-- [[primitives/concept/example|example]]
+- [[language/primitive/concept/example|example]]
 - [[language/primitive/concept/template|template]]
 
 适用条件：

@@ -6,15 +6,15 @@ kind: relation
 
 ## Network
 
-本 relation file 维护 [[language/semantic-lint/concept/signal|signal]]、[[primitives/concept/trigger|trigger]]、[[primitives/concept/confidence|confidence]]、[[primitives/concept/locator|locator]]、[[language/primitive/concept/assertion|assertion]] 与 [[language/semantic-lint/concept/semantic-lint|semantic-lint]]、[[language/semantic-lint/pipeline/semantic-lint|semantic-lint pipeline]] 之间的 semantic-lint chain 连接。
+本 relation file 维护 [[language/semantic-lint/concept/signal|signal]]、[[language/semantic-lint/concept/trigger|trigger]]、[[language/recognition/concept/confidence|confidence]]、[[language/recognition/concept/locator|locator]]、[[language/primitive/concept/assertion|assertion]] 与 [[language/semantic-lint/concept/semantic-lint|semantic-lint]]、[[language/semantic-lint/pipeline/semantic-lint|semantic-lint pipeline]] 之间的 semantic-lint chain 连接。
 
 ## `warning-language-of`
 
 From:
 
 - [[language/semantic-lint/concept/signal|signal]]
-- [[primitives/concept/trigger|trigger]]
-- [[primitives/concept/confidence|confidence]]
+- [[language/semantic-lint/concept/trigger|trigger]]
+- [[language/recognition/concept/confidence|confidence]]
 
 To:
 
@@ -28,8 +28,8 @@ Reading:
 
 Read next:
 
-- Definition: [[language/semantic-lint/concept/semantic-lint#Definition|semantic-lint#Definition]], [[language/semantic-lint/concept/signal#Definition|signal#Definition]], [[primitives/concept/trigger#Definition|trigger#Definition]], [[primitives/concept/confidence#Definition|confidence#Definition]]
-- Constraint: [[grammars/policy/semantic-lint-boundary|semantic-lint-boundary]], [[grammars/policy/signal-boundary|signal-boundary]]
+- Definition: [[language/semantic-lint/concept/semantic-lint#Definition|semantic-lint#Definition]], [[language/semantic-lint/concept/signal#Definition|signal#Definition]], [[language/semantic-lint/concept/trigger#Definition|trigger#Definition]], [[language/recognition/concept/confidence#Definition|confidence#Definition]]
+- Constraint: [[language/grammar/policy/semantic-lint-boundary|semantic-lint-boundary]], [[language/grammar/policy/signal-boundary|signal-boundary]]
 
 ## `pipeline-realizes`
 
@@ -52,15 +52,15 @@ review-ready lint result 复用 [[loop/lead-review/concept|lead-review]] 的 `le
 Read next:
 
 - Pipeline: [[language/semantic-lint/pipeline/semantic-lint|semantic-lint pipeline]]
-- Concept: [[primitives/concept/structure/pipeline#Definition|pipeline#Definition]], [[language/semantic-lint/concept/semantic-lint#Definition|semantic-lint#Definition]], [[loop/lead-review/concept#Definition|lead-review#Definition]]
-- Relation: [[grammars/relations/template-format-semantic-lint|template-format-semantic-lint]]
+- Concept: [[language/structure/concept/pipeline#Definition|pipeline#Definition]], [[language/semantic-lint/concept/semantic-lint#Definition|semantic-lint#Definition]], [[loop/lead-review/concept#Definition|lead-review#Definition]]
+- Relation: [[language/semantic-lint/relation/template-format|template-format-semantic-lint]]
 - Signal modules: [[lint/signal/concept-as-policy|concept-as-policy]], [[lint/signal/workflow-as-policy|workflow-as-policy]], [[lint/signal/architecture-as-responsibility-card|architecture-as-responsibility-card]], [[lint/signal/template-owns-lifecycle|template-owns-lifecycle]], [[lint/signal/example-as-kind|example-as-kind]], [[lint/signal/composition-as-list|composition-as-list]]
 
 ## `locator-target`
 
 From:
 
-- [[primitives/concept/locator|locator]]
+- [[language/recognition/concept/locator|locator]]
 
 To:
 
@@ -74,5 +74,5 @@ locator 提供定位，不判断 assertion 是否正确。
 
 Read next:
 
-- Definition: [[primitives/concept/locator#Definition|locator#Definition]], [[language/primitive/concept/assertion#Definition|assertion#Definition]]
+- Definition: [[language/recognition/concept/locator#Definition|locator#Definition]], [[language/primitive/concept/assertion#Definition|assertion#Definition]]
 - Pipeline: [[language/semantic-lint/pipeline/semantic-lint#Output|semantic-lint pipeline#Output]]

@@ -23,6 +23,10 @@ async function makeWorkspace(): Promise<string> {
   return fs.mkdtemp(path.join(os.tmpdir(), 'isomorph-cli-test-'))
 }
 
+async function copyDirectory(source: string, destination: string): Promise<void> {
+  await fs.cp(source, destination, { recursive: true })
+}
+
 function runProcess(command: string, args: readonly string[], cwd: string): Promise<ProcessResult> {
   return new Promise((resolve, reject) => {
     const child = spawn(command, [...args], {
@@ -304,6 +308,46 @@ Create a local skill primitive.
     expect(plain.stdout).toContain('## framework')
     expect(plain.stdout).toContain('## contract')
     expect(plain.stdout).toContain('## loop')
+  })
+
+  it('dogfoods a project framework vocabulary through CLI framework and lint commands', async () => {
+    const workspace = await makeWorkspace()
+    const exampleRoot = path.join(repoRoot, 'examples/isomorph-link-vocabulary')
+    await runIsomorph(['--root', workspace, 'init'], repoRoot)
+    await copyDirectory(
+      path.join(exampleRoot, '.isomorph/framework'),
+      path.join(workspace, '.isomorph/framework'),
+    )
+    await copyDirectory(
+      path.join(exampleRoot, 'content'),
+      path.join(workspace, 'content'),
+    )
+
+    const framework = await runIsomorph(['--root', workspace, 'framework', 'list', '--json'], repoRoot)
+    const frameworkJson = JSON.parse(framework.stdout)
+    expect(framework.exitCode).toBe(0)
+    expect(framework.stderr).toBe('')
+    expect(frameworkJson.frameworks[0]).toMatchObject({
+      id: 'link-vocabulary',
+      signals: ['short-ofm-link'],
+    })
+    expect(frameworkJson.frameworks[0].vocabularyTerms.map((term: { id: string }) => term.id)).toContain('link-example')
+
+    const shortLink = path.join(workspace, 'content/short-link.md')
+    const pathAliasLink = path.join(workspace, 'content/path-alias-link.md')
+    const shortLint = await runIsomorph(['--root', workspace, 'lint', shortLink, '--json'], repoRoot)
+    const shortLintJson = JSON.parse(shortLint.stdout)
+    expect(shortLint.exitCode).toBe(1)
+    expect(shortLint.stderr).toBe('')
+    expect(shortLintJson.recognition.recognizedRole).toBe('link-example')
+    expect(shortLintJson.signals[0]).toMatchObject({
+      signal: 'short-ofm-link',
+    })
+
+    const pathAliasLint = await runIsomorph(['--root', workspace, 'lint', pathAliasLink], repoRoot)
+    expect(pathAliasLint.exitCode).toBe(0)
+    expect(pathAliasLint.stderr).toBe('')
+    expect(pathAliasLint.stdout).toContain('signals: 0')
   })
 
   it('reports pinned upgrade status and malformed pin parse errors', async () => {

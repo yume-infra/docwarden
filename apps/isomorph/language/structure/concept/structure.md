@@ -22,11 +22,11 @@ structure 的核心不是列出多个对象，而是说明这些位置之间的�
 
 当前已验证的 structure subtype 是：
 
-- [[primitives/concept/structure/pipeline|pipeline]]：input、transform、output 共同成立的转换结构。
-- [[primitives/concept/structure/workflow|workflow]]：state、move、transition 共同成立的推进结构。
-- [[primitives/concept/structure/architecture|architecture]]：layer、relation、boundary 共同成立的层级结构。
-- [[primitives/concept/structure/branch|branch]]：condition、route、target 共同成立的分流结构。
-- [[primitives/concept/structure/composition|composition]]：whole、part、stable semantic boundary 共同成立的组合结构。
+- [[language/structure/concept/pipeline|pipeline]]：input、transform、output 共同成立的转换结构。
+- [[language/structure/concept/workflow|workflow]]：state、move、transition 共同成立的推进结构。
+- [[language/structure/concept/architecture|architecture]]：layer、relation、boundary 共同成立的层级结构。
+- [[language/structure/concept/branch|branch]]：condition、route、target 共同成立的分流结构。
+- [[language/structure/concept/composition|composition]]：whole、part、stable semantic boundary 共同成立的组合结构。
 
 具体 structure instance 放在 `language/structure/` 下，并按 subtype 分层。
 

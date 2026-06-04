@@ -32,4 +32,4 @@ naming 的核心是让 agent 能通过名称找到正确内容，并避免把相
 
 naming 为 semantic-lint 提供可消费的命名来源，但不定义完整 token 分层。
 
-primary magic word、fallback token 和 negative token 的消费角色由 [[primitives/concept/magic-word|magic-word]] 定义。
+primary magic word、fallback token 和 negative token 的消费角色由 [[language/recognition/concept/magic-word|magic-word]] 定义。

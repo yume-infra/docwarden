@@ -8,7 +8,7 @@ kind: magic-word
 
 - [[language/grammar/concept/metadata|metadata]]
 - [[language/grammar/concept/metadata/kind|kind]]
-- [[primitives/concept/format|format]]
+- [[language/primitive/concept/format|format]]
 - [[language/semantic-lint/concept/semantic-lint|semantic-lint]]
 
 ## Source

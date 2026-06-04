@@ -20,6 +20,6 @@ kind: signal
 
 ## Basis
 
-- [[primitives/concept/structure/workflow|workflow]]
-- [[primitives/concept/policy|policy]]
-- [[grammars/policy/signal-boundary|signal-boundary]]
+- [[language/structure/concept/workflow|workflow]]
+- [[language/primitive/concept/policy|policy]]
+- [[language/grammar/policy/signal-boundary|signal-boundary]]

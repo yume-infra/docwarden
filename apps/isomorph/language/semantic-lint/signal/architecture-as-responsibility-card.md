@@ -20,6 +20,6 @@ kind: signal
 
 ## Basis
 
-- [[primitives/concept/structure/architecture|architecture]]
-- [[primitives/concept/structure|structure]]
-- [[grammars/policy/signal-boundary|signal-boundary]]
+- [[language/structure/concept/architecture|architecture]]
+- [[language/structure/concept/structure|structure]]
+- [[language/grammar/policy/signal-boundary|signal-boundary]]

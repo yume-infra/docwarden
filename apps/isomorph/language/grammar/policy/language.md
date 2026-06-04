@@ -14,7 +14,7 @@ kind: policy
 
 Applies to:
 
-- [[primitives/concept/policy|policy]]
+- [[language/primitive/concept/policy|policy]]
 - [[language/primitive/concept/assertion|assertion]]
 
 适用条件：

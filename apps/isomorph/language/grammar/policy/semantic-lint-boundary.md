@@ -14,11 +14,11 @@ kind: policy
 
 Applies to:
 
-- [[primitives/concept/format|format]]
+- [[language/primitive/concept/format|format]]
 - [[language/semantic-lint/concept/semantic-lint|semantic-lint]]
 - [[language/semantic-lint/concept/signal|signal]]
-- [[primitives/concept/trigger|trigger]]
-- [[primitives/concept/locator|locator]]
+- [[language/semantic-lint/concept/trigger|trigger]]
+- [[language/recognition/concept/locator|locator]]
 
 适用条件：
 

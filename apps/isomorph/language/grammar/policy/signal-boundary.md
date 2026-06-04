@@ -62,7 +62,7 @@ signal: concept modules MUST NOT contain policy language
 
 ```md
 signal: concept-as-policy
-context: primitives/concept/example.md#Definition
+context: language/primitive/concept/example.md#Definition
 ```
 
 这是带有 context 的 signal。它有上下文，但还没有 assertion locator。

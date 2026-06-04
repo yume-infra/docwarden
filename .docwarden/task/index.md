@@ -25,6 +25,7 @@ owner: sayori
 - `.docwarden/task/28-docwarden-v1-skills-cli-dogfood/`：尽快实现 docwarden v1 repo-local skills + CLI dogfood 形态。
 - `.docwarden/task/29-isomorph-layer-theory-correction/`：慢速纠正 isomorph 层级理论与 semantic framework 机制。
 - `.docwarden/task/30-isomorph-source-init-layer-split/`：区分 isomorph source asset、portable theory primitive、自举 vocabulary、用户 init 后 `.isomorph` 与 projection/export material。
+- `.docwarden/task/31-isomorph-project-framework-workspace-contract/`：落地用户项目 `.isomorph/framework/<id>` contract，并用 link vocabulary repo example dogfood。
 
 最近完成并归档：
 

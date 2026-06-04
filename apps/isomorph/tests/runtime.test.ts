@@ -17,6 +17,7 @@ import {
   resolveIsomorphRootEffect,
   runDoctorInspectEffect,
   runDoctorRepairEffect,
+  runFrameworkListEffect,
   runInitEffect,
   runLintEffect,
   runPrimitiveSkillEffect,
@@ -49,9 +50,11 @@ async function treeSnapshot(root: string): Promise<readonly string[]> {
 
 const testRoot = path.dirname(fileURLToPath(import.meta.url))
 const packageRoot = path.resolve(testRoot, '..')
+const repoRoot = path.resolve(packageRoot, '../..')
 const sourceBaselineRoot = packageRoot
 const sourceRecognitionRule = path.join(sourceBaselineRoot, 'language/recognition/default.md')
 const sourceConceptSignal = path.join(sourceBaselineRoot, 'language/semantic-lint/signal/concept-as-policy.md')
+const linkVocabularyExampleRoot = path.join(repoRoot, 'examples/isomorph-link-vocabulary')
 
 async function writeSourceMetadata(workspace: string): Promise<void> {
   await fs.writeFile(path.join(workspace, '.isomorph', '.isomorph-origin.json'), `${JSON.stringify({
@@ -64,6 +67,10 @@ async function writeSourceMetadata(workspace: string): Promise<void> {
     },
     createdAt: '2026-05-28T00:00:00.000Z',
   }, null, 2)}\n`, 'utf8')
+}
+
+async function copyDirectory(source: string, destination: string): Promise<void> {
+  await fs.cp(source, destination, { recursive: true })
 }
 
 function runIsomorph<A, E>(effect: Effect.Effect<A, E, IsomorphRuntimeServices>): Promise<A> {
@@ -421,6 +428,57 @@ kind: decision
     }))
 
     expect(result.recognition.recognizedRole).toBe('decision')
+  })
+
+  it('dogfoods a project framework vocabulary through init, recognition, and lint', async () => {
+    const workspace = await makeWorkspace()
+    await runIsomorph(runInitEffect({ root: workspace }))
+    await copyDirectory(
+      path.join(linkVocabularyExampleRoot, '.isomorph/framework'),
+      path.join(workspace, '.isomorph/framework'),
+    )
+    await copyDirectory(
+      path.join(linkVocabularyExampleRoot, 'content'),
+      path.join(workspace, 'content'),
+    )
+
+    const frameworkList = await runIsomorph(runFrameworkListEffect({ root: workspace }))
+    expect(frameworkList.frameworks).toHaveLength(1)
+    expect(frameworkList.frameworks[0]).toMatchObject({
+      id: 'link-vocabulary',
+      path: 'framework/link-vocabulary/',
+      signals: ['short-ofm-link'],
+    })
+    expect(frameworkList.frameworks[0]?.vocabularyTerms.map(term => term.id)).toEqual([
+      'link-example',
+      'ofm-path-alias',
+      'short-ofm-link',
+    ])
+
+    const shortLink = path.join(workspace, 'content/short-link.md')
+    const pathAliasLink = path.join(workspace, 'content/path-alias-link.md')
+    const recognized = await runIsomorph(runRecognitionEffect({
+      root: workspace,
+      target: shortLink,
+    }))
+    expect(recognized.recognition.recognizedRole).toBe('link-example')
+    expect(recognized.recognition.basis).toContain('local recognition rule: local-kind-frontmatter')
+
+    const shortLint = await runIsomorph(runLintEffect({
+      root: workspace,
+      target: shortLink,
+    }))
+    expect(shortLint.signals).toContainEqual(expect.objectContaining({
+      signal: 'short-ofm-link',
+      context: '[[link-resolution]]',
+    }))
+
+    const pathAliasLint = await runIsomorph(runLintEffect({
+      root: workspace,
+      target: pathAliasLink,
+    }))
+    expect(pathAliasLint.signals.find(signal => signal.signal === 'short-ofm-link')).toBeUndefined()
+    expect(pathAliasLint.diagnostics).toHaveLength(0)
   })
 
   it('uses edited local signal definitions during lint', async () => {

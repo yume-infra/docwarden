@@ -6,7 +6,7 @@ kind: relation
 
 ## Network
 
-本 relation file 维护 [[primitives/concept/module|module]]、[[language/primitive/concept/assertion|assertion]]、[[primitives/concept/structure/composition|composition]] 与 [[grammars/structures/composition/module-assertion|module-assertion composition]] 之间的 part-whole structure 连接。
+本 relation file 维护 [[language/primitive/concept/module|module]]、[[language/primitive/concept/assertion|assertion]]、[[language/structure/concept/composition|composition]] 与 [[language/structure/composition/module-assertion|module-assertion composition]] 之间的 part-whole structure 连接。
 
 ## `part-of`
 
@@ -16,8 +16,8 @@ From:
 
 To:
 
-- [[primitives/concept/module|module]]
-- [[grammars/structures/composition/module-assertion|module-assertion composition]]
+- [[language/primitive/concept/module|module]]
+- [[language/structure/composition/module-assertion|module-assertion composition]]
 
 Reading:
 
@@ -31,12 +31,12 @@ assertion 的可审查性不要求 assertion 独立成文件。
 
 From:
 
-- [[primitives/concept/module|module]]
+- [[language/primitive/concept/module|module]]
 
 To:
 
 - [[language/primitive/concept/assertion|assertion]]
-- [[grammars/structures/composition/module-assertion|module-assertion composition]]
+- [[language/structure/composition/module-assertion|module-assertion composition]]
 
 Reading:
 
@@ -52,11 +52,11 @@ module 的成立来自 md file scope，不来自 composition。
 
 From:
 
-- [[grammars/structures/composition/module-assertion|module-assertion composition]]
+- [[language/structure/composition/module-assertion|module-assertion composition]]
 
 To:
 
-- [[primitives/concept/structure/composition|composition]]
+- [[language/structure/concept/composition|composition]]
 
 Reading:
 
@@ -66,7 +66,7 @@ Reading:
 
 Read next:
 
-- Definition: [[primitives/concept/module#Definition|module#Definition]], [[language/primitive/concept/assertion#Definition|assertion#Definition]], [[language/primitive/concept/assertion#Qualification|assertion#Qualification]], [[primitives/concept/structure/composition#Definition|composition#Definition]]
-- Instance: [[grammars/structures/composition/module-assertion|module-assertion composition]]
-- Constraint: [[grammars/policy/semantic-granularity|semantic-granularity]]
+- Definition: [[language/primitive/concept/module#Definition|module#Definition]], [[language/primitive/concept/assertion#Definition|assertion#Definition]], [[language/primitive/concept/assertion#Qualification|assertion#Qualification]], [[language/structure/concept/composition#Definition|composition#Definition]]
+- Instance: [[language/structure/composition/module-assertion|module-assertion composition]]
+- Constraint: [[language/grammar/policy/semantic-granularity|semantic-granularity]]
 - Signal: [[lint/signal/composition-as-list|composition-as-list]]

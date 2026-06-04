@@ -21,5 +21,5 @@ kind: signal
 ## Basis
 
 - [[language/primitive/concept/template|template]]
-- [[grammars/policy/template-boundary|template-boundary]]
-- [[grammars/policy/signal-boundary|signal-boundary]]
+- [[language/grammar/policy/template-boundary|template-boundary]]
+- [[language/grammar/policy/signal-boundary|signal-boundary]]

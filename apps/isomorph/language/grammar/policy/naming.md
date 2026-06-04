@@ -14,12 +14,12 @@ kind: policy
 
 Applies to:
 
-- [[primitives/concept/naming|naming]]
-- [[primitives/concept/module|module]]
-- [[primitives/concept/concept|concept]]
-- [[primitives/concept/policy|policy]]
+- [[language/primitive/concept/naming|naming]]
+- [[language/primitive/concept/module|module]]
+- [[language/primitive/concept/concept|concept]]
+- [[language/primitive/concept/policy|policy]]
 - [[language/primitive/concept/template|template]]
-- [[primitives/concept/structure|structure]]
+- [[language/structure/concept/structure|structure]]
 
 适用条件：
 

@@ -14,7 +14,7 @@ kind: policy
 
 Applies to:
 
-- [[primitives/concept/module|module]]
+- [[language/primitive/concept/module|module]]
 
 适用条件：
 

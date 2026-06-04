@@ -6,7 +6,7 @@ kind: magic-word
 
 ## Consumer
 
-- [[primitives/concept/policy|policy]]
+- [[language/primitive/concept/policy|policy]]
 - [[language/grammar/policy/language|language]]
 - [[language/semantic-lint/concept/semantic-lint|semantic-lint]]
 

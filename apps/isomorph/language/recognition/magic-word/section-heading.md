@@ -6,16 +6,16 @@ kind: magic-word
 
 ## Consumer
 
-- [[primitives/concept/format|format]]
+- [[language/primitive/concept/format|format]]
 - [[language/semantic-lint/concept/semantic-lint|semantic-lint]]
-- [[primitives/concept/concept|concept]]
-- [[primitives/concept/magic-word|magic-word]]
+- [[language/primitive/concept/concept|concept]]
+- [[language/recognition/concept/magic-word|magic-word]]
 
 ## Source
 
 - [[exports/templates/concept|concept template]]
-- [[primitives/concept/concept|concept]]
-- [[primitives/concept/magic-word|magic-word]]
+- [[language/primitive/concept/concept|concept]]
+- [[language/recognition/concept/magic-word|magic-word]]
 
 ## `Designation`
 

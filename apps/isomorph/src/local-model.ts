@@ -2,6 +2,7 @@ import type { IsomorphDocument, IsomorphModel, IsomorphRoot, RecognitionRule, Si
 import type { IsomorphError } from './errors.js'
 import { Effect, FileSystem, Path } from 'effect'
 import { formatUnknownCause, IsomorphRuntimeError } from './errors.js'
+import { collectVocabularyTerms } from './framework-model.js'
 import {
   extractListItems,
   extractListItemsAfterLabel,
@@ -33,6 +34,7 @@ export function loadIsomorphModelEffect(root: IsomorphRoot): Effect.Effect<Isomo
       documents.push({
         absolutePath,
         isomorphPath,
+        source: 'local',
         surface,
         title: firstHeadingText(surface) ?? path.basename(isomorphPath, '.md'),
         kind: surface.frontmatter.kind,
@@ -56,6 +58,7 @@ export function loadIsomorphModelEffect(root: IsomorphRoot): Effect.Effect<Isomo
         documents.push({
           absolutePath: path.join(root.isomorphRoot, file.path),
           isomorphPath: file.path,
+          source: 'pinned',
           surface,
           title: firstHeadingText(surface) ?? path.basename(file.path, '.md'),
           kind: surface.frontmatter.kind,
@@ -121,6 +124,9 @@ function collectLocalKinds(documents: readonly IsomorphDocument[]): ReadonlySet<
   for (const document of documents) {
     if (document.kind === 'concept') {
       kinds.add(normalizeToken(document.title))
+    }
+    for (const term of collectVocabularyTerms(document)) {
+      kinds.add(term.id)
     }
   }
   return kinds

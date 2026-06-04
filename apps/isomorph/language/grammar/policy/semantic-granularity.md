@@ -14,7 +14,7 @@ kind: policy
 
 Applies to:
 
-- [[primitives/concept/module|module]]
+- [[language/primitive/concept/module|module]]
 - [[language/primitive/concept/assertion|assertion]]
 
 适用条件：
@@ -45,11 +45,11 @@ Applies to:
 
 ## Rationale
 
-本 policy 已通过 `Applies to` 指向 [[language/primitive/concept/assertion|assertion]] 和 [[primitives/concept/module|module]]。
+本 policy 已通过 `Applies to` 指向 [[language/primitive/concept/assertion|assertion]] 和 [[language/primitive/concept/module|module]]。
 
 这里不重新定义这两个 concept，只解释为什么需要约束它们的粒度关系。
 
-module / assertion 的 part-whole structure 连接由 [[grammars/relations/module-assertion-composition|module-assertion-composition]] 维护。
+module / assertion 的 part-whole structure 连接由 [[language/structure/relation/module-assertion-composition|module-assertion-composition]] 维护。
 
 如果每条断言都升级为 module，组合会变得过碎，review 和使用成本都会上升。如果一个 module 混入多个 stable semantic boundary，规则边界会变得模糊，后续复用和修改也会困难。
 

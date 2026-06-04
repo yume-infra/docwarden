@@ -16,7 +16,7 @@ Applies to:
 
 - [[language/grammar/concept/metadata/kind|kind]]
 - [[language/grammar/concept/metadata|metadata]]
-- [[primitives/concept/module|module]]
+- [[language/primitive/concept/module|module]]
 - [[language/primitive/concept/template|template]]
 - [[language/primitive/concept/relation|relation]]
 

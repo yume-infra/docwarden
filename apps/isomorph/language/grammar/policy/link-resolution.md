@@ -14,11 +14,11 @@ kind: policy
 
 Applies to:
 
-- [[primitives/concept/format|format]]
-- [[primitives/concept/locator|locator]]
-- [[primitives/concept/naming|naming]]
+- [[language/primitive/concept/format|format]]
+- [[language/recognition/concept/locator|locator]]
+- [[language/primitive/concept/naming|naming]]
 - [[language/primitive/concept/relation|relation]]
-- [[primitives/concept/module|module]]
+- [[language/primitive/concept/module|module]]
 
 适用条件：
 
@@ -63,12 +63,12 @@ relation file 需要指向 concept pipeline。
 
 ### Judgment Material
 
-目标落点是 `primitives/concept/structure/pipeline.md`。
+目标落点是 `language/structure/concept/pipeline.md`。
 
 ### Positive
 
 ```md
-[[primitives/concept/structure/pipeline|pipeline]]
+[[language/structure/concept/pipeline|pipeline]]
 ```
 
 这个 link 同时给出稳定 target 和可读 display。
@@ -84,13 +84,13 @@ relation file 需要指向 concept pipeline。
 ### Borderline
 
 ```md
-[[primitives/concept/structure/pipeline#Definition|pipeline#Definition]]
+[[language/structure/concept/pipeline#Definition|pipeline#Definition]]
 ```
 
 这是 section link，可以用于 Read next。它稳定到 heading，但还不是 assertion locator。
 
 ```md
-[[primitives/concept/locator#^def-1|locator definition]]
+[[language/recognition/concept/locator#^def-1|locator definition]]
 ```
 
 这是 assertion-level reference。只有当目标位置存在 locator marker 时才成立。

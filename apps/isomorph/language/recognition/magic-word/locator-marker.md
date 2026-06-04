@@ -6,16 +6,16 @@ kind: magic-word
 
 ## Consumer
 
-- [[primitives/concept/locator|locator]]
+- [[language/recognition/concept/locator|locator]]
 - [[language/primitive/concept/assertion|assertion]]
 - [[language/semantic-lint/concept/semantic-lint|semantic-lint]]
 - [[language/semantic-lint/pipeline/semantic-lint|semantic-lint pipeline]]
 
 ## Source
 
-- [[primitives/concept/locator|locator]]
-- [[grammars/policy/link-resolution|link-resolution]]
-- [[grammars/policy/semantic-lint-boundary|semantic-lint-boundary]]
+- [[language/recognition/concept/locator|locator]]
+- [[language/grammar/policy/link-resolution|link-resolution]]
+- [[language/grammar/policy/semantic-lint-boundary|semantic-lint-boundary]]
 
 ## Token Role
 
@@ -23,7 +23,7 @@ locator marker 是 address token，不是 semantic classifier。
 
 本 registry 只记录 locator marker 作为 semantic-lint 可消费 token role。
 
-locator marker 的地址语义由 [[primitives/concept/locator|locator]] 定义。
+locator marker 的地址语义由 [[language/recognition/concept/locator|locator]] 定义。
 
 ## `^<prefix>-<number>`
 

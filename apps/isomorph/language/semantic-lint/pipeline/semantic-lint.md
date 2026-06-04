@@ -6,7 +6,7 @@ kind: pipeline
 
 ## Input
 
-- formatted md，由 [[primitives/concept/format|format]] 在持续编辑中保持可消费形态。
+- formatted md，由 [[language/primitive/concept/format|format]] 在持续编辑中保持可消费形态。
 - signal modules：
   - [[lint/signal/concept-as-policy|concept-as-policy]]
   - [[lint/signal/workflow-as-policy|workflow-as-policy]]
@@ -14,15 +14,15 @@ kind: pipeline
   - [[lint/signal/template-owns-lifecycle|template-owns-lifecycle]]
   - [[lint/signal/example-as-kind|example-as-kind]]
   - [[lint/signal/composition-as-list|composition-as-list]]
-- token roles：[[primitives/concept/magic-word|magic-word]]。
+- token roles：[[language/recognition/concept/magic-word|magic-word]]。
 - locator target：带有 `^<prefix>-<number>` marker 的 [[language/primitive/concept/assertion|assertion]]。
 
 ## Transform
 
-1. [[primitives/concept/trigger|trigger]] 直接检查 formatted md 中稳定存在的 path、frontmatter、heading、section、OFM link、marker 和 magic word。
+1. [[language/semantic-lint/concept/trigger|trigger]] 直接检查 formatted md 中稳定存在的 path、frontmatter、heading、section、OFM link、marker 和 magic word。
 2. [[language/semantic-lint/concept/signal|signal]] definition 命名语义偏移风险，并产生 signal。
-3. [[primitives/concept/confidence|confidence]] 可以根据命中来源标记 signal 的识别强度。
-4. [[primitives/concept/locator|locator]] 可以在 signal 指向具体 assertion 时提供 locator marker。
+3. [[language/recognition/concept/confidence|confidence]] 可以根据命中来源标记 signal 的识别强度。
+4. [[language/recognition/concept/locator|locator]] 可以在 signal 指向具体 assertion 时提供 locator marker。
 5. semantic-lint 尽可能把 signal 命中组织成 review-ready lint result。
 6. signal 进入 review 后才形成判断。
 
@@ -49,7 +49,7 @@ Implementation detail:
 
 本文件是 semantic-lint 的 pipeline structure，不重新定义 [[language/semantic-lint/concept/semantic-lint|semantic-lint]]。
 
-semantic-lint 相关 concept 仍由 `primitives/concept` 语义分组维护；本 pipeline 只编排这些 concept 如何共同形成检测链路。
+semantic-lint 相关 concept 仍由 `language/primitive/concept` 语义分组维护；本 pipeline 只编排这些 concept 如何共同形成检测链路。
 
 candidate、instance 和 evidence 是未来 CLI lint step 的实现细节，不是 isomorph 核心对象。
 
