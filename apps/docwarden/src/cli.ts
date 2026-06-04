@@ -26,6 +26,16 @@ interface TaskMaterialSummary {
   readonly gaps: readonly string[]
 }
 
+interface TaskReviewGate {
+  readonly reviewId: string
+  readonly reviewDirectory: string
+  readonly statePath: string
+  readonly leadPath: string
+  readonly backingPath: string
+  readonly status: string
+  readonly createdAt: string
+}
+
 interface CliSuccess {
   readonly output: string
   readonly exitCode: number
@@ -83,6 +93,7 @@ interface DocwardenPromoteResult extends CliResultBase {
   readonly targetLayer: TaskLayer
   readonly specTarget?: string
   readonly specKind?: SpecModuleKind
+  readonly reviewGate: TaskReviewGate
   readonly artifactPath: string
   readonly filesWritten: readonly string[]
 }
@@ -91,11 +102,18 @@ interface DocwardenPickResult extends CliResultBase {
   readonly command: 'pick'
   readonly taskId: string
   readonly taskDirectory: string
+  readonly reviewGate: TaskReviewGate
   readonly artifactPath: string
   readonly filesWritten: readonly string[]
 }
 
 type DocwardenRuntimeServices = FileSystem.FileSystem
+
+const allowedReviewGateStatuses = new Set([
+  'review-surface-ready',
+  'reviewed',
+  'routed',
+])
 
 class DocwardenConfigError extends Error {
   readonly _tag = 'DocwardenConfigError' as const
@@ -620,6 +638,7 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
     const taskIndex = yield* readTaskFile(taskIndexPath, `missing task index: ${taskIndexPath}`)
     const taskPlan = yield* readTaskFile(taskPlanPath, `missing task plan: ${taskPlanPath}`)
     const taskLog = yield* readTaskFile(taskLogPath, `missing task log: ${taskLogPath}`)
+    const reviewGate = yield* findLatestTaskReviewGate(runtime.docwardenRoot, taskId)
 
     const createdAt = new Date().toISOString()
     const artifactTimestamp = timestampForFiles(createdAt)
@@ -630,9 +649,7 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
       ? path.join(runtime.docwardenRoot, input.kind === 'pick' ? 'wiki' : targetLayer, artifactName)
       : path.join(runtime.docwardenRoot, 'spec', `${specTarget.target}.md`)
 
-    const sourcePaths = input.kind === 'promote'
-      ? [taskIndexPath, taskPlanPath, taskLogPath]
-      : [taskIndexPath, taskPlanPath]
+    const sourcePaths = [taskIndexPath, taskPlanPath, taskLogPath, reviewGate.statePath, reviewGate.leadPath]
 
     const taskTitle = extractTaskTitle(taskIndex, taskId)
 
@@ -640,7 +657,7 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
       ? specTarget === undefined
         ? formatPromoteArtifact(taskId, taskTitle, targetLayer, createdAt, sourcePaths, taskIndex, taskPlan)
         : yield* formatSpecModulePromoteArtifact(artifactPath, specTarget.target, specTarget.kind, taskId, taskIndex, taskPlan, taskLog, createdAt, sourcePaths)
-      : formatPickArtifact(taskId, taskTitle, createdAt, sourcePaths, taskIndex)
+      : formatPickArtifact(taskId, taskTitle, createdAt, sourcePaths, taskIndex, taskPlan, taskLog)
 
     if (specTarget !== undefined) {
       yield* ensureDirectory(path.dirname(artifactPath))
@@ -670,6 +687,7 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
               specTarget: specTarget.target,
             }),
         ...(specTarget?.kind === undefined ? {} : { specKind: specTarget.kind }),
+        reviewGate,
         artifactPath,
         filesWritten: [workspaceRelative(runtime.workspaceRoot, artifactPath)],
       } satisfies DocwardenPromoteResult
@@ -681,10 +699,90 @@ function runPromoteEffect(input: PromoteInput & { readonly kind: PromoteKind }):
       docwardenRoot: runtime.docwardenRoot,
       taskId,
       taskDirectory,
+      reviewGate,
       artifactPath,
       filesWritten: [workspaceRelative(runtime.workspaceRoot, artifactPath)],
     } satisfies DocwardenPickResult
   })
+}
+
+function findLatestTaskReviewGate(
+  docwardenRoot: string,
+  taskId: string,
+): Effect.Effect<TaskReviewGate, DocwardenError, DocwardenRuntimeServices> {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    const reviewRoot = path.join(docwardenRoot, 'review')
+    if (!(yield* pathExists(reviewRoot))) {
+      return yield* Effect.fail(new DocwardenConfigError(`task review gate missing; run docwarden review --task ${taskId} before promote or pick`))
+    }
+
+    const entries = yield* fs.readDirectory(reviewRoot).pipe(
+      Effect.mapError(error => new DocwardenRuntimeError(`failed to read review directory: ${reviewRoot}: ${formatUnknownCause(error)}`)),
+    )
+    const candidates: TaskReviewGate[] = []
+
+    for (const entry of entries) {
+      const reviewDirectory = path.join(reviewRoot, entry)
+      const entryInfo = yield* fs.stat(reviewDirectory).pipe(
+        Effect.catch(() => Effect.succeed(undefined as FileSystem.File.Info | undefined)),
+      )
+      if (entryInfo?.type !== 'Directory') {
+        continue
+      }
+
+      const statePath = path.join(reviewDirectory, 'state.yaml')
+      if (!(yield* pathExists(statePath))) {
+        continue
+      }
+
+      const state = yield* readTaskFile(statePath, `failed to read review state: ${statePath}`)
+      if (readStateScalar(state, 'mode') !== 'task' || readStateScalar(state, 'task_id') !== taskId) {
+        continue
+      }
+
+      const status = readStateScalar(state, 'status') ?? ''
+      const reviewId = readStateScalar(state, 'review_id') ?? entry
+      const createdAt = readStateScalar(state, 'created_at') ?? ''
+      candidates.push({
+        reviewId,
+        reviewDirectory,
+        statePath,
+        leadPath: path.join(reviewDirectory, 'lead.md'),
+        backingPath: path.join(reviewDirectory, 'backing.md'),
+        status,
+        createdAt,
+      })
+    }
+
+    if (candidates.length === 0) {
+      return yield* Effect.fail(new DocwardenConfigError(`task review gate missing; run docwarden review --task ${taskId} before promote or pick`))
+    }
+
+    const latest = candidates.sort(compareReviewGate).at(-1)
+    if (latest === undefined) {
+      return yield* Effect.fail(new DocwardenConfigError(`task review gate missing; run docwarden review --task ${taskId} before promote or pick`))
+    }
+    if (!allowedReviewGateStatuses.has(latest.status)) {
+      return yield* Effect.fail(new DocwardenConfigError(`task review gate is not routeable for ${taskId}: status ${latest.status || '(missing)'}`))
+    }
+
+    yield* readTaskFile(latest.leadPath, `review gate lead missing: ${latest.leadPath}`)
+    yield* readTaskFile(latest.backingPath, `review gate backing missing: ${latest.backingPath}`)
+    return latest
+  })
+}
+
+function compareReviewGate(left: TaskReviewGate, right: TaskReviewGate): number {
+  const leftKey = left.createdAt || left.reviewId
+  const rightKey = right.createdAt || right.reviewId
+  return leftKey.localeCompare(rightKey)
+}
+
+function readStateScalar(state: string, key: string): string | undefined {
+  const pattern = new RegExp(`^${key}:\\s*(.*)$`, 'm')
+  const match = state.match(pattern)
+  return match?.[1]?.trim()
 }
 
 function formatInit(result: DocwardenInitResult): string {
@@ -743,6 +841,8 @@ function formatPromote(result: DocwardenPromoteResult): string {
     'docwarden promote',
     `task: ${result.taskId}`,
     `to: ${result.targetLayer}`,
+    `review gate: ${result.reviewGate.statePath}`,
+    `review status: ${result.reviewGate.status}`,
     `artifact: ${result.artifactPath}`,
     'files:',
     ...result.filesWritten.map(file => `- ${file}`),
@@ -754,6 +854,8 @@ function formatPick(result: DocwardenPickResult): string {
     'docwarden pick',
     `task: ${result.taskId}`,
     'to: wiki',
+    `review gate: ${result.reviewGate.statePath}`,
+    `review status: ${result.reviewGate.status}`,
     `artifact: ${result.artifactPath}`,
     'files:',
     ...result.filesWritten.map(file => `- ${file}`),
@@ -880,6 +982,7 @@ function formatTaskReviewIndex(taskId: string, taskDirectory: string, reviewId: 
 
 function formatTaskReviewLead(taskId: string, taskIndex: string, taskPlan: string): string {
   const summary = summarizeTaskMaterial(taskId, taskIndex, taskPlan, '')
+  const specTargets = recommendSpecTargets(summary)
   return [
     '# Review Lead',
     '',
@@ -891,6 +994,9 @@ function formatTaskReviewLead(taskId: string, taskIndex: string, taskPlan: strin
     '',
     '## Mainline Candidate',
     ...formatSummaryBullets(summary.objective, '尚未提炼出明确目标，暂不建议直接 promote。'),
+    '',
+    '## Recommended Spec Target',
+    ...formatSummaryBullets(specTargets, '暂不能定位到具体 spec target；继续留在 task 或只做 wiki pick。'),
     '',
     '## Side Material Candidate',
     ...formatSummaryBullets(summary.context, '当前没有明显 side material；可继续从 log 或 review 反馈中 pick。'),
@@ -1070,9 +1176,11 @@ function formatPickArtifact(
   createdAt: string,
   sourcePaths: readonly string[],
   taskIndex: string,
+  taskPlan: string,
+  taskLog: string,
 ): string {
-  const summary = summarizeTaskMaterial(taskId, taskIndex, '', '')
-  const signal = firstOrFallback(summary.context, 'task material 中存在可能长期复用的判断或上下文。')
+  const summary = summarizeTaskMaterial(taskId, taskIndex, taskPlan, taskLog)
+  const signal = selectPickSignal(summary)
   return [
     `# Wiki Pick: ${taskTitle}`,
     '',
@@ -1086,7 +1194,7 @@ function formatPickArtifact(
     `- ${signal}`,
     '',
     '## Reusable Pattern',
-    ...formatSummaryBullets(summary.objective, '需要继续观察，多次 signal 后再提升为长期默认模式。'),
+    ...formatSummaryBullets(selectReusablePattern(summary), '需要继续观察，多次 signal 后再提升为长期默认模式。'),
     '',
     '## Applicability',
     ...formatSummaryBullets(summary.boundary, '适用于相似上下文中的后续判断，不能覆盖用户当前明确指令。'),
@@ -1606,6 +1714,26 @@ function firstOrFallback(lines: readonly string[], fallback: string): string {
   return useful.slice(0, 2).join(' ') || lines.slice(0, 2).join(' ') || fallback
 }
 
+function selectPickSignal(summary: TaskMaterialSummary): string {
+  const signal = summary.logEvents.find(event =>
+    /user review|用户审核|纠偏|全错|blocked|block|resumed|恢复/.test(event.toLowerCase()),
+  )
+  if (signal !== undefined) {
+    return signal
+  }
+  return firstOrFallback(summary.context, 'task material 中存在可能长期复用的判断或上下文。')
+}
+
+function selectReusablePattern(summary: TaskMaterialSummary): readonly string[] {
+  const boundarySignals = summary.boundary.filter(line =>
+    /不新增|默认不修改|不把|不引入|边界|scope|boundary/i.test(line),
+  )
+  if (boundarySignals.length > 0) {
+    return boundarySignals
+  }
+  return summary.objective
+}
+
 function recommendRoute(summary: TaskMaterialSummary): string {
   if (summary.gaps.length > 0) {
     return 'continue-task'
@@ -1614,6 +1742,33 @@ function recommendRoute(summary: TaskMaterialSummary): string {
     return 'promote or pick after user review'
   }
   return 'review-first'
+}
+
+function recommendSpecTargets(summary: TaskMaterialSummary): readonly string[] {
+  const corpus = [
+    summary.taskId,
+    summary.title,
+    ...summary.context,
+    ...summary.objective,
+    ...summary.boundary,
+    ...summary.planSteps,
+  ].join('\n').toLowerCase()
+  const targets: string[] = []
+
+  if (/\breview\b|review lead|backing|review surface|审核|审查/.test(corpus)) {
+    targets.push('`harness/review-surface`：review lead / backing / review state 的质量边界。')
+  }
+  if (/\bpromote\b|\bpick\b|spec|wiki|guide|稳定层|产物/.test(corpus)) {
+    targets.push('`harness/promote-to-spec`：promote / pick 写入稳定层前的 gate 与 target 规则。')
+  }
+  if (/\bcli\b|command|命令/.test(corpus)) {
+    targets.push('`apps/docwarden`：CLI 可执行行为与 contract tests。')
+  }
+  if (targets.length === 0 && /\binit\b|task create|task material|\.docwarden|harness|主链路/.test(corpus)) {
+    targets.push('`harness/docwarden-harness`：整体 `.docwarden` harness 结构与入口。')
+  }
+
+  return [...new Set(targets)]
 }
 
 function extractPlanSteps(taskPlan: string): readonly string[] {

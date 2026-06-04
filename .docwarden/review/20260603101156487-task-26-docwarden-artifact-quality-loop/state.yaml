@@ -1,0 +1,11 @@
+mode: task
+review_id: 20260603101156487-task-26-docwarden-artifact-quality-loop
+status: review-surface-ready
+created_at: 2026-06-03T10:11:56.488Z
+review_dir: /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/review/20260603101156487-task-26-docwarden-artifact-quality-loop
+config_path: /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/config.yaml
+task_id: 26-docwarden-artifact-quality-loop
+source_files:
+  - /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/task/26-docwarden-artifact-quality-loop/index.md
+  - /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/task/26-docwarden-artifact-quality-loop/plan.md
+  - /Users/sayori/.codex/worktrees/a18c/docwarden/.docwarden/task/26-docwarden-artifact-quality-loop/log.md
