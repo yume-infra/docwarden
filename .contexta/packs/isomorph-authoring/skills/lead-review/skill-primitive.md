@@ -70,13 +70,13 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[primitives/concept/lead-review|lead-review]]
-- [[grammars/policy/lead-review-boundary|lead-review-boundary]]
-- [[primitives/concept/assertion|assertion]]
-- [[primitives/concept/signal|signal]]
-- [[primitives/concept/skill-primitive|skill-primitive]]
-- [[primitives/concept/primitive-creator|primitive-creator]]
-- [[grammars/policy/semantic-framework-boundary|semantic-framework-boundary]]
+- [[basis/primitives/concept/lead-review|lead-review]]
+- [[basis/grammars/policy/lead-review-boundary|lead-review-boundary]]
+- [[basis/primitives/concept/assertion|assertion]]
+- [[basis/primitives/concept/signal|signal]]
+- [[bootstrap/primitives/concept/skill-primitive|skill-primitive]]
+- [[bootstrap/primitives/concept/primitive-creator|primitive-creator]]
+- [[basis/grammars/policy/semantic-framework-boundary|semantic-framework-boundary]]
 
 ## Validation
 

@@ -87,6 +87,8 @@ describe('isomorph CLI contract', () => {
     expect(result.exitCode).toBe(0)
     expect(result.stderr).toBe('')
     await expect(fs.access(path.join(workspace, '.isomorph', '.isomorph-pin.json'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(workspace, '.isomorph', 'README.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(workspace, '.isomorph', 'init/README.md'))).rejects.toThrow()
   })
 
   it('recognizes a target with JSON output', async () => {
@@ -242,8 +244,8 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[primitives/concept/skill-primitive|skill-primitive]]
-- [[primitives/concept/primitive-creator|primitive-creator]]
+- [[bootstrap/primitives/concept/skill-primitive|skill-primitive]]
+- [[bootstrap/primitives/concept/primitive-creator|primitive-creator]]
 
 ## Validation
 
@@ -260,13 +262,14 @@ kind: skill-primitive
 Create a local skill primitive.
 `, 'utf8')
 
-    const readyResult = await runIsomorph(['--root', workspace, 'primitive', 'skill', ready], repoRoot)
+    const readyResult = await runIsomorph(['--root', workspace, 'primitive', 'skill', ready, '--json'], repoRoot)
     const needsWorkResult = await runIsomorph(['--root', workspace, 'primitive', 'skill', needsWork, '--json'], repoRoot)
     const needsWorkJson = JSON.parse(needsWorkResult.stdout)
 
+    const readyJson = JSON.parse(readyResult.stdout)
     expect(readyResult.exitCode).toBe(0)
     expect(readyResult.stderr).toBe('')
-    expect(readyResult.stdout).toContain('status: ready')
+    expect(readyJson.status).toBe('ready')
     expect(needsWorkResult.exitCode).toBe(1)
     expect(needsWorkJson.status).toBe('needs-work')
   })
@@ -281,23 +284,20 @@ Create a local skill primitive.
     expect(result.exitCode).toBe(0)
     expect(result.stderr).toBe('')
     const scopes = output.scopes.map((scope: { scope: string }) => scope.scope)
-    expect(scopes).toContain('primitives')
-    expect(scopes).toContain('grammars')
-    expect(scopes).toContain('lint')
-    expect(scopes).toContain('exports')
-    const primitives = output.scopes.find((scope: { scope: string }) => scope.scope === 'primitives')
-    const exports = output.scopes.find((scope: { scope: string }) => scope.scope === 'exports')
-    expect(primitives.path).toBe('primitives/')
-    expect(primitives.kinds).toContain('concept')
-    expect(exports.path).toBe('exports/')
-    expect(exports.templates).toContain('concept')
-    expect(exports.templates).toContain('policy')
-    expect(exports.templates).toContain('semantic-framework')
+    expect(scopes).toContain('basis')
+    expect(scopes).toContain('bootstrap')
+    const basis = output.scopes.find((scope: { scope: string }) => scope.scope === 'basis')
+    const bootstrap = output.scopes.find((scope: { scope: string }) => scope.scope === 'bootstrap')
+    expect(basis.path).toBe('basis/')
+    expect(basis.kinds).toContain('concept')
+    expect(bootstrap.path).toBe('bootstrap/')
+    expect(bootstrap.templates).toContain('skill-primitive')
 
     const plain = await runIsomorph(['--root', workspace, 'source', 'list'], repoRoot)
     expect(plain.exitCode).toBe(0)
     expect(plain.stdout).toContain('isomorph source list')
-    expect(plain.stdout).toContain('## primitives')
+    expect(plain.stdout).toContain('## basis')
+    expect(plain.stdout).toContain('## bootstrap')
   })
 
   it('reports pinned upgrade status and malformed pin parse errors', async () => {

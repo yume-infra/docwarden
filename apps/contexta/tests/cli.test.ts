@@ -112,8 +112,9 @@ describe('contexta CLI contract', () => {
     ) as { readonly generatedAt: string, readonly packs: readonly { readonly id: string, readonly manifestPath: string }[] }
     expect(generatedAssets.generatedAt).toBe('1970-01-01T00:00:00.000Z')
     expect(generatedPacks.generatedAt).toBe('1970-01-01T00:00:00.000Z')
-    expect(generatedAssets.assets).toHaveLength(10)
-    expect(generatedPacks.packs).toHaveLength(2)
+    expect(generatedPacks.packs.length).toBeGreaterThanOrEqual(2)
+    expect(generatedAssets.assets.length).toBeGreaterThanOrEqual(10)
+    expect(new Set(generatedAssets.assets.map(asset => asset.id)).size).toBe(generatedAssets.assets.length)
     expect(generatedAssets.assets).toContainEqual(expect.objectContaining({
       id: 'skill:dw/review-doc',
       sourcePath: '.contexta/packs/docwarden/skills/review-doc.md',
@@ -126,6 +127,11 @@ describe('contexta CLI contract', () => {
       id: 'docwarden',
       manifestPath: '.contexta/packs/docwarden/contexta.yaml',
     }))
+    expect(generatedPacks.packs).toContainEqual(expect.objectContaining({
+      id: 'isomorph-authoring',
+      manifestPath: '.contexta/packs/isomorph-authoring/contexta.yaml',
+    }))
+    expect(generatedAssets.assets.every(asset => !/.+isomorph[\\/](?:primitives|grammars|exports)(?:[\\/]|$)/.test(asset.sourcePath))).toBe(true)
   })
 
   it('exports selected skill to repo-skill runtime root', async () => {

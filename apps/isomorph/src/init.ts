@@ -3,6 +3,7 @@ import type { IsomorphError } from './errors.js'
 import type { CurrentWorkingDirectoryService, VendorSnapshotProviderService } from './services.js'
 import { Clock, Effect, FileSystem, Path } from 'effect'
 import { formatUnknownCause, IsomorphConfigError, IsomorphRuntimeError } from './errors.js'
+import { initOutputPath, isomorphSourceLayers, readPinnedBaselineFilesForLayer } from './pinned-baseline.js'
 import { assertDirectory, assertInside, normalizeOptionalPath, pathExists } from './root.js'
 import { CurrentWorkingDirectory, VendorSnapshotProvider } from './services.js'
 
@@ -27,6 +28,7 @@ export function runInitEffect(options: InitOptions = {}): Effect.Effect<InitResu
     }
 
     const snapshot = yield* snapshotProvider.current
+    const initFiles = readPinnedBaselineFilesForLayer(isomorphSourceLayers.init)
     yield* fs.makeDirectory(isomorphRoot, { recursive: false }).pipe(
       Effect.mapError(error => new IsomorphRuntimeError({
         message: `failed to create local .isomorph: ${isomorphRoot}: ${formatUnknownCause(error)}`,
@@ -34,9 +36,10 @@ export function runInitEffect(options: InitOptions = {}): Effect.Effect<InitResu
     )
 
     const writePinnedBaseline = Effect.gen(function* () {
-      for (const file of snapshot.files) {
-        const destination = path.join(isomorphRoot, file.path)
-        yield* assertInside(isomorphRoot, destination, `pinned baseline path escapes .isomorph: ${file.path}`)
+      for (const file of initFiles) {
+        const outputPath = initOutputPath(file.path)
+        const destination = path.join(isomorphRoot, outputPath)
+        yield* assertInside(isomorphRoot, destination, `pinned baseline path escapes .isomorph: ${outputPath}`)
         yield* fs.makeDirectory(path.dirname(destination), { recursive: true }).pipe(
           Effect.mapError(error => new IsomorphRuntimeError({
             message: `failed to create pinned baseline directory: ${path.dirname(destination)}: ${formatUnknownCause(error)}`,
@@ -70,7 +73,7 @@ export function runInitEffect(options: InitOptions = {}): Effect.Effect<InitResu
         workspaceRoot,
         isomorphRoot,
         pin,
-        filesWritten: snapshot.files.length + 1,
+        filesWritten: initFiles.length + 1,
       }
     })
 

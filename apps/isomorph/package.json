@@ -16,7 +16,8 @@
     "isomorph": "dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "isomorph-source"
   ],
   "engines": {
     "node": ">=22.22.1"

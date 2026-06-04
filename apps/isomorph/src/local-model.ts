@@ -10,16 +10,20 @@ import {
   readField,
 } from './markdown-helpers.js'
 import { parseMarkdownSurface } from './markdown.js'
+import {
+  isomorphSourceLayers,
+  readPinnedBaselineFilesForLayers,
+} from './pinned-baseline.js'
 import { toPosix } from './root.js'
 
 export function loadIsomorphModelEffect(root: IsomorphRoot): Effect.Effect<IsomorphModel, IsomorphError, FileSystem.FileSystem | Path.Path> {
   return Effect.gen(function* () {
     const path = yield* Path.Path
     const fs = yield* FileSystem.FileSystem
-    const files = yield* listMarkdownFiles(root.isomorphRoot)
+    const localFiles = yield* listMarkdownFiles(root.isomorphRoot)
     const documents: IsomorphDocument[] = []
 
-    for (const absolutePath of files) {
+    for (const absolutePath of localFiles) {
       const content = yield* fs.readFileString(absolutePath, 'utf8').pipe(
         Effect.mapError(error => new IsomorphRuntimeError({
           message: `failed to read isomorph document: ${absolutePath}: ${formatUnknownCause(error)}`,
@@ -34,6 +38,33 @@ export function loadIsomorphModelEffect(root: IsomorphRoot): Effect.Effect<Isomo
         title: firstHeadingText(surface) ?? path.basename(isomorphPath, '.md'),
         kind: surface.frontmatter.kind,
       })
+    }
+
+    const hasPin = yield* fs.exists(path.join(root.isomorphRoot, '.isomorph-pin.json')).pipe(
+      Effect.match({
+        onFailure: () => false,
+        onSuccess: exists => exists,
+      }),
+    )
+    if (hasPin) {
+      const basisFiles = readPinnedBaselineFilesForLayers([
+        isomorphSourceLayers.basis,
+        isomorphSourceLayers.bootstrap,
+      ])
+      const localPaths = new Set(documents.map(document => document.isomorphPath))
+      for (const file of basisFiles) {
+        if (localPaths.has(file.path)) {
+          continue
+        }
+        const surface = parseMarkdownSurface(file.content, file.path)
+        documents.push({
+          absolutePath: path.join(root.isomorphRoot, file.path),
+          isomorphPath: file.path,
+          surface,
+          title: firstHeadingText(surface) ?? path.basename(file.path, '.md'),
+          kind: surface.frontmatter.kind,
+        })
+      }
     }
 
     const localKinds = collectLocalKinds(documents)

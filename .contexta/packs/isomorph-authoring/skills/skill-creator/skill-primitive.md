@@ -95,12 +95,12 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[primitives/concept/skill-primitive|skill-primitive]]
-- [[primitives/concept/lead-review|lead-review]]
-- [[primitives/concept/primitive-creator|primitive-creator]]
-- [[grammars/policy/skill-primitive-boundary|skill-primitive-boundary]]
-- [[grammars/policy/lead-review-boundary|lead-review-boundary]]
-- [[lint/signal/skill-primitive-legacy-surface|skill-primitive-legacy-surface]]
+- [[bootstrap/primitives/concept/skill-primitive|skill-primitive]]
+- [[basis/primitives/concept/lead-review|lead-review]]
+- [[bootstrap/primitives/concept/primitive-creator|primitive-creator]]
+- [[bootstrap/grammars/policy/skill-primitive-boundary|skill-primitive-boundary]]
+- [[basis/grammars/policy/lead-review-boundary|lead-review-boundary]]
+- [[basis/grammars/policy/semantic-framework-boundary|semantic-framework-boundary]]
 
 ## Validation
 
@@ -108,7 +108,3 @@ Exclusions:
 - materialize skill 后运行 `python3 .contexta/packs/isomorph-authoring/skills/skill-creator/scripts/quick_validate.py .contexta/packs/isomorph-authoring/skills/skill-creator`。
 - 对 repo-skill / plugin-distributed skill 同步运行对应 `quick_validate.py`。
 - 非平凡变更需要 forward-test：使用一个不包含预设答案的 realistic skill creation request。
-
-## Diagnostics
-
-- 当前修复把旧 root concrete skill material 降级为 contexta canonical skill source；canonical primitive path 是 `.contexta/packs/isomorph-authoring/skills/skill-creator/skill-primitive.md`。

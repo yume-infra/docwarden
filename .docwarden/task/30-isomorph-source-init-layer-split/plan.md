@@ -8,13 +8,15 @@ Created: 2026-06-04T09:28:42.615Z
 
 ## Steps
 - [x] Step 0: 捕获用户纠偏与任务入口
-- [ ] Step 1: Freeze current layer inventory
-- [ ] Step 2: Define target layer taxonomy
-- [ ] Step 3: Classify existing `primitives / grammars / exports`
-- [ ] Step 4: Define init contract
-- [ ] Step 5: Design migration route
-- [ ] Step 6: Review with user before implementation
-- [ ] Step 7: Implement accepted breaking migration in one pass
+- [x] Step 1: Freeze current layer inventory
+- [x] Step 2: Define target layer taxonomy
+- [x] Step 3: Classify existing `primitives / grammars / exports`
+- [x] Step 4: Define init contract
+- [x] Step 5: Design migration route
+- [x] Step 6: Review with user before implementation
+- [x] Step 7: Implement accepted breaking migration in one pass
+
+Current workspace note (2026-06-04): package-owned isomorph source 已落到 `apps/isomorph/isomorph-source/{basis,bootstrap,init}`；root `.isomorph` 只保留 init 后用户项目可见的 `README.md` 与 `.isomorph-pin.json`；`isomorph init` 不再把 basis/bootstrap/source-only material 写进用户 `.isomorph`。
 
 ## Confirmed Starting Point
 
@@ -234,6 +236,10 @@ isomorph source repository
   source implementation
     apps/isomorph/src/**
     apps/isomorph/tests/**
+  package-owned source
+    apps/isomorph/isomorph-source/basis/**
+    apps/isomorph/isomorph-source/bootstrap/**
+    apps/isomorph/isomorph-source/init/**
   portable basis source
     portable theory primitives
     portable grammar

@@ -1,6 +1,6 @@
 ---
 status: active
-workspace_status: working
+workspace_status: validating
 created: 2026-06-04T09:28:42.615Z
 updated: 2026-06-04T09:28:42.615Z
 title: isomorph source init layer split
@@ -18,13 +18,13 @@ id: 30-isomorph-source-init-layer-split
   - “isomorph init 后需要出现在用户 codebase 里的 `.isomorph`”。
 
 ## Objective
-- 设计 isomorph source `.isomorph` 与用户项目 init 后 `.isomorph` 的层级分裂。
+- 设计并实现 isomorph package source 与用户项目 init 后 `.isomorph` 的层级分裂。
 - 明确 current `primitives / grammars / exports` 中哪些属于 portable theory primitives，哪些属于 isomorph bootstrap vocabulary，哪些属于 generated/project instance material，哪些只是 projection/export/dogfood。
 - 产出一个可 review 的重构模型和迁移计划，再进入文件迁移或 CLI init 实现。
 
 ## Boundary
 - 本 task 不直接修改 `docs/`。
-- 本 task 不先执行大规模目录迁移；先产出可审核 layer model。
+- 本 task 已进入 breaking implementation；大规模目录迁移必须保持一次到位。
 - 本 task 不把 `.isomorph/exports/**` 继续当作稳定 root layer 扩张。
 - 本 task 不把 isomorph 自举 vocabulary 默认带入所有用户项目。
 - 本 task 不让 contexta/plugin/runtime material 反向定义 isomorph bootstrap language。
