@@ -1,0 +1,4 @@
+interface:
+  display_name: "Probe Loop"
+  short_description: "Explore unclear needs into decisions"
+  default_prompt: "使用 -probe-loop，把这个还没想清楚的需求拆成 decision tree，并给出 recommended answer 来协同收敛方向。"

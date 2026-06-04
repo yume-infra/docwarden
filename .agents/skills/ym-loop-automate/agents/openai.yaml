@@ -1,0 +1,4 @@
+interface:
+  display_name: "Loop Automate"
+  short_description: "把重复 harness loop 变成最小 automation"
+  default_prompt: "使用 $ym-loop-automate，把这个重复手工 loop 变成最小 automation。"

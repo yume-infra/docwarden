@@ -10,6 +10,20 @@ Agents MUST load and apply the project user context when working in this reposit
 
 The user context is not a project policy or workflow rule. Current user instructions and project rules take priority over it.
 
+## AI Harness Dogfood Constraint
+
+当当前任务属于 `ai-harness dogfood`、把 theory / scattered ideas 转成可执行工具、或维护 repo-local Codex skills / contexta export surface 时，Agents MUST 默认执行这五条约束：
+
+1. `Question every requirement`：每个需求都要先问“今天证明它有用需要什么”。
+2. `Delete any part or process you can`：优先删除不影响首个可用 baseline 的流程、schema、review、命名、polish。
+3. `Simplify and optimize`：只保留一个 target surface、一个可回滚文件组、一个最快验证命令。
+4. `Accelerate cycle time`：选择仓库已有的最短真实 feedback loop，先交付粗糙可用版本。
+5. `Automate`：只自动化已经重复、易错、或会明显缩短下一轮迭代的步骤。
+
+如果完整 theory 与可用 baseline 冲突，先落地可用 baseline，再用后续 slice 迭代质量。
+
+对这类工作，默认使用中文写 skill 主体，只保留必要英文术语，例如 `skill`、`harness`、`workflow`、`baseline`、`slice`、`export`、`smoke`、`CLI`。
+
 ## Effect Reference
 
 - Effect work in this repository uses the v4 beta toolchain, following the same baseline shape as `symphony-ts`.

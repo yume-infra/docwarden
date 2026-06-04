@@ -1,0 +1,4 @@
+interface:
+  display_name: "Requirement Cut"
+  short_description: "把宽需求删到最小可执行 slice 和验证路径"
+  default_prompt: "使用 $ym-requirement-cut，把这个需求删到最小可执行 slice。"

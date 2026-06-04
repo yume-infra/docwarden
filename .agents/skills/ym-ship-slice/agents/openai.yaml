@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ship Slice"
+  short_description: "把 theory 立刻交付成粗糙可用 slice"
+  default_prompt: "使用 $ym-ship-slice，把这个想法立刻转成粗糙可用 repo change。"

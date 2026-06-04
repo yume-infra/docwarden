@@ -1,0 +1,4 @@
+interface:
+  display_name: "Harness Smoke"
+  short_description: "用最短 smoke 验证 harness change 可用"
+  default_prompt: "使用 $ym-harness-smoke，验证这个 harness change 是否真的可用。"

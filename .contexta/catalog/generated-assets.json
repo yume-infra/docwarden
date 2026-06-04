@@ -3,6 +3,86 @@
   "generatedAt": "1970-01-01T00:00:00.000Z",
   "assets": [
     {
+      "id": "skill:ym/aiming",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "aiming",
+      "sourcePath": ".contexta/packs/ai-harness/skills/aiming"
+    },
+    {
+      "id": "skill:ym/requirement-cut",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "requirement-cut",
+      "sourcePath": ".contexta/packs/ai-harness/skills/requirement-cut"
+    },
+    {
+      "id": "skill:ym/ship-slice",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "ship-slice",
+      "sourcePath": ".contexta/packs/ai-harness/skills/ship-slice"
+    },
+    {
+      "id": "skill:ym/harness-wire",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "harness-wire",
+      "sourcePath": ".contexta/packs/ai-harness/skills/harness-wire"
+    },
+    {
+      "id": "skill:ym/harness-smoke",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "harness-smoke",
+      "sourcePath": ".contexta/packs/ai-harness/skills/harness-smoke"
+    },
+    {
+      "id": "skill:ym/loop-automate",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "loop-automate",
+      "sourcePath": ".contexta/packs/ai-harness/skills/loop-automate"
+    },
+    {
+      "id": "skill:ym/probe-loop",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "probe-loop",
+      "sourcePath": ".contexta/packs/ai-harness/skills/probe-loop"
+    },
+    {
+      "id": "skill:ym/push-loop",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "push-loop",
+      "sourcePath": ".contexta/packs/ai-harness/skills/push-loop"
+    },
+    {
+      "id": "skill:ym/handoff",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "handoff",
+      "sourcePath": ".contexta/packs/ai-harness/skills/handoff"
+    },
+    {
+      "id": "skill:ym/skill-improver",
+      "kind": "skill",
+      "packId": "ai-harness",
+      "namespace": "ym",
+      "name": "skill-improver",
+      "sourcePath": ".contexta/packs/ai-harness/skills/skill-improver"
+    },
+    {
       "id": "skill:dw/review-doc",
       "kind": "skill",
       "packId": "docwarden",

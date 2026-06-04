@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aiming"
+  short_description: "Check whether new requests drift from the original aim"
+  default_prompt: "使用 -aiming，检查当前请求是否偏离最初 aim，并给出 continue、switch 或 park 的最小选择。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Harness Wire"
+  short_description: "把 agent behavior 接成 repo-local skill"
+  default_prompt: "使用 $ym-harness-wire，把这个 behavior 物化成 repo-local AI harness skill。"

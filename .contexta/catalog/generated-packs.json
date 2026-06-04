@@ -3,6 +3,16 @@
   "generatedAt": "1970-01-01T00:00:00.000Z",
   "packs": [
     {
+      "id": "ai-harness",
+      "namespace": "ym",
+      "manifestPath": ".contexta/packs/ai-harness/contexta.yaml",
+      "packPath": ".contexta/packs/ai-harness",
+      "description": "AI harness 初版：用五条约束把理论快速压成可执行 slice。",
+      "targets": [
+        "codex"
+      ]
+    },
+    {
       "id": "docwarden",
       "namespace": "dw",
       "manifestPath": ".contexta/packs/docwarden/contexta.yaml",

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Push Loop"
+  short_description: "用 relentless task loop 推进到完全一致"
+  default_prompt: "使用 -push-loop，在方向已明确后把这个复杂任务推进成 relentless loop，直到和用户完全一致。"

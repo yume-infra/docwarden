@@ -1,0 +1,3 @@
+interface:
+  display_name: "Skill Improver"
+  short_description: "Patch named skills from direct feedback"

@@ -1,0 +1,16 @@
+pack: ai-harness
+namespace: ym
+description: AI harness 初版：用五条约束把理论快速压成可执行 slice。
+target: codex
+assets:
+  skill:
+    - aiming
+    - requirement-cut
+    - ship-slice
+    - harness-wire
+    - harness-smoke
+    - loop-automate
+    - probe-loop
+    - push-loop
+    - handoff
+    - skill-improver
