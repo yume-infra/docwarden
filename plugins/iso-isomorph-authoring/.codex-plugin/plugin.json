@@ -1,0 +1,22 @@
+{
+  "name": "iso-isomorph-authoring",
+  "version": "0.1.0",
+  "description": "Isomorph authoring context assets distributed through contexta.",
+  "author": {
+    "name": "contexta"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Iso Isomorph Authoring",
+    "shortDescription": "Isomorph authoring context assets distributed through contexta.",
+    "longDescription": "Isomorph authoring context assets distributed through contexta.",
+    "developerName": "contexta",
+    "category": "Productivity",
+    "capabilities": [
+      "Skills"
+    ],
+    "defaultPrompt": [
+      "Use $iso-skill-creator"
+    ]
+  }
+}
