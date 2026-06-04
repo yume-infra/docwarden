@@ -224,6 +224,7 @@ describe('docwarden CLI contract', () => {
 
     expect(lead).toContain('## Decision')
     expect(lead).toContain('## Mainline Candidate')
+    expect(lead).toContain('## Recommended Spec Target')
     expect(lead).toContain('## Side Material Candidate')
     expect(lead).toContain('## Missing Context')
     expect(lead).toContain('## Review Options')
@@ -278,6 +279,7 @@ describe('docwarden CLI contract', () => {
     expect(promoteOutput.targetLayer).toBe('spec')
     expect(promoteOutput.specTarget).toBe('harness/spec-entry-boundary')
     expect(promoteOutput.specKind).toBe('policy')
+    expect(promoteOutput.reviewGate.status).toBe('review-surface-ready')
     await expect(fs.access(promoteOutput.artifactPath)).resolves.toBeUndefined()
 
     const promoteArtifact = await fs.readFile(promoteOutput.artifactPath, 'utf8')
@@ -303,6 +305,7 @@ describe('docwarden CLI contract', () => {
     expect(pick.exitCode).toBe(0)
     const pickOutput = JSON.parse(pick.stdout)
     expect(pickOutput.command).toBe('pick')
+    expect(pickOutput.reviewGate.status).toBe('review-surface-ready')
     await expect(fs.access(pickOutput.artifactPath)).resolves.toBeUndefined()
 
     const pickArtifact = await fs.readFile(pickOutput.artifactPath, 'utf8')
@@ -332,6 +335,13 @@ describe('docwarden CLI contract', () => {
       '--title',
       'built in scaffold',
     ], repoRoot)
+    await runDocwarden([
+      '--root',
+      workspace,
+      'review',
+      '--task',
+      '28-built-in-scaffold',
+    ], repoRoot)
 
     const promote = await runDocwarden([
       '--root',
@@ -358,6 +368,49 @@ describe('docwarden CLI contract', () => {
     expect(artifact).toContain('kind: artifact')
     expect(artifact).toContain('# review-output')
     expect(artifact).toContain('## Assertions')
+  })
+
+  it('requires a task review surface before promote or pick writes stable material', async () => {
+    const workspace = await makeWorkspace()
+    await runDocwarden(['--root', workspace, 'init'], repoRoot)
+    await runDocwarden([
+      '--root',
+      workspace,
+      'task',
+      'create',
+      '--id',
+      '28-no-review-gate',
+      '--title',
+      'no review gate',
+    ], repoRoot)
+
+    const promote = await runDocwarden([
+      '--root',
+      workspace,
+      'promote',
+      '--task',
+      '28-no-review-gate',
+      '--to',
+      'wiki',
+    ], repoRoot)
+
+    expect(promote.exitCode).toBe(2)
+    expect(promote.stderr).toContain('docwarden config error')
+    expect(promote.stderr).toContain('run docwarden review --task 28-no-review-gate before promote or pick')
+
+    const pick = await runDocwarden([
+      '--root',
+      workspace,
+      'pick',
+      '--task',
+      '28-no-review-gate',
+      '--to',
+      'wiki',
+    ], repoRoot)
+
+    expect(pick.exitCode).toBe(2)
+    expect(pick.stderr).toContain('docwarden config error')
+    expect(pick.stderr).toContain('run docwarden review --task 28-no-review-gate before promote or pick')
   })
 
   it('requires concrete spec module target for promote to spec', async () => {

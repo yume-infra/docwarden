@@ -35,7 +35,7 @@ Status: done
 
 ## Step 2: 重写 review lead 生成语义
 
-Status: next
+Status: done
 
 目标：`review --task` 生成的 `lead.md` 不再是泛化问题，而是围绕本轮 task 产生最小可审核判断。
 
@@ -48,7 +48,7 @@ Status: next
 
 ## Step 3: 重写 promote / pick 产物形态
 
-Status: pending
+Status: working
 
 目标：promote/pick 生成稳定层候选时，不再只是 raw excerpt。
 
@@ -61,7 +61,7 @@ Status: pending
 
 ## Step 4: 增加质量 contract 测试
 
-Status: pending
+Status: working
 
 目标：用测试锁住基础质量，不只测文件存在。
 
@@ -75,7 +75,7 @@ Status: pending
 
 ## Step 5: 再次 dogfood
 
-Status: pending
+Status: working
 
 目标：对 task26 自己运行新链路。
 
