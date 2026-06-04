@@ -1,50 +1,61 @@
 ---
 name: skill-creator
-description: Use when creating or updating Codex skills, converting isomorph skill-primitive material into a skill, or fixing a skill that is drifting into generic scaffolding, CLI wrapping, bloated docs, unclear triggers, missing review gates, or unvalidated SKILL.md/resources.
+description: 用于创建或更新 Codex skill、把 isomorph skill-primitive material 派生成 SKILL.md/repo-skill/plugin skill，或修正漂移成 generic scaffolding、CLI wrapper、膨胀 docs、trigger 不清、缺少 review gate、未验证 artifact 的 skill；不用于只安装 skill、只跑脚本或只写 docs/prompt。
 ---
 
 # Skill Creator
 
-Create or update Codex native skills as agent behavior interventions. A skill exists to correct repeatable agent drift; deterministic hard constraints belong in CLI or scripts.
+把 Codex skill 当作 agent behavior intervention 来创建或修复。先证明 repeatable drift，再写文件；skill 用来引导软判断，硬约束交给 CLI 或脚本。
+
+## Capability
+
+这个 skill 处理三类工作：
+
+- 从用户请求、workflow 或 isomorph `skill-primitive` 派生新的 Codex skill。
+- 更新已有 skill，使它重新对齐明确的 trigger、boundary、resource rules 与 validation。
+- 修复已经漂移成 generic scaffolding、CLI wrapper、膨胀说明文档、结构有效但行为弱的 skill。
 
 ## Drift Pressure
 
-Do not start from folder shape, generic capability prose, or a command wrapper. First name the agent failure the skill prevents.
+动手前先用一句具体话命名这个 skill 要防止的 agent failure。
 
-Common pressure scenarios:
+常见 drift:
 
-- The agent generates skill files before proving why the skill should exist.
-- The agent puts hard constraints into prose instead of deterministic scripts.
-- The agent mirrors CLI commands, directories, or internal workflow nodes instead of user-facing behavior.
-- A skill passes structural validation but lacks trigger boundary, review gate, pressure scenario, or forward-test surface.
+- agent 在证明 skill 必要性前就生成目录和 `SKILL.md`。
+- agent 明明有 isomorph primitive material，却从 runtime folder、plugin export shape 或 generic scaffold 反推 skill。
+- agent 把 hard constraints 与 soft workflow judgment 都写进 prose。
+- agent 把 CLI command、directory structure 或内部 workflow node 当成 user-facing skill behavior。
+- draft 通过结构校验，但缺少 trigger boundary、review gate、pressure scenario 或 forward-test surface。
 
 ## Workflow
 
-1. Read source material and any existing skill resources before editing.
-2. State the drift pressure in one concrete sentence.
-3. Decide whether the request needs a skill, docs, prompt, CLI, script, reference, or asset.
-4. Define activation: user phrases that should trigger the skill and nearby requests that should not.
-5. Separate judgment surface from deterministic boundary.
-6. Choose the smallest review gate if the drift, trigger, or skill-vs-CLI boundary is uncertain.
-7. Materialize `SKILL.md` and only the bundled resources that directly support the skill.
-8. Run deterministic validation before treating the skill as usable.
+1. 如果有 isomorph primitive material，先接管它，把它当作 semantic source。
+2. 以 primitive 为 derivation unit，再 materialize `SKILL.md`、repo-skill 或 plugin-distributed skill。
+3. 读取已有 skill resources，再决定编辑范围。
+4. 写出 pressure scenario：这个 skill 防止哪种可重复 agent drift。
+5. 判断 artifact 应进入 skill、docs、prompt、CLI、script、reference 还是 asset。
+6. 定义 activation：哪些用户说法应该触发，哪些相邻请求不该触发。
+7. 分离 soft boundary 与 hard boundary。
+8. 如果 drift、trigger 或 skill-vs-CLI 边界不确定，只让用户确认最小 semantic unit。
+9. 只 materialize `SKILL.md` 和直接支撑该 skill 的 bundled resources。
+10. 跑 deterministic validation，再把 skill 当作可用。
 
-If the user already confirmed the direction or the source material makes it clear, proceed with a reversible baseline and report validation instead of asking broad permission questions.
+用户已经确认方向，或 primitive source 已经足够清楚时，直接推进 reversible baseline 并报告验证结果，不要问宽泛确认问题。
 
-## Judgment Surface
+## Soft Boundary
 
-Use skill instructions for soft agent judgment:
+skill instructions 只负责 agent judgment:
 
-- whether repeated drift justifies a reusable skill;
-- which workflow decisions the agent must make while using the skill;
-- trigger and exclusion boundaries for frontmatter `description`;
-- what belongs in `SKILL.md` versus `references/`;
-- where user review should happen and what the minimal review unit is;
-- whether the draft is too generic, too verbose, or too implementation-shaped.
+- repeated drift 是否足以支撑 reusable skill；
+- 请求应该落到 skill、docs、prompt、CLI、script、reference 还是 asset；
+- frontmatter `description` 的 positive / negative trigger boundary；
+- 哪些内容是 SKILL.md every-use material，哪些应该进入一层 references；
+- review gate 放在哪里，以及最小 review unit 是什么；
+- draft 是否太 generic、verbose、implementation-shaped 或 runtime-shaped。
 
-## Deterministic Boundary
+## Hard Boundary
 
-Use scripts or CLI for hard constraints:
+硬约束交给脚本或 CLI:
 
 ```bash
 python3 scripts/init_skill.py "$SKILL_NAME" --path "$OUTPUT_DIR" --resources scripts,references
@@ -52,58 +63,64 @@ python3 scripts/generate_openai_yaml.py "$SKILL_DIR" --interface key=value
 python3 scripts/quick_validate.py "$SKILL_DIR"
 ```
 
-Use `init_skill.py` for repeatable scaffolding, `generate_openai_yaml.py` for `agents/openai.yaml`, and `quick_validate.py` for SKILL.md frontmatter, name, description, and placeholder checks.
+使用 `init_skill.py` 做 repeatable scaffolding，使用 `generate_openai_yaml.py` 生成 `agents/openai.yaml`，使用 `quick_validate.py` 校验 frontmatter、name、description 与 placeholder。
 
-If the skill adds or changes scripts, run or smoke-test those scripts directly. If the skill is derived from isomorph material, run `isomorph primitive skill` on the primitive file before export.
+如果 skill 新增或修改 scripts，直接 run 或 smoke-test 那些 scripts。如果 skill 从 isomorph material 派生，先运行 `isomorph primitive skill` 验证 primitive source。
 
 ## Writing Rules
 
 Frontmatter:
 
-- `name` is the stable skill identity, in hyphen-case.
-- `description` is the activation surface, not a summary.
-- Include trigger scenarios and important exclusions in `description`.
-- Keep unsupported metadata out unless the platform explicitly supports it.
-- Keep description under 1024 characters and free of angle-bracket placeholders.
+- `name` 是稳定 skill identity，使用 hyphen-case。
+- `description` 是 activation surface，不是摘要。
+- description 要包含重要 trigger 与 exclusion boundary。
+- 不加入平台不支持的 metadata。
+- description 保持在 1024 字符以内，不能包含 angle-bracket placeholder。
 
 Body:
 
-- Write for a future Codex instance that does not share this conversation.
-- Keep only every-use instructions in `SKILL.md`.
-- Prefer concrete examples and decision points over explanation.
-- Do not include README, changelog, installation guide, process notes, or extra docs inside the skill.
-- Use `references/` for conditional detail and link each reference from `SKILL.md` with when to read it.
-- Keep references one level deep.
-- Use `scripts/` only for deterministic, fragile, or repeatedly rewritten operations.
-- Use `assets/` only for files used in final outputs.
+- 写给不知道当前对话的未来 Codex instance。
+- `SKILL.md` 只保留 every-use instructions。
+- 用具体 decision point 和 examples，避免解释性长文。
+- 不在 skill 目录里添加 README、changelog、installation guide、process notes 或额外 docs。
+- 条件性细节放入 `references/`，并在 `SKILL.md` 说明什么时候读取。
+- references 保持一层深。
+- `scripts/` 只放 deterministic、fragile 或反复被重写的操作。
+- `assets/` 只放最终输出会实际使用的文件。
 
-Read `references/openai_yaml.md` before adding optional UI metadata fields.
+添加 optional UI metadata 前，先读 `references/openai_yaml.md`。
 
 ## Review Gates
 
-Ask the user to confirm only the smallest uncertain unit:
+只确认最小不确定单元：
 
-- drift pressure, if the skill's reason to exist is unclear;
-- activation boundary, if trigger or exclusion examples are ambiguous;
-- skill-vs-CLI boundary, if hard and soft constraints are mixed;
-- export shape, if the skill identity or resource layout is uncertain.
+- drift pressure 不清楚时，确认 skill 存在理由；
+- activation boundary 不清楚时，确认 trigger 与 exclusion examples；
+- skill-vs-CLI 边界混合时，确认 hard / soft responsibility；
+- export shape 不清楚时，确认 skill identity 与 resource layout。
 
-Do not ask for broad confirmation when the user has already confirmed the direction.
+用户已经确认方向时，不要再要求 broad confirmation。
 
 ## Validation
 
-Always run:
+总是运行：
 
 ```bash
 python3 scripts/quick_validate.py "$SKILL_DIR"
 ```
 
-Regenerate `agents/openai.yaml` when frontmatter name, description, display name, short description, or default prompt changes.
+当 frontmatter name、description、display name、short description 或 default prompt 改变时，重新生成 `agents/openai.yaml`。
 
-For nontrivial skills, forward-test with a clean realistic request:
+从 primitive 派生时运行：
+
+```bash
+isomorph primitive skill .isomorph/primitives/skill-primitive/skill-creator.md --json
+```
+
+非平凡 skill 变更需要 forward-test，使用干净、真实的请求，例如：
 
 ```text
 Use $generated-skill at $SKILL_DIR to handle: turn a repo-specific review workflow into a concise Codex skill.
 ```
 
-Do not include the intended answer, suspected bug, or prior conclusions in the forward-test prompt unless the test explicitly requires them.
+forward-test 不要泄露预期答案、疑似 bug、目标修复或本轮结论，除非测试本身要求这些信息。
