@@ -6,7 +6,7 @@ kind: composition
 
 ## Whole
 
-[[primitives/modules/concept/module|module]]
+[[primitives/concept/module|module]]
 
 Reading:
 
@@ -16,7 +16,7 @@ module 的成立来自 md file scope，不来自 composition。
 
 ## Part
 
-[[primitives/modules/concept/assertion|assertion]]
+[[primitives/concept/assertion|assertion]]
 
 Reading:
 
@@ -36,6 +36,6 @@ review/promote 改变 assertion 的系统地位，不改变 assertion 作为 sem
 
 ## Module Scope
 
-本文件是 module / assertion 的 composition instance，不重新定义 [[primitives/modules/concept/module|module]] 或 [[primitives/modules/concept/assertion|assertion]]。
+本文件是 module / assertion 的 composition instance，不重新定义 [[primitives/concept/module|module]] 或 [[primitives/concept/assertion|assertion]]。
 
 module / assertion 是 whole / part composition，不是 architecture 的 layer / relation / boundary。

@@ -28,7 +28,7 @@ import { evaluateSignal } from './signal.js'
 import { readSourceMetadataEffect, sourceMetadataPath } from './source.js'
 import { runUpgradeStatusEffect } from './upgrade.js'
 
-const adoptPackagedBaselinePlanId = 'adopt-packaged-baseline'
+const adoptPinnedBaselinePlanId = 'adopt-pinned-baseline'
 const installDefaultRecognitionPlanId = 'install-default-recognition-primitive'
 
 export function runDoctorInspectEffect(options: ResolveOptions = {}): Effect.Effect<DoctorInspectResult, IsomorphError, CurrentWorkingDirectoryService | VendorSnapshotProviderService | FileSystem.FileSystem | Path.Path> {
@@ -74,8 +74,8 @@ export function runDoctorRepairEffect(options: DoctorRepairOptions): Effect.Effe
     const snapshotProvider = yield* VendorSnapshotProvider
     const snapshot = yield* snapshotProvider.current
     const beforeFingerprint = fingerprintIssues(before.issues)
-    const actions = options.plan === adoptPackagedBaselinePlanId
-      ? yield* applyAdoptPackagedBaseline(before.root, snapshot, options.now)
+    const actions = options.plan === adoptPinnedBaselinePlanId
+      ? yield* applyAdoptPinnedBaseline(before.root, snapshot, options.now)
       : yield* applyInstallDefaultRecognitionPrimitive(before.root, snapshot)
 
     const after = yield* runDoctorInspectEffect({ root: before.root.isomorphRoot })
@@ -169,7 +169,7 @@ function inspectPin(root: IsomorphRoot, snapshot: VendorSnapshot): Effect.Effect
           evidence: pin.message,
           impact: 'ordinary upgrade fails until the local instance has an explicit baseline',
           repairability: 'plan-only',
-          repair: adoptPackagedBaselinePlanId,
+          repair: adoptPinnedBaselinePlanId,
         })]
       }
       return [issue({
@@ -191,7 +191,7 @@ function inspectPin(root: IsomorphRoot, snapshot: VendorSnapshot): Effect.Effect
         target: pinPath,
         summary: 'local .isomorph pin points at an unknown baseline',
         evidence: `vendor=${pin.vendor} ref=${pin.ref} digest=${pin.digest}`,
-        impact: 'ordinary upgrade refuses shape-valid pins that do not resolve to packaged baseline material',
+        impact: 'ordinary upgrade refuses shape-valid pins that do not resolve to pinned baseline material',
         repairability: 'manual',
         repair: undefined,
       })]
@@ -230,11 +230,11 @@ function inspectBaselineMaterial(root: IsomorphRoot, snapshot: VendorSnapshot): 
         code: 'missing-baseline-material',
         severity: 'warning',
         target: root.isomorphRoot,
-        summary: 'local .isomorph is missing packaged baseline material',
+        summary: 'local .isomorph is missing pinned baseline material',
         evidence: summarizeList(missing),
         impact: 'strict runtime commands may fail because required local authority material is absent',
         repairability: 'auto',
-        repair: adoptPackagedBaselinePlanId,
+        repair: adoptPinnedBaselinePlanId,
       }))
     }
     if (conflicting.length > 0) {
@@ -268,7 +268,7 @@ function inspectLocalModel(model: IsomorphModel, options: {
       evidence: 'no .md files found',
       impact: 'recognition, lint, primitive, and upgrade cannot rely on local authority material',
       repairability: 'auto',
-      repair: adoptPackagedBaselinePlanId,
+      repair: adoptPinnedBaselinePlanId,
     }))
   }
 
@@ -369,7 +369,7 @@ function inspectNestedIsomorph(root: IsomorphRoot): Effect.Effect<readonly Docto
   })
 }
 
-function applyAdoptPackagedBaseline(root: IsomorphRoot, snapshot: VendorSnapshot, now: Date | undefined): Effect.Effect<readonly string[], IsomorphError, FileSystem.FileSystem | Path.Path> {
+function applyAdoptPinnedBaseline(root: IsomorphRoot, snapshot: VendorSnapshot, now: Date | undefined): Effect.Effect<readonly string[], IsomorphError, FileSystem.FileSystem | Path.Path> {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
@@ -381,7 +381,7 @@ function applyAdoptPackagedBaseline(root: IsomorphRoot, snapshot: VendorSnapshot
       const pin = yield* readPinEffect(root.isomorphRoot)
       if (!pinMatchesSnapshot(pin, snapshot)) {
         return yield* Effect.fail(new IsomorphConfigError({
-          message: `cannot adopt packaged baseline while pin metadata already exists: ${pinPath}`,
+          message: `cannot adopt pinned baseline while pin metadata already exists: ${pinPath}`,
         }))
       }
     }
@@ -420,10 +420,10 @@ function applyAdoptPackagedBaseline(root: IsomorphRoot, snapshot: VendorSnapshot
 function applyInstallDefaultRecognitionPrimitive(root: IsomorphRoot, snapshot: VendorSnapshot): Effect.Effect<readonly string[], IsomorphError, FileSystem.FileSystem | Path.Path> {
   return Effect.gen(function* () {
     const path = yield* Path.Path
-    const file = snapshot.files.find(file => file.path === 'lint/modules/recognition/default.md')
+    const file = snapshot.files.find(file => file.path === 'lint/recognition/default.md')
     if (file === undefined) {
       return yield* Effect.fail(new IsomorphConfigError({
-        message: 'packaged baseline has no default recognition primitive',
+        message: 'pinned baseline has no default recognition primitive',
       }))
     }
     const destination = path.join(root.isomorphRoot, file.path)
@@ -492,7 +492,7 @@ function repairPlansForIssues(issues: readonly DoctorIssue[]): readonly DoctorRe
   const codes = new Set(issues.map(issue => issue.code))
   return [
     ...(codes.has('missing-pin-metadata') || codes.has('missing-baseline-material') || codes.has('empty-isomorph-instance')
-      ? [knownRepairPlan(adoptPackagedBaselinePlanId)]
+      ? [knownRepairPlan(adoptPinnedBaselinePlanId)]
       : []),
     ...(codes.has('missing-recognition-authority')
       && issues.some(issue => issue.repair === installDefaultRecognitionPlanId)
@@ -505,24 +505,24 @@ function repairPlansForIssues(issues: readonly DoctorIssue[]): readonly DoctorRe
 }
 
 function knownRepairPlan(id: string): DoctorRepairPlan | undefined {
-  if (id === adoptPackagedBaselinePlanId) {
+  if (id === adoptPinnedBaselinePlanId) {
     return {
       id,
       issues: ['missing-pin-metadata', 'missing-baseline-material', 'missing-recognition-authority', 'empty-isomorph-instance'],
-      strategy: 'adopt-packaged-baseline',
+      strategy: 'adopt-pinned-baseline',
       preconditions: [
         '.isomorph exists',
-        '.isomorph/.isomorph-pin.json is absent or already resolves to the packaged baseline',
+        '.isomorph/.isomorph-pin.json is absent or already resolves to the pinned baseline',
         'baseline paths are only written when absent',
       ],
       actions: [
-        'write absent packaged baseline files',
+        'write absent pinned baseline files',
         'write .isomorph/.isomorph-pin.json when absent',
         'record repair log',
       ],
       postconditions: [
         'pin metadata decodes',
-        'pin baseline resolves to packaged snapshot',
+        'pin baseline resolves to pinned snapshot',
         'missing baseline files now exist',
       ],
       verification: [
@@ -539,11 +539,11 @@ function knownRepairPlan(id: string): DoctorRepairPlan | undefined {
       issues: ['missing-recognition-authority'],
       strategy: 'install-default-recognition-primitive',
       preconditions: [
-        'packaged baseline contains default recognition primitive',
+        'pinned baseline contains default recognition primitive',
         'target recognition primitive path is absent',
       ],
       actions: [
-        'write packaged default recognition primitive when absent',
+        'write pinned default recognition primitive when absent',
         'record repair log',
       ],
       postconditions: [

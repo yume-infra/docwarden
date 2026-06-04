@@ -76,7 +76,7 @@ owner: test
 
 agent MUST keep the marker. ^def-1
 
-See [[primitives/modules/concept/concept|concept]].
+See [[primitives/concept/concept|concept]].
 `, 'sample.md')
 
     expect(surface.frontmatter).toEqual({
@@ -87,7 +87,7 @@ See [[primitives/modules/concept/concept|concept]].
     expect(surface.sections.find(section => section.heading.text === 'Definition')?.text).toContain('agent MUST')
     expect(surface.locatorMarkers[0]?.marker).toBe('^def-1')
     expect(surface.ofmLinks[0]).toMatchObject({
-      target: 'primitives/modules/concept/concept',
+      target: 'primitives/concept/concept',
       label: 'concept',
     })
   })
@@ -105,11 +105,15 @@ describe('isomorph runtime v0', () => {
     expect(result.pin).toMatchObject({
       schemaVersion: 1,
       vendor: 'isomorph',
-      ref: 'isomorph-seed-v0',
+      ref: 'isomorph-origin-v0',
       createdAt: '2026-05-26T00:00:00.000Z',
     })
     await expect(fs.access(path.join(workspace, 'isomorph.md'))).rejects.toThrow()
     await expect(fs.access(path.join(workspace, '.isomorph', '.isomorph-pin.json'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(workspace, '.isomorph', 'primitives/concept/semantic-framework.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(workspace, '.isomorph', 'primitives/concept/vocabulary.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(workspace, '.isomorph', 'grammars/policy/semantic-framework-boundary.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(workspace, '.isomorph', 'exports/templates/semantic-framework.md'))).resolves.toBeUndefined()
   })
 
   it('refuses to overwrite an existing local .isomorph', async () => {
@@ -167,7 +171,7 @@ agent MUST treat this as a rule. ^def-1
       context: 'Definition',
       locator: '^def-1',
     })
-    expect(result.signals[0]?.lossModel).toContain('boundary between naming')
+    expect(result.signals[0]?.lossModel).toContain('concept material 的命名职责')
   })
 
   it('does not let an unknown frontmatter.kind become recognition authority', async () => {
@@ -187,6 +191,37 @@ kind: not-local
     }))
 
     expect(result.recognition.recognizedRole).toBe('unknown')
+  })
+
+  it('recognizes pinned baseline semantic framework bootstrap concepts as local roles', async () => {
+    const workspace = await makeWorkspace()
+    await runIsomorph(runInitEffect({ root: workspace }))
+    const framework = path.join(workspace, 'animation-framework.md')
+    const vocabulary = path.join(workspace, 'animation-vocabulary.md')
+    await fs.writeFile(framework, `---
+kind: semantic-framework
+---
+
+# animation framework
+`, 'utf8')
+    await fs.writeFile(vocabulary, `---
+kind: vocabulary
+---
+
+# animation vocabulary
+`, 'utf8')
+
+    const frameworkResult = await runIsomorph(runRecognitionEffect({
+      root: workspace,
+      target: framework,
+    }))
+    const vocabularyResult = await runIsomorph(runRecognitionEffect({
+      root: workspace,
+      target: vocabulary,
+    }))
+
+    expect(frameworkResult.recognition.recognizedRole).toBe('semantic-framework')
+    expect(vocabularyResult.recognition.recognizedRole).toBe('vocabulary')
   })
 
   it('does not let arbitrary local frontmatter.kind become recognition authority', async () => {
@@ -219,7 +254,7 @@ kind: foo
   it('fails recognition when local recognition authority is missing', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    await fs.rm(path.join(workspace, '.isomorph', 'lint', 'modules', 'recognition'), { recursive: true })
+    await fs.rm(path.join(workspace, '.isomorph', 'lint', 'recognition'), { recursive: true })
     const target = path.join(workspace, 'concept.md')
     await fs.writeFile(target, `---
 kind: concept
@@ -239,7 +274,7 @@ kind: concept
   it('fails recognition when local recognition trigger is unsupported', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const recognitionFile = path.join(workspace, '.isomorph', 'lint/modules/recognition/default.md')
+    const recognitionFile = path.join(workspace, '.isomorph', 'lint/recognition/default.md')
     const original = await fs.readFile(recognitionFile, 'utf8')
     await fs.writeFile(recognitionFile, original.replace('frontmatter.kind is local kind', 'unsupported trigger syntax'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -261,7 +296,7 @@ kind: concept
   it('lets local recognition material change recognition output', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const recognitionFile = path.join(workspace, '.isomorph', 'lint/modules/recognition/default.md')
+    const recognitionFile = path.join(workspace, '.isomorph', 'lint/recognition/default.md')
     const original = await fs.readFile(recognitionFile, 'utf8')
     await fs.writeFile(recognitionFile, original.replace('Role: $frontmatter.kind', 'Role: locally-overridden'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -280,10 +315,10 @@ kind: concept
     expect(result.recognition.recognizedRole).toBe('locally-overridden')
   })
 
-  it('applies concept signals from recognized role instead of raw frontmatter.kind', async () => {
+  it('applies pinned baseline concept signals from frontmatter surface even when recognition role is overridden', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const recognitionFile = path.join(workspace, '.isomorph', 'lint/modules/recognition/default.md')
+    const recognitionFile = path.join(workspace, '.isomorph', 'lint/recognition/default.md')
     const original = await fs.readFile(recognitionFile, 'utf8')
     await fs.writeFile(recognitionFile, original.replace('Role: $frontmatter.kind', 'Role: locally-overridden'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -305,16 +340,16 @@ agent MUST treat this as a rule.
 
     expect(result.recognition.recognizedRole).toBe('locally-overridden')
     expect(result.recognition.candidateSignalScope.find(candidate => candidate.signal === 'concept-as-policy')).toMatchObject({
-      applicable: false,
-      applicabilityBasis: 'mixed',
+      applicable: true,
+      applicabilityBasis: 'surface-feature',
     })
-    expect(result.signals).toHaveLength(0)
+    expect(result.signals.find(signal => signal.signal === 'concept-as-policy')).toBeDefined()
   })
 
-  it('applies concept signals when recognition comes from a non-frontmatter rule', async () => {
+  it('does not apply pinned baseline frontmatter-based concept signal when frontmatter is absent', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const recognitionFile = path.join(workspace, '.isomorph', 'lint/modules/recognition/default.md')
+    const recognitionFile = path.join(workspace, '.isomorph', 'lint/recognition/default.md')
     const original = await fs.readFile(recognitionFile, 'utf8')
     await fs.writeFile(
       recognitionFile,
@@ -337,13 +372,13 @@ agent MUST treat this as a rule.
     }))
 
     expect(result.recognition.recognizedRole).toBe('concept')
-    expect(result.signals.find(signal => signal.signal === 'concept-as-policy')).toBeDefined()
+    expect(result.signals.find(signal => signal.signal === 'concept-as-policy')).toBeUndefined()
   })
 
   it('lets local kind material add a recognized role without changing TypeScript', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const localKind = path.join(workspace, '.isomorph', 'primitives/modules/concept/decision.md')
+    const localKind = path.join(workspace, '.isomorph', 'primitives/concept/decision.md')
     await fs.writeFile(localKind, `---
 kind: concept
 ---
@@ -373,7 +408,7 @@ kind: decision
   it('uses edited local signal definitions during lint', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const signalFile = path.join(workspace, '.isomorph', 'lint/modules/signal/concept-as-policy.md')
+    const signalFile = path.join(workspace, '.isomorph', 'lint/signal/concept-as-policy.md')
     const original = await fs.readFile(signalFile, 'utf8')
     await fs.writeFile(signalFile, original.replace('section contains MUST / SHOULD / MUST NOT', 'section contains impossible-token'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -402,7 +437,7 @@ agent MUST treat this as a rule.
   it('surfaces missing signal loss model as a lint diagnostic', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const signalFile = path.join(workspace, '.isomorph', 'lint/modules/signal/concept-as-policy.md')
+    const signalFile = path.join(workspace, '.isomorph', 'lint/signal/concept-as-policy.md')
     const original = await fs.readFile(signalFile, 'utf8')
     await fs.writeFile(signalFile, original.replace(/## Loss Model\n\n[\s\S]*?\n## Trigger/, '## Trigger'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -420,14 +455,14 @@ kind: concept
 
     expect(result.diagnostics).toContainEqual(expect.objectContaining({
       code: 'missing-signal-loss-model',
-      target: 'lint/modules/signal/concept-as-policy.md',
+      target: 'lint/signal/concept-as-policy.md',
     }))
   })
 
   it('surfaces unsupported signal triggers as lint diagnostics', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
-    const signalFile = path.join(workspace, '.isomorph', 'lint/modules/signal/concept-as-policy.md')
+    const signalFile = path.join(workspace, '.isomorph', 'lint/signal/concept-as-policy.md')
     const original = await fs.readFile(signalFile, 'utf8')
     await fs.writeFile(signalFile, original.replace('section contains MUST / SHOULD / MUST NOT', 'unsupported signal trigger'), 'utf8')
     const target = path.join(workspace, 'concept.md')
@@ -531,7 +566,7 @@ owner responsibility function descriptions with layer relation boundary.
     },
     {
       signal: 'example-as-kind',
-      positivePath: 'example.md',
+      positivePath: 'example/templates/example.md',
       positive: `---
 kind: example
 ---
@@ -576,6 +611,64 @@ stable semantic boundary.
 `,
     },
     {
+      signal: 'isomorph-legacy-mapping-surface',
+      positivePath: 'legacy-mapping.md',
+      positive: `---
+kind: structure
+mapping: docwarden
+---
+
+# legacy mapping
+
+This file uses mapping frontmatter as ownership.
+`,
+      negativePath: 'semantic-export-shape.md',
+      negative: `---
+kind: structure
+---
+
+# semantic export shape
+
+This file describes a downstream semantic shape without mapping frontmatter.
+`,
+    },
+    {
+      signal: 'project-framework-owned-by-root-isomorph',
+      positivePath: '.isomorph/exports/docwarden/concept/spec.md',
+      positive: `---
+kind: concept
+---
+
+# spec
+
+This docwarden semantic shape still lives under root isomorph exports.
+`,
+      negativePath: 'frameworks/animation/vocabulary.md',
+      negative: `---
+kind: semantic-framework
+---
+
+# animation-framework
+
+## Domain
+
+animation vocabulary.
+
+## Naming Surface
+
+- stagger
+- spring
+
+## Semantic Objects
+
+- motion term
+
+## Loss Model
+
+- jank
+`,
+    },
+    {
       signal: 'skill-primitive-legacy-surface',
       positivePath: 'legacy-skill-primitive.md',
       positive: `---
@@ -616,7 +709,7 @@ Description: Use when stabilizing skill primitive material.
 - Keep review gates as workflow moves.
 `,
     },
-  ])('covers seed signal positive and negative fixtures: $signal', async ({ negative, negativePath, positive, positivePath, signal }) => {
+  ])('covers pinned baseline signal positive and negative fixtures: $signal', async ({ negative, negativePath, positive, positivePath, signal }) => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
     const positiveTarget = path.join(workspace, positivePath)
@@ -699,8 +792,8 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[primitives/modules/concept/skill-primitive|skill-primitive]]
-- [[primitives/modules/concept/primitive-creator|primitive-creator]]
+- [[primitives/concept/skill-primitive|skill-primitive]]
+- [[primitives/concept/primitive-creator|primitive-creator]]
 
 ## Validation
 
@@ -735,7 +828,7 @@ Exclusions:
     expect(result.model.workflow).toContain('Produce an export draft only after workflow and validation material exist.')
     expect(result.model.workflow).toContain('Ask the user to confirm the pressure scenario and trigger boundary before materializing the skill.')
     expect(result.model.validation).toContain('Forward-test the materialized skill with a realistic user request.')
-    expect(result.model.semanticBasisLinks).toContain('primitives/modules/concept/skill-primitive')
+    expect(result.model.semanticBasisLinks).toContain('primitives/concept/skill-primitive')
     expect(result.exportPosition.present).toBe(true)
     expect(result.sourceMaterial).toContain('exports/templates/skill-primitive.md')
   })
@@ -789,7 +882,7 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[primitives/modules/concept/skill-primitive|skill-primitive]]
+- [[primitives/concept/skill-primitive|skill-primitive]]
 
 ## Validation
 
@@ -804,7 +897,7 @@ Exclusions:
     expect(result.status).toBe('needs-work')
     expect(result.diagnostics).toContainEqual({
       severity: 'warning',
-      message: 'missing semantic basis link: primitives/modules/concept/primitive-creator',
+      message: 'missing semantic basis link: primitives/concept/primitive-creator',
     })
   })
 
@@ -857,9 +950,9 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[primitives/modules/concept/skill-primitive|skill-primitive]]
-- [[primitives/modules/concept/primitive-creator|primitive-creator]]
-- [[primitives/modules/concept/missing|missing]]
+- [[primitives/concept/skill-primitive|skill-primitive]]
+- [[primitives/concept/primitive-creator|primitive-creator]]
+- [[primitives/concept/missing|missing]]
 
 ## Validation
 
@@ -874,7 +967,7 @@ Exclusions:
     expect(result.status).toBe('needs-work')
     expect(result.diagnostics).toContainEqual({
       severity: 'warning',
-      message: 'broken semantic basis link: primitives/modules/concept/missing',
+      message: 'broken semantic basis link: primitives/concept/missing',
     })
   })
 
@@ -927,8 +1020,8 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[primitives/modules/concept/skill-primitive|skill-primitive]]
-- [[primitives/modules/concept/primitive-creator|primitive-creator]]
+- [[primitives/concept/skill-primitive|skill-primitive]]
+- [[primitives/concept/primitive-creator|primitive-creator]]
 
 ## Validation
 
@@ -965,15 +1058,15 @@ Exclusions:
     }
     expect(result.localInstance.status).toBe('derived-v0')
     expect(result.pinStatus.status).toBe('pinned-v0')
-    expect(result.pinnedBaseline?.ref).toBe('isomorph-seed-v0')
+    expect(result.pinnedBaseline?.ref).toBe('isomorph-origin-v0')
     expect(result.pinnedBaseline?.digest).toBe(result.newBaseline.digest)
     expect(result.mergeEngine).toBe('not-implemented-v0')
   })
 
-  it('treats source metadata as an origin instance instead of a missing packaged baseline', async () => {
+  it('treats source metadata as an origin instance instead of a missing pinned baseline', async () => {
     const workspace = await makeWorkspace()
     const isomorphRoot = path.join(workspace, '.isomorph')
-    const concept = path.join(isomorphRoot, 'primitives/modules/concept/concept.md')
+    const concept = path.join(isomorphRoot, 'primitives/concept/concept.md')
     await fs.mkdir(path.dirname(concept), { recursive: true })
     await writeSourceMetadata(workspace)
     await fs.writeFile(concept, `---
@@ -1042,11 +1135,11 @@ kind: concept
     const inspect = await runIsomorph(runDoctorInspectEffect({ root: workspace }))
     expect(inspect.issues.map(issue => issue.code)).toContain('missing-pin-metadata')
     expect(inspect.issues.map(issue => issue.code)).toContain('missing-recognition-authority')
-    expect(inspect.repairPlans.map(plan => plan.id)).toContain('adopt-packaged-baseline')
+    expect(inspect.repairPlans.map(plan => plan.id)).toContain('adopt-pinned-baseline')
 
     const repair = await runIsomorph(runDoctorRepairEffect({
       root: workspace,
-      plan: 'adopt-packaged-baseline',
+      plan: 'adopt-pinned-baseline',
       now: new Date('2026-05-26T00:00:00.000Z'),
     }))
     expect(repair.applied).toBe(true)
@@ -1075,11 +1168,11 @@ kind: concept
   })
 
   it.each([
-    ['missing field', { schemaVersion: 1, vendor: 'isomorph', ref: 'isomorph-seed-v0', createdAt: '2026-05-26T00:00:00.000Z' }],
-    ['wrong field type', { schemaVersion: '1', vendor: 'isomorph', ref: 'isomorph-seed-v0', digest: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', createdAt: '2026-05-26T00:00:00.000Z' }],
-    ['unsupported schemaVersion', { schemaVersion: 99, vendor: 'isomorph', ref: 'isomorph-seed-v0', digest: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', createdAt: '2026-05-26T00:00:00.000Z' }],
-    ['invalid digest', { schemaVersion: 1, vendor: 'isomorph', ref: 'isomorph-seed-v0', digest: 'not-a-digest', createdAt: '2026-05-26T00:00:00.000Z' }],
-    ['invalid createdAt', { schemaVersion: 1, vendor: 'isomorph', ref: 'isomorph-seed-v0', digest: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', createdAt: 'not-a-date' }],
+    ['missing field', { schemaVersion: 1, vendor: 'isomorph', ref: 'isomorph-origin-v0', createdAt: '2026-05-26T00:00:00.000Z' }],
+    ['wrong field type', { schemaVersion: '1', vendor: 'isomorph', ref: 'isomorph-origin-v0', digest: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', createdAt: '2026-05-26T00:00:00.000Z' }],
+    ['unsupported schemaVersion', { schemaVersion: 99, vendor: 'isomorph', ref: 'isomorph-origin-v0', digest: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', createdAt: '2026-05-26T00:00:00.000Z' }],
+    ['invalid digest', { schemaVersion: 1, vendor: 'isomorph', ref: 'isomorph-origin-v0', digest: 'not-a-digest', createdAt: '2026-05-26T00:00:00.000Z' }],
+    ['invalid createdAt', { schemaVersion: 1, vendor: 'isomorph', ref: 'isomorph-origin-v0', digest: 'sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', createdAt: 'not-a-date' }],
   ])('decodes invalid pin metadata as config error: %s', async (_name, pin) => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
