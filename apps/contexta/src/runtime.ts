@@ -1065,15 +1065,3 @@ async function fileExists(filePath: string): Promise<boolean> {
 async function sourceIsDirectory(filePath: string): Promise<boolean> {
   return fs.stat(filePath).then(stat => stat.isDirectory(), () => false)
 }
-
-export type {
-  ContextaAsset,
-  ContextaAssetExportResult,
-  ContextaCatalog,
-  ContextaCodexTargetConfig,
-  ContextaExportCodexOptions,
-  ContextaExportCodexResult,
-  ContextaPackManifest,
-  ContextaPackSummary,
-  ContextaRuntimePaths,
-} from './domain.js'

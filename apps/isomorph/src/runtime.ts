@@ -26,7 +26,6 @@ export type {
   InitOptions,
   InitResult,
   IsomorphDiagnostic,
-  IsomorphInstance,
   IsomorphRoot,
   LintResult,
   LintSignal,
@@ -43,8 +42,6 @@ export type {
   ResolveOptions,
   SignalCandidate,
   SourceListResult,
-  SourceMetadata,
-  SourceReference,
   SourceScopeSummary,
   TriggerHit,
   UpgradeStatusResult,
@@ -66,7 +63,6 @@ export {
 export { readPinEffect } from './pin.js'
 export { resolveIsomorphRootEffect } from './root.js'
 export { isomorphLiveLayer, type IsomorphRuntimeServices } from './services.js'
-export { detectIsomorphInstanceEffect, readSourceMetadataEffect } from './source.js'
 export {
   runUpgradeStatusEffect,
 } from './upgrade.js'

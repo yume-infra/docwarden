@@ -17,6 +17,7 @@ export type {
   ContextaExportCodexOptions,
   ContextaExportCodexResult,
   ContextaListAssetsResult,
+  ContextaNamespace,
   ContextaPackManifest,
   ContextaPackSummary,
   ContextaRuntimePaths,
@@ -30,6 +31,7 @@ export {
   contextaInfraPackage,
   exportCodexAssets,
   listAssets,
+  listPacks,
   resolveContextaPaths,
 } from './runtime.js'
 

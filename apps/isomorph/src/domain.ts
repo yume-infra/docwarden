@@ -319,7 +319,7 @@ export interface BaselineStatus {
   readonly digest: string
 }
 
-export interface DerivedUpgradeStatusResult {
+interface DerivedUpgradeStatusResult {
   readonly status: 'derived-v0'
   readonly root: IsomorphRoot
   readonly localInstance: {
@@ -333,7 +333,7 @@ export interface DerivedUpgradeStatusResult {
   readonly mergeEngine: 'not-implemented-v0'
 }
 
-export interface OriginUpgradeStatusResult {
+interface OriginUpgradeStatusResult {
   readonly status: 'origin'
   readonly root: IsomorphRoot
   readonly localInstance: {

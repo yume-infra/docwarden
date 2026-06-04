@@ -46,8 +46,6 @@ export interface ContextaCatalog {
   readonly version: string
 }
 
-export type ContextaExportSelector = { readonly kind: 'pack', readonly value: string } | { readonly kind: 'asset', readonly value: string }
-
 export interface ContextaCodexTargetConfig {
   readonly root: string
 }
@@ -91,5 +89,3 @@ export class ContextaError extends Error {
     this.name = 'ContextaError'
   }
 }
-
-export type ContextaAssetSelector = string
