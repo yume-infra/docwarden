@@ -11,8 +11,7 @@ import {
 } from './markdown-helpers.js'
 import { parseMarkdownSurface } from './markdown.js'
 import {
-  isomorphSourceLayers,
-  readPinnedBaselineFilesForLayers,
+  readPinnedBaselineFiles,
 } from './pinned-baseline.js'
 import { toPosix } from './root.js'
 
@@ -47,12 +46,9 @@ export function loadIsomorphModelEffect(root: IsomorphRoot): Effect.Effect<Isomo
       }),
     )
     if (hasPin) {
-      const basisFiles = readPinnedBaselineFilesForLayers([
-        isomorphSourceLayers.basis,
-        isomorphSourceLayers.bootstrap,
-      ])
+      const sourceFiles = readPinnedBaselineFiles()
       const localPaths = new Set(documents.map(document => document.isomorphPath))
-      for (const file of basisFiles) {
+      for (const file of sourceFiles) {
         if (localPaths.has(file.path)) {
           continue
         }

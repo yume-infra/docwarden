@@ -95,12 +95,12 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[bootstrap/primitives/concept/skill-primitive|skill-primitive]]
-- [[basis/primitives/concept/lead-review|lead-review]]
-- [[bootstrap/primitives/concept/primitive-creator|primitive-creator]]
-- [[bootstrap/grammars/policy/skill-primitive-boundary|skill-primitive-boundary]]
-- [[basis/grammars/policy/lead-review-boundary|lead-review-boundary]]
-- [[basis/grammars/policy/semantic-framework-boundary|semantic-framework-boundary]]
+- [[contract/skill-primitive/concept|skill-primitive]]
+- [[loop/lead-review/concept|lead-review]]
+- [[contract/primitive-creator/concept|primitive-creator]]
+- [[contract/skill-primitive/policy/boundary|skill-primitive-boundary]]
+- [[loop/lead-review/policy/boundary|lead-review-boundary]]
+- [[framework/policy/boundary|semantic-framework-boundary]]
 
 ## Validation
 

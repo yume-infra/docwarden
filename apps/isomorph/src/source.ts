@@ -9,7 +9,7 @@ const supportedSourceSchemaVersion = 1
 
 export function sourceMetadataPath(isomorphRoot: string): Effect.Effect<string, never, Path.Path> {
   return Path.Path.pipe(
-    Effect.map(path => path.join(isomorphRoot, '.isomorph-source.json')),
+    Effect.map(path => path.join(isomorphRoot, '.isomorph-origin.json')),
   )
 }
 

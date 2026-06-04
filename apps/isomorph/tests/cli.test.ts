@@ -244,8 +244,8 @@ Exclusions:
 
 ## Semantic Basis
 
-- [[bootstrap/primitives/concept/skill-primitive|skill-primitive]]
-- [[bootstrap/primitives/concept/primitive-creator|primitive-creator]]
+- [[contract/skill-primitive/concept|skill-primitive]]
+- [[contract/primitive-creator/concept|primitive-creator]]
 
 ## Validation
 
@@ -274,7 +274,7 @@ Create a local skill primitive.
     expect(needsWorkJson.status).toBe('needs-work')
   })
 
-  it('lists local source layers, kinds, and templates', async () => {
+  it('lists local source abilities, kinds, and templates', async () => {
     const workspace = await makeWorkspace()
     await runIsomorph(['--root', workspace, 'init'], repoRoot)
 
@@ -284,20 +284,26 @@ Create a local skill primitive.
     expect(result.exitCode).toBe(0)
     expect(result.stderr).toBe('')
     const scopes = output.scopes.map((scope: { scope: string }) => scope.scope)
-    expect(scopes).toContain('basis')
-    expect(scopes).toContain('bootstrap')
-    const basis = output.scopes.find((scope: { scope: string }) => scope.scope === 'basis')
-    const bootstrap = output.scopes.find((scope: { scope: string }) => scope.scope === 'bootstrap')
-    expect(basis.path).toBe('basis/')
-    expect(basis.kinds).toContain('concept')
-    expect(bootstrap.path).toBe('bootstrap/')
-    expect(bootstrap.templates).toContain('skill-primitive')
+    expect(scopes).toEqual(expect.arrayContaining(['language', 'framework', 'contract', 'loop']))
+    const language = output.scopes.find((scope: { scope: string }) => scope.scope === 'language')
+    const contract = output.scopes.find((scope: { scope: string }) => scope.scope === 'contract')
+    const framework = output.scopes.find((scope: { scope: string }) => scope.scope === 'framework')
+    const loop = output.scopes.find((scope: { scope: string }) => scope.scope === 'loop')
+    expect(language.path).toBe('language/')
+    expect(language.kinds).toContain('concept')
+    expect(contract.path).toBe('contract/')
+    expect(contract.templates).toContain('skill-primitive/template')
+    expect(framework.path).toBe('framework/')
+    expect(framework.templates).toContain('semantic-framework')
+    expect(loop.path).toBe('loop/')
 
     const plain = await runIsomorph(['--root', workspace, 'source', 'list'], repoRoot)
     expect(plain.exitCode).toBe(0)
     expect(plain.stdout).toContain('isomorph source list')
-    expect(plain.stdout).toContain('## basis')
-    expect(plain.stdout).toContain('## bootstrap')
+    expect(plain.stdout).toContain('## language')
+    expect(plain.stdout).toContain('## framework')
+    expect(plain.stdout).toContain('## contract')
+    expect(plain.stdout).toContain('## loop')
   })
 
   it('reports pinned upgrade status and malformed pin parse errors', async () => {
