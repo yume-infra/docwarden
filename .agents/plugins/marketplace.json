@@ -1,0 +1,20 @@
+{
+  "name": "local-repo",
+  "interface": {
+    "displayName": "Local Repo"
+  },
+  "plugins": [
+    {
+      "name": "iso-isomorph-authoring",
+      "source": {
+        "source": "local",
+        "path": "./plugins/iso-isomorph-authoring"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

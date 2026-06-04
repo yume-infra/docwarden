@@ -87,6 +87,7 @@ describe('contexta CLI contract', () => {
       readonly command: string
       readonly contextaRoot: string
       readonly catalog: {
+        readonly generatedAt: string
         readonly packs: readonly { readonly id: string }[]
         readonly assets: readonly { readonly id: string }[]
       }
@@ -101,15 +102,26 @@ describe('contexta CLI contract', () => {
     expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'prompt:dw/review-guidance' }))
     expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'agent:dw/doc-assistant' }))
     expect(output.catalog.assets).toContainEqual(expect.objectContaining({ id: 'hook:dw/bootstrap' }))
+    expect(output.catalog.generatedAt).toBe('1970-01-01T00:00:00.000Z')
 
     const generatedAssets = JSON.parse(
       await fs.readFile(path.join(workspace, '.contexta/catalog/generated-assets.json'), 'utf8'),
-    ) as { readonly assets: readonly unknown[] }
+    ) as { readonly generatedAt: string, readonly assets: readonly { readonly id: string, readonly sourcePath: string }[] }
     const generatedPacks = JSON.parse(
       await fs.readFile(path.join(workspace, '.contexta/catalog/generated-packs.json'), 'utf8'),
-    ) as { readonly packs: readonly unknown[] }
+    ) as { readonly generatedAt: string, readonly packs: readonly { readonly id: string, readonly manifestPath: string }[] }
+    expect(generatedAssets.generatedAt).toBe('1970-01-01T00:00:00.000Z')
+    expect(generatedPacks.generatedAt).toBe('1970-01-01T00:00:00.000Z')
     expect(generatedAssets.assets).toHaveLength(9)
     expect(generatedPacks.packs).toHaveLength(2)
+    expect(generatedAssets.assets).toContainEqual(expect.objectContaining({
+      id: 'skill:dw/review-doc',
+      sourcePath: '.contexta/packs/docwarden/skills/review-doc.md',
+    }))
+    expect(generatedPacks.packs).toContainEqual(expect.objectContaining({
+      id: 'docwarden',
+      manifestPath: '.contexta/packs/docwarden/contexta.yaml',
+    }))
   })
 
   it('exports selected skill to repo-skill runtime root', async () => {
@@ -284,9 +296,10 @@ assets:
     }))
 
     await expect(fs.readFile(path.join(targetRoot, 'plugins', 'dw-docwarden', 'skills', 'dw-review-doc', 'SKILL.md'), 'utf8')).resolves.toContain('name: dw-review-doc')
-    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'references', 'prompts', 'review-guidance.md'))).resolves.toBeUndefined()
-    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'references', 'workflows', 'review-workflow.md'))).resolves.toBeUndefined()
-    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'references', 'references', 'glossary.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'skills', 'dw-review-doc', 'references', 'contexta', 'prompts', 'review-guidance.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'skills', 'dw-review-doc', 'references', 'contexta', 'workflows', 'review-workflow.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'skills', 'dw-review-doc', 'references', 'contexta', 'references', 'glossary.md'))).resolves.toBeUndefined()
+    await expect(fs.access(path.join(targetRoot, 'plugins', 'dw-docwarden', 'references'))).rejects.toThrow()
     await expect(fs.access(path.join(targetRoot, '.codex', 'hooks.json'))).rejects.toThrow()
 
     const manifest = JSON.parse(await fs.readFile(path.join(targetRoot, 'plugins', 'dw-docwarden', '.codex-plugin', 'plugin.json'), 'utf8')) as {

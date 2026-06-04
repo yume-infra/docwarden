@@ -25,6 +25,7 @@ import {
 export const contextaInfraPackage = 'contexta'
 
 const catalogVersion = '0.1.0'
+const generatedCatalogTimestamp = '1970-01-01T00:00:00.000Z'
 
 const skillNamePattern = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
 const codexTargetAliases: Record<string, string> = {
@@ -283,7 +284,7 @@ async function exportPackAsPlugin(options: {
   const pluginPath = path.join('plugins', pluginName)
   const pluginDir = path.resolve(options.targetRoot, pluginPath)
   const materializedSkills: MaterializedSkill[] = []
-  const references: PluginSkillReference[] = []
+  const referenceAssets: ContextaAsset[] = []
 
   for (const asset of options.assets) {
     switch (asset.kind) {
@@ -294,11 +295,7 @@ async function exportPackAsPlugin(options: {
       case 'prompt':
       case 'workflow':
       case 'reference': {
-        const ext = deriveReferenceExtension(asset.sourcePath)
-        references.push({
-          asset,
-          destinationPath: path.resolve(pluginDir, 'references', `${asset.kind}s`, `${asset.name}${ext}`),
-        })
+        referenceAssets.push(asset)
         break
       }
       case 'hook': {
@@ -324,6 +321,11 @@ async function exportPackAsPlugin(options: {
 
   const pluginManifestPath = path.resolve(pluginDir, '.codex-plugin', 'plugin.json')
   const marketplacePath = path.resolve(options.targetRoot, '.agents', 'plugins', 'marketplace.json')
+  const references = materializedSkills.flatMap(skill => makePluginSkillReferences({
+    pluginDir,
+    skill,
+    assets: referenceAssets,
+  }))
   await assertWritableDestinations([
     ...materializedSkills.map(skill => path.resolve(pluginDir, 'skills', skill.name)),
     ...references.map(reference => reference.destinationPath),
@@ -409,6 +411,28 @@ async function readCodexHooksPayload(asset: ContextaAsset): Promise<Record<strin
 function deriveReferenceExtension(sourcePath: string): string {
   const ext = path.extname(sourcePath).toLowerCase()
   return ext.length > 0 ? ext : '.md'
+}
+
+function makePluginSkillReferences(options: {
+  readonly pluginDir: string
+  readonly skill: MaterializedSkill
+  readonly assets: readonly ContextaAsset[]
+}): readonly PluginSkillReference[] {
+  return options.assets.map((asset): PluginSkillReference => {
+    const ext = deriveReferenceExtension(asset.sourcePath)
+    return {
+      asset,
+      destinationPath: path.resolve(
+        options.pluginDir,
+        'skills',
+        options.skill.name,
+        'references',
+        'contexta',
+        `${asset.kind}s`,
+        `${asset.name}${ext}`,
+      ),
+    }
+  })
 }
 
 async function materializeSkill(asset: ContextaAsset): Promise<MaterializedSkill> {
@@ -667,7 +691,7 @@ async function buildCatalog(paths: ContextaRuntimePaths): Promise<ContextaCatalo
 
   return {
     version: catalogVersion,
-    generatedAt: new Date().toISOString(),
+    generatedAt: generatedCatalogTimestamp,
     packs: packs.map((pack): ContextaPackSummary => ({
       id: pack.packId,
       namespace: pack.namespace,
@@ -858,13 +882,23 @@ function pickExportSelection(
 }
 
 async function writeCatalog(paths: ContextaRuntimePaths, catalog: ContextaCatalog): Promise<void> {
+  const portablePacks = catalog.packs.map(pack => ({
+    ...pack,
+    manifestPath: toWorkspaceRelativePath(paths.workspaceRoot, pack.manifestPath),
+    packPath: toWorkspaceRelativePath(paths.workspaceRoot, pack.packPath),
+  }))
+  const portableAssets = catalog.assets.map(asset => ({
+    ...asset,
+    sourcePath: toWorkspaceRelativePath(paths.workspaceRoot, asset.sourcePath),
+  }))
+
   await fs.mkdir(paths.catalogRoot, { recursive: true })
   await fs.writeFile(
     paths.generatedPacksPath,
     `${JSON.stringify({
       version: catalog.version,
       generatedAt: catalog.generatedAt,
-      packs: catalog.packs,
+      packs: portablePacks,
     }, null, 2)}\n`,
     'utf8',
   )
@@ -873,10 +907,18 @@ async function writeCatalog(paths: ContextaRuntimePaths, catalog: ContextaCatalo
     `${JSON.stringify({
       version: catalog.version,
       generatedAt: catalog.generatedAt,
-      assets: catalog.assets,
+      assets: portableAssets,
     }, null, 2)}\n`,
     'utf8',
   )
+}
+
+function toWorkspaceRelativePath(workspaceRoot: string, targetPath: string): string {
+  const relative = path.relative(workspaceRoot, targetPath)
+  if (relative.length === 0 || relative.startsWith('..') || path.isAbsolute(relative)) {
+    return targetPath.split(path.sep).join('/')
+  }
+  return relative.split(path.sep).join('/')
 }
 
 function parseContextaPackManifest(packId: string, raw: unknown): ContextaPackManifest {
