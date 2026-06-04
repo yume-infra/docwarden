@@ -16,6 +16,6 @@ Aliases:
 
 skill-primitive is a local isomorph primitive for modeling a future skill as an agent behavior intervention.
 
-It starts from drift pressure: the repeated agent failure or default behavior the skill must correct. It then models intervention, activation, judgment surface, deterministic boundary, review gate, and export shape.
+It starts from capability: the behavior intervention the future skill gives an agent, grounded in the repeated pressure scenario it corrects. It then models trigger, soft boundary, hard boundary, workflow, semantic basis, export shape, and validation.
 
 v0 produces a codex-skill export draft from semantic material. It does not materialize the final SKILL.md artifact.

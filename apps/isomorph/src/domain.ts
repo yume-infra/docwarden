@@ -230,19 +230,15 @@ export interface PrimitiveDiagnostic {
 }
 
 export interface PrimitiveSkillModel {
-  readonly driftPressure: string | undefined
+  readonly capability: string | undefined
   readonly pressureScenarios: readonly string[]
-  readonly intervention: string | undefined
-  readonly interventionMoves: readonly string[]
-  readonly activation: string | undefined
-  readonly activationTriggers: readonly string[]
-  readonly activationExclusions: readonly string[]
-  readonly judgmentSurface: readonly string[]
-  readonly deterministicBoundary: readonly string[]
-  readonly reviewGate: readonly string[]
+  readonly triggerDescription: string | undefined
+  readonly triggerExamples: readonly string[]
+  readonly triggerExclusions: readonly string[]
+  readonly softBoundary: readonly string[]
+  readonly hardBoundary: readonly string[]
+  readonly workflow: readonly string[]
   readonly exportShape: readonly string[]
-  readonly confirmationGates: readonly string[]
-  readonly outputContract: readonly string[]
   readonly antiPatterns: readonly string[]
   readonly semanticBasisLinks: readonly string[]
   readonly references: readonly string[]
@@ -251,7 +247,7 @@ export interface PrimitiveSkillModel {
   readonly progressiveLoading: readonly string[]
   readonly validation: readonly string[]
   readonly exportPosition: string | undefined
-  readonly futureSkillExportRequirements: readonly string[]
+  readonly exportRequirements: readonly string[]
 }
 
 export interface PrimitiveSkillExportDraft {
@@ -265,13 +261,15 @@ export interface PrimitiveSkillExportDraft {
     readonly description: string | undefined
   }
   readonly bodyOutline: readonly string[]
-  readonly driftPressure: string | undefined
-  readonly intervention: string | undefined
-  readonly judgmentSurface: readonly string[]
-  readonly deterministicBoundary: readonly string[]
-  readonly reviewGate: readonly string[]
+  readonly capability: string | undefined
   readonly exportShape: readonly string[]
   readonly pressureScenarios: readonly string[]
+  readonly triggerDescription: string | undefined
+  readonly triggerExamples: readonly string[]
+  readonly triggerExclusions: readonly string[]
+  readonly softBoundary: readonly string[]
+  readonly hardBoundary: readonly string[]
+  readonly workflow: readonly string[]
   readonly antiPatterns: readonly string[]
   readonly resources: {
     readonly references: readonly string[]
@@ -287,7 +285,7 @@ export interface PrimitiveSkillPlan {
   readonly compiler: 'draft-skill-v0'
   readonly exportable: boolean
   readonly missingForExport: readonly string[]
-  readonly futureSkillExportRequirements: readonly string[]
+  readonly exportRequirements: readonly string[]
 }
 
 export interface PrimitiveSkillResult {

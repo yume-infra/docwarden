@@ -227,7 +227,7 @@ Aliases:
 
 skill-primitive is a local isomorph primitive for modeling a future skill as an agent behavior intervention.
 
-It starts from drift pressure: the repeated agent failure or default behavior the skill must correct. It then models intervention, activation, judgment surface, deterministic boundary, review gate, and export shape.
+It starts from capability: the behavior intervention the future skill gives an agent, grounded in the repeated pressure scenario it corrects. It then models trigger, soft boundary, hard boundary, workflow, semantic basis, export shape, and validation.
 
 v0 produces a codex-skill export draft from semantic material. It does not materialize the final SKILL.md artifact.
 `,
@@ -396,13 +396,15 @@ This policy keeps v0 skill primitive material distinct from final skill artifact
 ## Policy
 
 - skill primitive MUST keep semantic basis visible.
-- skill primitive MUST start from drift pressure rather than purpose, capability, or file shape.
-- skill primitive MUST model the behavior intervention the future skill should apply to an agent.
-- skill primitive MUST distinguish judgment surface from deterministic boundary.
-- skill primitive MUST name the user review gate before export.
+- skill primitive MUST use the surface \`Capability / Trigger / Soft Boundary / Hard Boundary / Workflow / Export Shape / Semantic Basis / Validation\`.
+- skill primitive MUST start from capability as behavior intervention, not from folder shape, runtime path, or CLI wrapper.
+- skill primitive MUST keep pressure scenarios under Capability.
+- skill primitive MUST distinguish soft agent judgment from hard deterministic constraints.
+- skill primitive MUST model review gates as Workflow moves.
 - skill primitive MUST keep export shape and validation material visible.
 - skill primitive MAY produce a codex-skill export draft.
 - skill primitive MUST NOT directly materialize final SKILL.md artifacts in v0.
+- skill primitive MUST NOT use legacy headings \`Drift Pressure / Intervention / Activation / Judgment Surface / Deterministic Boundary / Review Gate\` as the exportable surface.
 `,
   },
   {
@@ -455,22 +457,15 @@ kind: skill-primitive
 
 # <skill-primitive-id>
 
-## Drift Pressure
+## Capability
 
-<Name the repeated agent failure, default drift, or behavior loss this future skill exists to correct.>
+<Name the behavior intervention this future skill gives an agent.>
 
 Pressure Scenarios:
 
 - <Describe a concrete user request or working situation where the agent drifts without the skill.>
 
-## Intervention
-
-<Describe how the future skill changes agent behavior once it activates.>
-
-- <Describe the first behavior move the skill should force.>
-- <Describe the handoff, review, or validation move the skill should force.>
-
-## Activation
+## Trigger
 
 Description: <Write the future skill description trigger in user-facing terms.>
 
@@ -482,17 +477,19 @@ Exclusions:
 
 - <Describe a nearby request shape that should not activate the skill.>
 
-## Judgment Surface
+## Soft Boundary
 
 - <Describe judgment, routing, review, or writing behavior the future skill should guide.>
 
-## Deterministic Boundary
+## Hard Boundary
 
 - <Describe validation, path, script, CLI, or filesystem constraints the future skill must defer to deterministic tooling.>
 
-## Review Gate
+## Workflow
 
+- <Describe the first behavior move the skill should force.>
 - <Describe the smallest user-reviewable decision or artifact before materialization.>
+- <Describe the handoff or validation move the skill should force.>
 
 ## Export Shape
 
@@ -678,6 +675,34 @@ This signal protects composition material from losing its stable whole / part bo
 ## Basis
 
 - [[primitives/modules/concept/policy|policy]]
+- [[grammars/modules/policy/signal-boundary|signal-boundary]]
+`,
+  },
+  {
+    path: 'lint/modules/signal/skill-primitive-legacy-surface.md',
+    content: `---
+kind: signal
+---
+
+# skill-primitive-legacy-surface
+
+## Definition
+
+\`skill-primitive-legacy-surface\` means skill primitive material still uses the old drift/intervention/activation surface instead of the stable primitive surface.
+
+## Loss Model
+
+This signal protects skill primitive grammar from drifting back into pre-exportDraft wording that hides capability, trigger, soft boundary, hard boundary, and workflow roles.
+
+## Trigger
+
+- \`recognized role == skill-primitive\`
+- \`heading in [Drift Pressure, Intervention, Activation, Judgment Surface, Deterministic Boundary, Review Gate]\`
+
+## Basis
+
+- [[primitives/modules/concept/skill-primitive|skill-primitive]]
+- [[grammars/modules/policy/skill-primitive-boundary|skill-primitive-boundary]]
 - [[grammars/modules/policy/signal-boundary|signal-boundary]]
 `,
   },

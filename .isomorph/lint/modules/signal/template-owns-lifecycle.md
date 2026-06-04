@@ -8,6 +8,10 @@ kind: signal
 
 `template-owns-lifecycle` 表示 template module 可能承担来源、review、pick、更新、写入或 lifecycle 等操作职责。
 
+## Loss Model
+
+该信号保护 template material 只描述格式表面；当模板承担 lifecycle authority 时，workflow/review 的职责边界会被移入格式层。
+
 ## Trigger
 
 - `path matches */templates/*.md`

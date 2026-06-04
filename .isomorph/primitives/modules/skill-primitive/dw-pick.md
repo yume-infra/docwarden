@@ -4,9 +4,9 @@ kind: skill-primitive
 
 # dw-pick
 
-## Drift Pressure
+## Capability
 
-Agents either lose reusable side signals after task cleanup, or over-promote conversation corrections and user preferences into project mainline rules.
+Preserve post-review/promote side signals as reusable user-level assets without over-promoting them into project mainline rules.
 
 Pressure Scenarios:
 
@@ -15,17 +15,7 @@ Pressure Scenarios:
 - A side signal looks valuable, and the agent writes it as spec or docs material even though it does not change the project baseline.
 - The agent runs `docwarden pick` mechanically before deciding whether the candidate is pick, promote, log-only, or continue-task material.
 
-## Intervention
-
-Force pick work to behave as post-promote information-loss control for compoundable user-level assets.
-
-- Identify what promote absorbed, abstracted, or hid before naming the pick candidate.
-- Route material as promote, pick, log-only, or continue-task before writing anything.
-- Treat conversation corrections, user feedback, task residue, and agent error patterns as valid pick sources.
-- Keep the pick candidate small enough for user review: signal, reusable pattern, applicability boundary, and proposed asset landing.
-- Defer filesystem writes, destination constraints, path generation, and task log updates to the docwarden CLI.
-
-## Activation
+## Trigger
 
 Description: Use when deciding, preparing, reviewing, or executing docwarden dw:pick after review/promote, especially to preserve user-level assets such as corrections, preferences, ADRs, terminology, project-history judgments, or reusable side knowledge that promote would hide. Do not use for mainline spec/guide/wiki promotion, raw task logging, docs edits, or deterministic CLI validation alone.
 
@@ -44,7 +34,7 @@ Exclusions:
 - The request is to edit `docs/` directly.
 - The signal is only transient process noise, failed draft text, or a one-off correction with no reusable value.
 
-## Judgment Surface
+## Soft Boundary
 
 - Decide whether a signal is a compoundable user-level asset rather than project mainline delta.
 - Decide what promote absorbed or hid, and whether the remaining residue still has long-term value.
@@ -53,7 +43,7 @@ Exclusions:
 - Decide whether proposed landing should be wiki, user-context/profile, a future asset layer, or a blocked/gap note.
 - Decide when to ask the user for only asset nature and landing confirmation.
 
-## Deterministic Boundary
+## Hard Boundary
 
 - Use `docwarden review` for review surface creation; the skill does not invent persistent review artifacts.
 - Use `docwarden promote` for project mainline changes; the skill does not write spec, guide, wiki mainline deltas by hand.
@@ -62,8 +52,13 @@ Exclusions:
 - Treat conversation-sourced or user-context/profile landings as review-gated handoff material until a deterministic CLI/entity path exists.
 - Use repository validation commands for hard checks; the skill only chooses route and candidate semantics.
 
-## Review Gate
+## Workflow
 
+- Identify what promote absorbed, abstracted, or hid before naming the pick candidate.
+- Route material as promote, pick, log-only, or continue-task before writing anything.
+- Treat conversation corrections, user feedback, task residue, and agent error patterns as valid pick sources.
+- Keep the pick candidate small enough for user review: signal, reusable pattern, applicability boundary, and proposed asset landing.
+- Defer filesystem writes, destination constraints, path generation, and task log updates to the docwarden CLI.
 - If the candidate may change the project baseline, stop pick and route back to promote review.
 - If the candidate is only a single weak signal, present it as a pick signal and do not promote it to a long-term default without repeated evidence or user confirmation.
 - If source, reusable value, applicability, or landing is unclear, ask the user to confirm only that smallest unit.
@@ -72,9 +67,9 @@ Exclusions:
 
 ## Export Shape
 
-- Runtime SKILL.md frontmatter `name` must materialize as `dw-pick`.
+- Export draft `skillName` is `dw-pick`; runtime naming belongs to contexta/export materialization.
 - SKILL.md frontmatter `description` must mention `dw:pick`, post-review/promote use, user-level assets, and key exclusions from promote, raw logging, docs edits, and CLI-only validation.
-- SKILL.md body must preserve drift pressure, route decision, pick candidate shape, deterministic CLI boundary, review gate, and validation.
+- SKILL.md body must preserve capability, trigger, route decision, pick candidate shape, hard CLI boundary, workflow review gates, and validation.
 - The skill should not bundle scripts unless `docwarden pick` stops providing the hard write path.
 - The skill should not create README, changelog, installation guide, or process-history files.
 

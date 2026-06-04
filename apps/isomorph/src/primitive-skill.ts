@@ -2,12 +2,11 @@ import type { PrimitiveDiagnostic, PrimitiveSkillExportDraft, PrimitiveSkillResu
 import { collectOfmLinksFromText, extractListItems, extractListItemsAfterLabel, findSection, firstNonEmptyLine, includesNormalized, normalizeToken, readField } from './markdown-helpers.js'
 
 const defaultRequiredSections = [
-  'Drift Pressure',
-  'Intervention',
-  'Activation',
-  'Judgment Surface',
-  'Deterministic Boundary',
-  'Review Gate',
+  'Capability',
+  'Trigger',
+  'Soft Boundary',
+  'Hard Boundary',
+  'Workflow',
   'Export Shape',
   'Semantic Basis',
   'Validation',
@@ -30,38 +29,34 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
     .filter(heading => heading.level === 2)
     .map(heading => heading.text)
   const missingSections = requiredSections.filter(section => !includesNormalized(presentSections, section))
-  const driftPressureSection = findSection(run.surface, 'Drift Pressure')
-  const interventionSection = findSection(run.surface, 'Intervention')
-  const activationSection = findSection(run.surface, 'Activation')
-  const judgmentSurfaceSection = findSection(run.surface, 'Judgment Surface')
-  const deterministicBoundarySection = findSection(run.surface, 'Deterministic Boundary')
-  const reviewGateSection = findSection(run.surface, 'Review Gate')
+  const capabilitySection = findSection(run.surface, 'Capability')
+  const triggerSection = findSection(run.surface, 'Trigger')
+  const softBoundarySection = findSection(run.surface, 'Soft Boundary')
+  const hardBoundarySection = findSection(run.surface, 'Hard Boundary')
+  const workflowSection = findSection(run.surface, 'Workflow')
   const exportShapeSection = findSection(run.surface, 'Export Shape')
   const semanticBasisSection = findSection(run.surface, 'Semantic Basis')
   const referencesSection = findSection(run.surface, 'References')
   const scriptsSection = findSection(run.surface, 'Scripts')
   const assetsSection = findSection(run.surface, 'Assets')
   const validationSection = findSection(run.surface, 'Validation')
-  const driftPressureText = driftPressureSection?.text ?? ''
-  const interventionText = interventionSection?.text ?? ''
-  const activationText = activationSection?.text ?? ''
+  const capabilityText = capabilitySection?.text ?? ''
+  const triggerText = triggerSection?.text ?? ''
   const exportShapeText = exportShapeSection?.text ?? ''
-  const driftPressure = firstNonEmptyLine(driftPressureText)
+  const capability = readField(capabilityText, 'Summary') ?? firstNonEmptyLine(capabilityText)
   const pressureScenarios = withFallbackList(
-    extractListItemsAfterLabel(driftPressureText, 'Pressure Scenarios'),
-    extractListItems(driftPressureText),
+    extractListItemsAfterLabel(capabilityText, 'Pressure Scenarios'),
+    extractListItemsAfterLabel(capabilityText, 'Pressure'),
   )
-  const intervention = firstNonEmptyLine(interventionText)
-  const interventionMoves = extractListItems(interventionText)
-  const activation = readField(activationText, 'Description') ?? firstNonEmptyLine(activationText)
-  const activationTriggers = withFallbackList(
-    extractListItemsAfterLabel(activationText, 'Triggers'),
-    extractListItemsAfterLabel(activationText, 'Trigger Examples'),
+  const triggerDescription = readField(triggerText, 'Description') ?? firstNonEmptyLine(triggerText)
+  const triggerExamples = withFallbackList(
+    extractListItemsAfterLabel(triggerText, 'Triggers'),
+    extractListItemsAfterLabel(triggerText, 'Trigger Examples'),
   )
-  const activationExclusions = extractListItemsAfterLabel(activationText, 'Exclusions')
-  const judgmentSurface = extractListItems(judgmentSurfaceSection?.text ?? '')
-  const deterministicBoundary = extractListItems(deterministicBoundarySection?.text ?? '')
-  const reviewGate = extractListItems(reviewGateSection?.text ?? '')
+  const triggerExclusions = extractListItemsAfterLabel(triggerText, 'Exclusions')
+  const softBoundary = extractListItems(softBoundarySection?.text ?? '')
+  const hardBoundary = extractListItems(hardBoundarySection?.text ?? '')
+  const workflow = extractListItems(workflowSection?.text ?? '')
   const exportShape = extractListItems(exportShapeText)
   const semanticBasisLinks = collectOfmLinksFromText(semanticBasisSection?.text ?? '').map(link => link.target)
   const references = extractListItems(referencesSection?.text ?? '')
@@ -89,40 +84,40 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
       message: `missing skill primitive section: ${missingSection}`,
     })
   }
-  if (driftPressure === undefined) {
+  if (capability === undefined) {
     diagnostics.push({
       severity: 'warning',
-      message: 'missing drift pressure material',
+      message: 'missing capability material',
     })
   }
-  if (intervention === undefined) {
+  if (triggerDescription === undefined) {
     diagnostics.push({
       severity: 'warning',
-      message: 'missing intervention material',
+      message: 'missing trigger description material for future skill description',
     })
   }
-  if (activation === undefined) {
+  if (triggerExamples.length === 0) {
     diagnostics.push({
       severity: 'warning',
-      message: 'missing activation material for future skill description',
+      message: 'missing trigger examples for trigger boundary',
     })
   }
-  if (judgmentSurface.length === 0) {
+  if (softBoundary.length === 0) {
     diagnostics.push({
       severity: 'warning',
-      message: 'missing judgment surface items for skill behavior',
+      message: 'missing soft boundary items for skill behavior',
     })
   }
-  if (deterministicBoundary.length === 0) {
+  if (hardBoundary.length === 0) {
     diagnostics.push({
       severity: 'warning',
-      message: 'missing deterministic boundary items for CLI/script guardrails',
+      message: 'missing hard boundary items for CLI/script guardrails',
     })
   }
-  if (reviewGate.length === 0) {
+  if (workflow.length === 0) {
     diagnostics.push({
       severity: 'warning',
-      message: 'missing review gate items for user intervention',
+      message: 'missing workflow items for skill behavior',
     })
   }
   if (exportShape.length === 0) {
@@ -137,16 +132,14 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
       message: 'missing validation items for skill export',
     })
   }
-  addPlaceholderDiagnostic(diagnostics, 'drift pressure', driftPressure)
+  addPlaceholderDiagnostic(diagnostics, 'capability', capability)
   addPlaceholderDiagnostic(diagnostics, 'pressure scenarios', pressureScenarios)
-  addPlaceholderDiagnostic(diagnostics, 'intervention', intervention)
-  addPlaceholderDiagnostic(diagnostics, 'intervention moves', interventionMoves)
-  addPlaceholderDiagnostic(diagnostics, 'activation', activation)
-  addPlaceholderDiagnostic(diagnostics, 'activation triggers', activationTriggers)
-  addPlaceholderDiagnostic(diagnostics, 'activation exclusions', activationExclusions)
-  addPlaceholderDiagnostic(diagnostics, 'judgment surface', judgmentSurface)
-  addPlaceholderDiagnostic(diagnostics, 'deterministic boundary', deterministicBoundary)
-  addPlaceholderDiagnostic(diagnostics, 'review gate', reviewGate)
+  addPlaceholderDiagnostic(diagnostics, 'trigger description', triggerDescription)
+  addPlaceholderDiagnostic(diagnostics, 'trigger examples', triggerExamples)
+  addPlaceholderDiagnostic(diagnostics, 'trigger exclusions', triggerExclusions)
+  addPlaceholderDiagnostic(diagnostics, 'soft boundary', softBoundary)
+  addPlaceholderDiagnostic(diagnostics, 'hard boundary', hardBoundary)
+  addPlaceholderDiagnostic(diagnostics, 'workflow', workflow)
   addPlaceholderDiagnostic(diagnostics, 'export shape', exportShape)
   addPlaceholderDiagnostic(diagnostics, 'validation', validation)
   const missingRequiredSemanticBasis = requiredSemanticBasisTargets.filter(target => !semanticBasisLinks.includes(target))
@@ -174,12 +167,11 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
   }
 
   const missingForExport = [
-    missingOrPlaceholder(driftPressure) || pressureScenarios.length === 0 || hasAnyPlaceholder(pressureScenarios) ? 'drift-pressure' : undefined,
-    missingOrPlaceholder(intervention) || interventionMoves.length === 0 || hasAnyPlaceholder(interventionMoves) ? 'intervention' : undefined,
-    missingOrPlaceholder(activation) ? 'activation' : undefined,
-    judgmentSurface.length === 0 || hasAnyPlaceholder(judgmentSurface) ? 'judgment-surface' : undefined,
-    deterministicBoundary.length === 0 || hasAnyPlaceholder(deterministicBoundary) ? 'deterministic-boundary' : undefined,
-    reviewGate.length === 0 || hasAnyPlaceholder(reviewGate) ? 'review-gate' : undefined,
+    missingOrPlaceholder(capability) || pressureScenarios.length === 0 || hasAnyPlaceholder(pressureScenarios) ? 'capability' : undefined,
+    missingOrPlaceholder(triggerDescription) || triggerExamples.length === 0 || hasAnyPlaceholder(triggerExamples) ? 'trigger' : undefined,
+    softBoundary.length === 0 || hasAnyPlaceholder(softBoundary) ? 'soft-boundary' : undefined,
+    hardBoundary.length === 0 || hasAnyPlaceholder(hardBoundary) ? 'hard-boundary' : undefined,
+    workflow.length === 0 || hasAnyPlaceholder(workflow) ? 'workflow' : undefined,
     exportShape.length === 0 || hasAnyPlaceholder(exportShape) ? 'export-shape' : undefined,
     semanticBasisLinks.length === 0 || missingRequiredSemanticBasis.length > 0 || brokenSemanticBasisLinks.length > 0 ? 'semantic-basis' : undefined,
     validation.length === 0 || hasAnyPlaceholder(validation) ? 'validation' : undefined,
@@ -187,23 +179,24 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
   const status = diagnostics.some(diagnostic => diagnostic.severity === 'warning') ? 'needs-work' : 'ready'
   const skillName = normalizeToken(run.surface.headings.find(heading => heading.level === 1)?.text ?? run.recognition.recognizedRole)
   const exportDraft = makeExportDraft({
-    activation,
     assets,
-    deterministicBoundary,
-    driftPressure,
+    capability,
     exportShape,
-    intervention,
-    judgmentSurface,
+    hardBoundary,
     missingForExport,
     pressureScenarios,
     references,
-    reviewGate,
     scripts,
     semanticBasisLinks,
     skillName,
+    softBoundary,
     status,
     target: run.recognition.target,
+    triggerDescription,
+    triggerExamples,
+    triggerExclusions,
     validation,
+    workflow,
   })
 
   return {
@@ -212,19 +205,15 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
     recognizedRole: run.recognition.recognizedRole,
     status,
     model: {
-      driftPressure,
+      capability,
       pressureScenarios,
-      intervention,
-      interventionMoves,
-      activation,
-      activationTriggers,
-      activationExclusions,
-      judgmentSurface,
-      deterministicBoundary,
-      reviewGate,
+      triggerDescription,
+      triggerExamples,
+      triggerExclusions,
+      softBoundary,
+      hardBoundary,
+      workflow,
       exportShape,
-      confirmationGates: reviewGate,
-      outputContract: exportShape,
       antiPatterns: [],
       semanticBasisLinks,
       references,
@@ -233,13 +222,13 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
       progressiveLoading: extractListItemsAfterLabel(exportShapeText, 'Progressive Loading'),
       validation,
       exportPosition: exportShape[0],
-      futureSkillExportRequirements: exportShape,
+      exportRequirements: exportShape,
     },
     plan: {
       compiler: 'draft-skill-v0',
       exportable: missingForExport.length === 0 && status === 'ready',
       missingForExport,
-      futureSkillExportRequirements: exportShape,
+      exportRequirements: exportShape,
     },
     exportDraft,
     sourceMaterial: material.map(document => document.isomorphPath).sort(),
@@ -255,13 +244,14 @@ export function analyzePrimitiveSkill(run: RecognitionRunResult): PrimitiveSkill
 
 function makeExportDraft(input: {
   readonly skillName: string
-  readonly driftPressure: string | undefined
   readonly pressureScenarios: readonly string[]
-  readonly intervention: string | undefined
-  readonly activation: string | undefined
-  readonly judgmentSurface: readonly string[]
-  readonly deterministicBoundary: readonly string[]
-  readonly reviewGate: readonly string[]
+  readonly capability: string | undefined
+  readonly triggerDescription: string | undefined
+  readonly triggerExamples: readonly string[]
+  readonly triggerExclusions: readonly string[]
+  readonly softBoundary: readonly string[]
+  readonly hardBoundary: readonly string[]
+  readonly workflow: readonly string[]
   readonly exportShape: readonly string[]
   readonly references: readonly string[]
   readonly scripts: readonly string[]
@@ -275,29 +265,30 @@ function makeExportDraft(input: {
   return {
     artifact: 'codex-skill',
     skillName: input.skillName,
-    description: input.activation,
+    description: input.triggerDescription,
     readiness: input.status === 'ready' && input.missingForExport.length === 0 ? 'ready' : 'blocked',
     missingForExport: input.missingForExport,
     frontmatter: {
       name: input.skillName,
-      description: input.activation,
+      description: input.triggerDescription,
     },
     bodyOutline: [
-      'Drift Pressure',
-      'Intervention',
-      'Activation',
-      ...(input.judgmentSurface.length === 0 ? [] : ['Judgment Surface']),
-      ...(input.deterministicBoundary.length === 0 ? [] : ['Deterministic Boundary']),
-      ...(input.reviewGate.length === 0 ? [] : ['Review Gate']),
+      'Capability',
+      'Trigger',
+      ...(input.softBoundary.length === 0 ? [] : ['Soft Boundary']),
+      ...(input.hardBoundary.length === 0 ? [] : ['Hard Boundary']),
+      ...(input.workflow.length === 0 ? [] : ['Workflow']),
       'Semantic Basis',
       ...(input.validation.length === 0 ? [] : ['Validation']),
     ],
-    driftPressure: input.driftPressure,
+    capability: input.capability,
     pressureScenarios: input.pressureScenarios,
-    intervention: input.intervention,
-    judgmentSurface: input.judgmentSurface,
-    deterministicBoundary: input.deterministicBoundary,
-    reviewGate: input.reviewGate,
+    triggerDescription: input.triggerDescription,
+    triggerExamples: input.triggerExamples,
+    triggerExclusions: input.triggerExclusions,
+    softBoundary: input.softBoundary,
+    hardBoundary: input.hardBoundary,
+    workflow: input.workflow,
     exportShape: input.exportShape,
     antiPatterns: [],
     resources: {

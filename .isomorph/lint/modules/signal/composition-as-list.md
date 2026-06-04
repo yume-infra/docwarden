@@ -8,6 +8,10 @@ kind: signal
 
 `composition-as-list` 表示 composition module 可能退化为普通列表，而没有表达 whole / part 的稳定语义边界。
 
+## Loss Model
+
+该信号保护 composition material 不被普通条目清单替代；如果 whole、part 和稳定边界缺失，组合关系会失去可审核语义。
+
 ## Trigger
 
 - `frontmatter.kind == composition`
