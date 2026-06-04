@@ -4,22 +4,15 @@ kind: skill-primitive
 
 # <skill-primitive-id>
 
-## Drift Pressure
+## Capability
 
-<Name the repeated agent failure, default drift, or behavior loss this future skill exists to correct.>
+<Name the behavior intervention this future skill gives an agent.>
 
 Pressure Scenarios:
 
 - <Describe a concrete user request or working situation where the agent drifts without the skill.>
 
-## Intervention
-
-<Describe how the future skill changes agent behavior once it activates.>
-
-- <Describe the first behavior move the skill should force.>
-- <Describe the handoff, review, or validation move the skill should force.>
-
-## Activation
+## Trigger
 
 Description: <Write the future skill description trigger in user-facing terms.>
 
@@ -31,17 +24,19 @@ Exclusions:
 
 - <Describe a nearby request shape that should not activate the skill.>
 
-## Judgment Surface
+## Soft Boundary
 
 - <Describe judgment, routing, review, or writing behavior the future skill should guide.>
 
-## Deterministic Boundary
+## Hard Boundary
 
 - <Describe validation, path, script, CLI, or filesystem constraints the future skill must defer to deterministic tooling.>
 
-## Review Gate
+## Workflow
 
+- <Describe the first behavior move the skill should force.>
 - <Describe the smallest user-reviewable decision or artifact before materialization.>
+- <Describe the handoff or validation move the skill should force.>
 
 ## Export Shape
 

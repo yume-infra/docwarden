@@ -202,22 +202,15 @@ kind: skill-primitive
 
 # ready-skill
 
-## Drift Pressure
+## Capability
 
-Agents turn skill creation into generic scaffolding before naming the behavior drift.
+Create or update Codex skills as behavior interventions before files are materialized.
 
 Pressure Scenarios:
 
 - User asks for a skill and the agent starts with files first.
 
-## Intervention
-
-Force the agent to model the future skill as behavior correction before export.
-
-- Name the drift pressure.
-- Separate agent judgment from deterministic guardrails.
-
-## Activation
+## Trigger
 
 Description: Use when creating or updating a Codex skill from primitive material.
 
@@ -229,21 +222,23 @@ Exclusions:
 
 - run an existing validation script only.
 
-## Judgment Surface
+## Soft Boundary
 
 - Decide whether the skill corrects a real agent drift.
 
-## Deterministic Boundary
+## Hard Boundary
 
 - Run deterministic validation scripts before accepting the skill.
 
-## Review Gate
+## Workflow
 
-- Ask the user to confirm drift pressure before materialization.
+- Name the pressure scenario before export.
+- Separate agent judgment from deterministic guardrails.
+- Ask the user to confirm the pressure scenario before materialization.
 
 ## Export Shape
 
-- SKILL.md export must preserve drift, activation, judgment surface, deterministic boundary, review gate, semantic basis, and validation.
+- SKILL.md export must preserve capability, trigger, soft boundary, hard boundary, workflow, semantic basis, and validation.
 
 ## Semantic Basis
 

@@ -575,6 +575,47 @@ kind: composition
 stable semantic boundary.
 `,
     },
+    {
+      signal: 'skill-primitive-legacy-surface',
+      positivePath: 'legacy-skill-primitive.md',
+      positive: `---
+kind: skill-primitive
+---
+
+# legacy-skill
+
+## Drift Pressure
+
+Agents start from the old heading surface.
+`,
+      negativePath: 'stable-skill-primitive.md',
+      negative: `---
+kind: skill-primitive
+---
+
+# stable-skill
+
+## Capability
+
+Create skills through the stable primitive surface.
+
+## Trigger
+
+Description: Use when stabilizing skill primitive material.
+
+## Soft Boundary
+
+- Decide semantic skill behavior.
+
+## Hard Boundary
+
+- Defer runtime writes to exporters.
+
+## Workflow
+
+- Keep review gates as workflow moves.
+`,
+    },
   ])('covers seed signal positive and negative fixtures: $signal', async ({ negative, negativePath, positive, positivePath, signal }) => {
     const workspace = await makeWorkspace()
     await runIsomorph(runInitEffect({ root: workspace }))
@@ -612,24 +653,16 @@ kind: skill-primitive
 
 # custom-skill-creator
 
-## Drift Pressure
+## Capability
 
-Agents turn skill creation into file scaffolding or generic capability prose before proving which behavior drift the skill corrects.
+Create or update Codex skills as behavior interventions before files are materialized.
 
 Pressure Scenarios:
 
 - User asks to create a skill and the agent starts with directory layout instead of failure mode.
 - User asks to evolve skill-primitive and the agent treats CLI guardrails as skill behavior.
 
-## Intervention
-
-Force the agent to model the future skill as behavior correction before export.
-
-- Name the drift pressure.
-- Separate agent judgment from deterministic guardrails.
-- Produce an export draft only after review gate and validation material exist.
-
-## Activation
+## Trigger
 
 Description: Use when creating or updating a Codex skill from isomorph primitive material, especially when the user needs the skill behavior theory before files are materialized.
 
@@ -642,24 +675,27 @@ Exclusions:
 
 - requests to run an existing skill validation script only.
 
-## Judgment Surface
+## Soft Boundary
 
 - Decide whether the skill exists to correct a real agent drift.
 - Decide which judgments belong in skill instructions.
 
-## Deterministic Boundary
+## Hard Boundary
 
 - Defer filesystem shape validation to deterministic skill validation scripts.
 - Do not materialize final SKILL.md artifacts from primitive analysis alone.
 
-## Review Gate
+## Workflow
 
-- Ask the user to confirm the drift pressure and activation boundary before materializing the skill.
+- Name the pressure scenario before naming the skill capability.
+- Separate agent judgment from deterministic guardrails.
+- Produce an export draft only after workflow and validation material exist.
+- Ask the user to confirm the pressure scenario and trigger boundary before materializing the skill.
 
 ## Export Shape
 
-- SKILL.md description must preserve activation terms.
-- SKILL.md body must preserve drift pressure, intervention, judgment surface, deterministic boundary, review gate, semantic basis, and validation.
+- SKILL.md description must preserve trigger terms.
+- SKILL.md body must preserve capability, trigger, soft boundary, hard boundary, workflow, semantic basis, and validation.
 
 ## Semantic Basis
 
@@ -679,8 +715,8 @@ Exclusions:
     expect(result.recognizedRole).toBe('skill-primitive')
     expect(result.status).toBe('ready')
     expect(result.model).toMatchObject({
-      driftPressure: 'Agents turn skill creation into file scaffolding or generic capability prose before proving which behavior drift the skill corrects.',
-      activation: 'Use when creating or updating a Codex skill from isomorph primitive material, especially when the user needs the skill behavior theory before files are materialized.',
+      capability: 'Create or update Codex skills as behavior interventions before files are materialized.',
+      triggerDescription: 'Use when creating or updating a Codex skill from isomorph primitive material, especially when the user needs the skill behavior theory before files are materialized.',
     })
     expect(result.plan.compiler).toBe('draft-skill-v0')
     expect(result.plan.exportable).toBe(true)
@@ -694,10 +730,10 @@ Exclusions:
       },
     })
     expect(result.model.pressureScenarios).toContain('User asks to create a skill and the agent starts with directory layout instead of failure mode.')
-    expect(result.model.judgmentSurface).toContain('Decide whether the skill exists to correct a real agent drift.')
-    expect(result.model.deterministicBoundary).toContain('Defer filesystem shape validation to deterministic skill validation scripts.')
-    expect(result.model.interventionMoves).toContain('Produce an export draft only after review gate and validation material exist.')
-    expect(result.model.reviewGate).toContain('Ask the user to confirm the drift pressure and activation boundary before materializing the skill.')
+    expect(result.model.softBoundary).toContain('Decide whether the skill exists to correct a real agent drift.')
+    expect(result.model.hardBoundary).toContain('Defer filesystem shape validation to deterministic skill validation scripts.')
+    expect(result.model.workflow).toContain('Produce an export draft only after workflow and validation material exist.')
+    expect(result.model.workflow).toContain('Ask the user to confirm the pressure scenario and trigger boundary before materializing the skill.')
     expect(result.model.validation).toContain('Forward-test the materialized skill with a realistic user request.')
     expect(result.model.semanticBasisLinks).toContain('primitives/modules/concept/skill-primitive')
     expect(result.exportPosition.present).toBe(true)
@@ -714,21 +750,15 @@ kind: skill-primitive
 
 # custom-skill-creator
 
-## Drift Pressure
+## Capability
 
-Agents turn skill creation into scaffolding before proving the behavior drift.
+Create a skill from primitive material only after the capability is modeled.
 
 Pressure Scenarios:
 
 - User asks for a skill and the agent starts with files first.
 
-## Intervention
-
-Force the agent to model drift before export.
-
-- Name the drift pressure.
-
-## Activation
+## Trigger
 
 Description: Use when creating a skill from primitive material.
 
@@ -740,16 +770,17 @@ Exclusions:
 
 - run validation only.
 
-## Judgment Surface
+## Soft Boundary
 
 - Decide whether the skill exists to correct a real agent drift.
 
-## Deterministic Boundary
+## Hard Boundary
 
 - Defer filesystem shape validation to deterministic skill validation scripts.
 
-## Review Gate
+## Workflow
 
+- Name the pressure scenario before export.
 - Ask the user to confirm drift before materialization.
 
 ## Export Shape
@@ -787,21 +818,15 @@ kind: skill-primitive
 
 # custom-skill-creator
 
-## Drift Pressure
+## Capability
 
-Agents turn skill creation into scaffolding before proving the behavior drift.
+Create a skill from primitive material only after the capability is modeled.
 
 Pressure Scenarios:
 
 - User asks for a skill and the agent starts with files first.
 
-## Intervention
-
-Force the agent to model drift before export.
-
-- Name the drift pressure.
-
-## Activation
+## Trigger
 
 Description: Use when creating a skill from primitive material.
 
@@ -813,16 +838,17 @@ Exclusions:
 
 - run validation only.
 
-## Judgment Surface
+## Soft Boundary
 
 - Decide whether the skill exists to correct a real agent drift.
 
-## Deterministic Boundary
+## Hard Boundary
 
 - Defer filesystem shape validation to deterministic skill validation scripts.
 
-## Review Gate
+## Workflow
 
+- Name the pressure scenario before export.
 - Ask the user to confirm drift before materialization.
 
 ## Export Shape
@@ -862,21 +888,15 @@ kind: skill-primitive
 
 # placeholder-skill
 
-## Drift Pressure
+## Capability
 
-<Name the repeated agent failure this future skill exists to correct.>
+<Name the behavior intervention this future skill gives an agent.>
 
 Pressure Scenarios:
 
 - User asks for a skill and the agent starts with files first.
 
-## Intervention
-
-Force the agent to model drift before export.
-
-- Name the drift pressure.
-
-## Activation
+## Trigger
 
 Description: Use when creating a skill from primitive material.
 
@@ -888,16 +908,17 @@ Exclusions:
 
 - run validation only.
 
-## Judgment Surface
+## Soft Boundary
 
 - Decide whether the skill exists to correct a real agent drift.
 
-## Deterministic Boundary
+## Hard Boundary
 
 - Defer filesystem shape validation to deterministic skill validation scripts.
 
-## Review Gate
+## Workflow
 
+- Name the pressure scenario before export.
 - Ask the user to confirm drift before materialization.
 
 ## Export Shape
@@ -921,11 +942,11 @@ Exclusions:
 
     expect(result.status).toBe('needs-work')
     expect(result.plan.exportable).toBe(false)
-    expect(result.plan.missingForExport).toContain('drift-pressure')
+    expect(result.plan.missingForExport).toContain('capability')
     expect(result.exportDraft.readiness).toBe('blocked')
     expect(result.diagnostics).toContainEqual({
       severity: 'warning',
-      message: 'drift pressure contains placeholder material',
+      message: 'capability contains placeholder material',
     })
   })
 

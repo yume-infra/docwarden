@@ -368,30 +368,26 @@ function formatPrimitiveSkill(result: PrimitiveSkillResult): string {
     `export position: ${result.exportPosition.present ? 'present' : 'missing'}`,
     ...(result.exportPosition.excerpt === undefined ? [] : [`export excerpt: ${result.exportPosition.excerpt}`]),
     'model:',
-    ...(result.model.driftPressure === undefined ? ['- drift pressure: missing'] : [`- drift pressure: ${result.model.driftPressure}`]),
+    ...(result.model.capability === undefined ? ['- capability: missing'] : [`- capability: ${result.model.capability}`]),
     ...(result.model.pressureScenarios.length === 0
       ? ['- pressure scenario: none']
       : result.model.pressureScenarios.map(item => `- pressure scenario: ${item}`)),
-    ...(result.model.intervention === undefined ? ['- intervention: missing'] : [`- intervention: ${result.model.intervention}`]),
-    ...(result.model.interventionMoves.length === 0
-      ? ['- intervention move: none']
-      : result.model.interventionMoves.map(item => `- intervention move: ${item}`)),
-    ...(result.model.activation === undefined ? ['- activation: missing'] : [`- activation: ${result.model.activation}`]),
-    ...(result.model.activationTriggers.length === 0
-      ? ['- activation trigger: none']
-      : result.model.activationTriggers.map(item => `- activation trigger: ${item}`)),
-    ...(result.model.activationExclusions.length === 0
-      ? ['- activation exclusion: none']
-      : result.model.activationExclusions.map(item => `- activation exclusion: ${item}`)),
-    ...(result.model.judgmentSurface.length === 0
-      ? ['- judgment surface: none']
-      : result.model.judgmentSurface.map(item => `- judgment surface: ${item}`)),
-    ...(result.model.deterministicBoundary.length === 0
-      ? ['- deterministic boundary: none']
-      : result.model.deterministicBoundary.map(item => `- deterministic boundary: ${item}`)),
-    ...(result.model.reviewGate.length === 0
-      ? ['- review gate: none']
-      : result.model.reviewGate.map(item => `- review gate: ${item}`)),
+    ...(result.model.triggerDescription === undefined ? ['- trigger description: missing'] : [`- trigger description: ${result.model.triggerDescription}`]),
+    ...(result.model.triggerExamples.length === 0
+      ? ['- trigger example: none']
+      : result.model.triggerExamples.map(item => `- trigger example: ${item}`)),
+    ...(result.model.triggerExclusions.length === 0
+      ? ['- trigger exclusion: none']
+      : result.model.triggerExclusions.map(item => `- trigger exclusion: ${item}`)),
+    ...(result.model.softBoundary.length === 0
+      ? ['- soft boundary: none']
+      : result.model.softBoundary.map(item => `- soft boundary: ${item}`)),
+    ...(result.model.hardBoundary.length === 0
+      ? ['- hard boundary: none']
+      : result.model.hardBoundary.map(item => `- hard boundary: ${item}`)),
+    ...(result.model.workflow.length === 0
+      ? ['- workflow: none']
+      : result.model.workflow.map(item => `- workflow: ${item}`)),
     ...(result.model.exportShape.length === 0
       ? ['- export shape: none']
       : result.model.exportShape.map(item => `- export shape: ${item}`)),
@@ -417,9 +413,9 @@ function formatPrimitiveSkill(result: PrimitiveSkillResult): string {
     ...(result.plan.missingForExport.length === 0
       ? ['- missing for export: none']
       : result.plan.missingForExport.map(item => `- missing for export: ${item}`)),
-    ...(result.plan.futureSkillExportRequirements.length === 0
-      ? ['- future skill export requirements: none']
-      : result.plan.futureSkillExportRequirements.map(item => `- future skill export requirement: ${item}`)),
+    ...(result.plan.exportRequirements.length === 0
+      ? ['- export requirements: none']
+      : result.plan.exportRequirements.map(item => `- export requirement: ${item}`)),
     'export draft:',
     `- artifact: ${result.exportDraft.artifact}`,
     `- skill name: ${result.exportDraft.skillName}`,
