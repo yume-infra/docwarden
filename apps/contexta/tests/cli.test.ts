@@ -112,11 +112,15 @@ describe('contexta CLI contract', () => {
     ) as { readonly generatedAt: string, readonly packs: readonly { readonly id: string, readonly manifestPath: string }[] }
     expect(generatedAssets.generatedAt).toBe('1970-01-01T00:00:00.000Z')
     expect(generatedPacks.generatedAt).toBe('1970-01-01T00:00:00.000Z')
-    expect(generatedAssets.assets).toHaveLength(9)
+    expect(generatedAssets.assets).toHaveLength(10)
     expect(generatedPacks.packs).toHaveLength(2)
     expect(generatedAssets.assets).toContainEqual(expect.objectContaining({
       id: 'skill:dw/review-doc',
       sourcePath: '.contexta/packs/docwarden/skills/review-doc.md',
+    }))
+    expect(generatedAssets.assets).toContainEqual(expect.objectContaining({
+      id: 'skill:iso/lead-review',
+      sourcePath: '.contexta/packs/isomorph-authoring/skills/lead-review',
     }))
     expect(generatedPacks.packs).toContainEqual(expect.objectContaining({
       id: 'docwarden',

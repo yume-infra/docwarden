@@ -1,6 +1,6 @@
 ---
 name: skill-creator
-description: 用于创建或更新 Codex skill、把 isomorph skill-primitive material 派生成 SKILL.md/repo-skill/plugin skill，或修正漂移成 generic scaffolding、CLI wrapper、膨胀 docs、trigger 不清、缺少 review gate、未验证 artifact 的 skill；不用于只安装 skill、只跑脚本或只写 docs/prompt。
+description: 用于创建或更新 Codex skill、把 skill-primitive material 派生成 SKILL.md/repo-skill/plugin skill，或修正漂移成 generic scaffolding、CLI wrapper、膨胀 docs、trigger 不清、缺少 lead-review gate、未验证 artifact 的 skill；不用于只安装 skill、只跑脚本或只写 docs/prompt。
 ---
 
 # Skill Creator
@@ -11,7 +11,7 @@ description: 用于创建或更新 Codex skill、把 isomorph skill-primitive ma
 
 这个 skill 处理三类工作：
 
-- 从用户请求、workflow 或 isomorph `skill-primitive` 派生新的 Codex skill。
+- 从用户请求、workflow 或 `skill-primitive` 派生新的 Codex skill。
 - 更新已有 skill，使它重新对齐明确的 trigger、boundary、resource rules 与 validation。
 - 修复已经漂移成 generic scaffolding、CLI wrapper、膨胀说明文档、结构有效但行为弱的 skill。
 
@@ -22,14 +22,14 @@ description: 用于创建或更新 Codex skill、把 isomorph skill-primitive ma
 常见 drift:
 
 - agent 在证明 skill 必要性前就生成目录和 `SKILL.md`。
-- agent 明明有 isomorph primitive material，却从 runtime folder、plugin export shape 或 generic scaffold 反推 skill。
+- agent 明明有 skill-primitive material，却从 runtime folder、plugin export shape 或 generic scaffold 反推 skill。
 - agent 把 hard constraints 与 soft workflow judgment 都写进 prose。
 - agent 把 CLI command、directory structure 或内部 workflow node 当成 user-facing skill behavior。
-- draft 通过结构校验，但缺少 trigger boundary、review gate、pressure scenario 或 forward-test surface。
+- draft 通过结构校验，但缺少 trigger boundary、lead-review route、pressure scenario 或 forward-test surface。
 
 ## Workflow
 
-1. 如果有 isomorph primitive material，先接管它，把它当作 semantic source。
+1. 如果有 skill-primitive material，先接管它，把它当作 semantic source；具体 skill primitive material 应来自 owning contexta pack 或 semantic framework。
 2. 以 primitive 为 derivation unit，再 materialize `SKILL.md`、repo-skill 或 plugin-distributed skill。
 3. 读取已有 skill resources，再决定编辑范围。
 4. 写出 pressure scenario：这个 skill 防止哪种可重复 agent drift。
@@ -50,7 +50,7 @@ skill instructions 只负责 agent judgment:
 - 请求应该落到 skill、docs、prompt、CLI、script、reference 还是 asset；
 - frontmatter `description` 的 positive / negative trigger boundary；
 - 哪些内容是 SKILL.md every-use material，哪些应该进入一层 references；
-- review gate 放在哪里，以及最小 review unit 是什么；
+- lead-review gate 放在哪里，以及最小 review unit 是什么；
 - draft 是否太 generic、verbose、implementation-shaped 或 runtime-shaped。
 
 ## Hard Boundary
@@ -114,7 +114,7 @@ python3 scripts/quick_validate.py "$SKILL_DIR"
 从 primitive 派生时运行：
 
 ```bash
-isomorph primitive skill .isomorph/primitives/skill-primitive/skill-creator.md --json
+isomorph primitive skill .contexta/packs/isomorph-authoring/skills/skill-creator/skill-primitive.md --json
 ```
 
 非平凡 skill 变更需要 forward-test，使用干净、真实的请求，例如：

@@ -72,7 +72,7 @@ If the signal is only one weak correction, present it as a pick signal and keep 
 Before treating this skill as usable, run:
 
 ```bash
-rtk apps/isomorph/dist/index.js primitive skill .isomorph/primitives/modules/skill-primitive/dw-pick.md --json
+rtk apps/isomorph/dist/index.js primitive skill .contexta/packs/docwarden/skills/pick/skill-primitive.md --json
 rtk python3 .contexta/packs/isomorph-authoring/skills/skill-creator/scripts/quick_validate.py .contexta/packs/docwarden/skills/pick
 ```
 

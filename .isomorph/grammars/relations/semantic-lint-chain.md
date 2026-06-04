@@ -47,12 +47,12 @@ Reading:
 
 pipeline 不重新定义 semantic-lint，也不拥有 signal definitions。
 
-review-ready lint result 复用 docwarden review surface 的 `lead + backing` 口径；如果它已经足够清晰，review surface 可以走短路径。
+review-ready lint result 复用 [[primitives/concept/lead-review|lead-review]] 的 `lead + backing` 口径；如果它已经足够清晰，docwarden review surface 可以作为 dogfood projection 走短路径。
 
 Read next:
 
 - Pipeline: [[grammars/structures/pipeline/semantic-lint|semantic-lint pipeline]]
-- Concept: [[primitives/concept/structure/pipeline#Definition|pipeline#Definition]], [[primitives/concept/semantic-lint#Definition|semantic-lint#Definition]]
+- Concept: [[primitives/concept/structure/pipeline#Definition|pipeline#Definition]], [[primitives/concept/semantic-lint#Definition|semantic-lint#Definition]], [[primitives/concept/lead-review#Definition|lead-review#Definition]]
 - Relation: [[grammars/relations/template-format-semantic-lint|template-format-semantic-lint]]
 - Signal modules: [[lint/signal/concept-as-policy|concept-as-policy]], [[lint/signal/workflow-as-policy|workflow-as-policy]], [[lint/signal/architecture-as-responsibility-card|architecture-as-responsibility-card]], [[lint/signal/template-owns-lifecycle|template-owns-lifecycle]], [[lint/signal/example-as-kind|example-as-kind]], [[lint/signal/composition-as-list|composition-as-list]]
 

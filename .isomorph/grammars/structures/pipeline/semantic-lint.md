@@ -28,16 +28,16 @@ kind: pipeline
 
 ## Output
 
-- review-ready lint result：semantic-lint 的输出，尽可能贴近 review surface 的 `lead + backing`。
+- review-ready lint result：semantic-lint 的输出，尽可能贴近 [[primitives/concept/lead-review|lead-review]] 的 `lead + backing`。
 
 review-ready lint result 至少围绕 signal 命中组织：
 
 - lead：一次 signal 命中的最小审核问题。
 - backing：signal name、locator 或 context、trigger hit、confidence，以及可通过 signal definition 回读的 Basis。
 
-如果 review-ready lint result 已经足够清晰，docwarden review surface 可以走短路径。
+如果 review-ready lint result 已经足够清晰，docwarden review surface 可以作为 dogfood projection 走短路径。
 
-如果它不足以支撑 user review，docwarden review surface 仍然负责重新组织 `lead + backing`。
+如果它不足以支撑 user review，lead-review 仍然负责重新组织 `lead + backing`，再交给 docwarden review 或其他下游 workflow。
 
 Implementation detail:
 

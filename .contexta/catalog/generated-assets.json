@@ -73,6 +73,14 @@
       "namespace": "iso",
       "name": "skill-creator",
       "sourcePath": ".contexta/packs/isomorph-authoring/skills/skill-creator"
+    },
+    {
+      "id": "skill:iso/lead-review",
+      "kind": "skill",
+      "packId": "isomorph-authoring",
+      "namespace": "iso",
+      "name": "lead-review",
+      "sourcePath": ".contexta/packs/isomorph-authoring/skills/lead-review"
     }
   ]
 }

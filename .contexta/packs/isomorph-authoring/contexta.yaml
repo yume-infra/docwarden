@@ -6,3 +6,4 @@ targets:
 assets:
   skill:
     - skill-creator
+    - lead-review

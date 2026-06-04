@@ -68,11 +68,11 @@ Reading:
 
 沿 `emits` 读取时，semantic-lint 的结果包含 signal，并应尽可能把 signal 命中组织成 review-ready lint result。
 
-review-ready lint result 不是 review judgment。它只是尽量贴近 review surface 的 `lead + backing`，让 docwarden review surface 可以在足够清晰时走短路径。
+review-ready lint result 不是 review judgment。它只是尽量贴近 [[primitives/concept/lead-review|lead-review]] 的 `lead + backing`，让 docwarden review surface 可以在足够清晰时走短路径。
 
 Read next:
 
-- Definition: [[primitives/concept/template#Definition|template#Definition]], [[primitives/concept/format#Definition|format#Definition]], [[primitives/concept/semantic-lint#Definition|semantic-lint#Definition]], [[primitives/concept/module#Definition|module#Definition]], [[primitives/concept/signal#Definition|signal#Definition]], [[primitives/concept/magic-word#Definition|magic-word#Definition]]
+- Definition: [[primitives/concept/template#Definition|template#Definition]], [[primitives/concept/format#Definition|format#Definition]], [[primitives/concept/semantic-lint#Definition|semantic-lint#Definition]], [[primitives/concept/module#Definition|module#Definition]], [[primitives/concept/signal#Definition|signal#Definition]], [[primitives/concept/magic-word#Definition|magic-word#Definition]], [[primitives/concept/lead-review#Definition|lead-review#Definition]]
 - Magic words: [[grammars/magic-word/transition|transition]]
 - Pipeline: [[grammars/structures/pipeline/semantic-lint|semantic-lint pipeline]]
-- Constraint: [[grammars/policy/template-boundary|template-boundary]], [[grammars/policy/semantic-lint-boundary|semantic-lint-boundary]]
+- Constraint: [[grammars/policy/template-boundary|template-boundary]], [[grammars/policy/semantic-lint-boundary|semantic-lint-boundary]], [[grammars/policy/lead-review-boundary|lead-review-boundary]]

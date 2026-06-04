@@ -76,11 +76,12 @@ Exclusions:
 ## Semantic Basis
 
 - [[primitives/concept/skill-primitive|skill-primitive]]
+- [[primitives/concept/lead-review|lead-review]]
 - [[primitives/concept/primitive-creator|primitive-creator]]
 
 ## Validation
 
-- 运行 `apps/isomorph/dist/index.js primitive skill .isomorph/primitives/skill-primitive/dw-pick.md --json`，要求 `status: ready`。
+- 运行 `apps/isomorph/dist/index.js primitive skill .contexta/packs/docwarden/skills/pick/skill-primitive.md --json`，要求 `status: ready`。
 - materialize skill 后运行 `python3 .contexta/packs/isomorph-authoring/skills/skill-creator/scripts/quick_validate.py .contexta/packs/docwarden/skills/pick`。
 - 使用 realistic correction signal 做 forward-test，并要求 skill 在任何 CLI command 前先产出 route decision。
 

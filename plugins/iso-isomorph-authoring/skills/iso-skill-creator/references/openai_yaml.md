@@ -6,20 +6,20 @@
 
 ```yaml
 interface:
-  display_name: Optional user-facing name
-  short_description: Optional user-facing description
-  icon_small: ./assets/small-400px.png
-  icon_large: ./assets/large-logo.svg
-  brand_color: '#3B82F6'
-  default_prompt: Optional surrounding prompt to use the skill with
+  display_name: "Optional user-facing name"
+  short_description: "Optional user-facing description"
+  icon_small: "./assets/small-400px.png"
+  icon_large: "./assets/large-logo.svg"
+  brand_color: "#3B82F6"
+  default_prompt: "Optional surrounding prompt to use the skill with"
 
 dependencies:
   tools:
-    - type: mcp
-      value: github
-      description: GitHub MCP server
-      transport: streamable_http
-      url: https://api.githubcopilot.com/mcp/
+    - type: "mcp"
+      value: "github"
+      description: "GitHub MCP server"
+      transport: "streamable_http"
+      url: "https://api.githubcopilot.com/mcp/"
 
 policy:
   allow_implicit_invocation: true
@@ -29,8 +29,7 @@ policy:
 
 Top-level constraints:
 
-- Prefer plain style scalar values; use single quotes only when YAML requires
-  quoting, such as values beginning with `#`.
+- Quote all string values.
 - Keep keys unquoted.
 - For `interface.default_prompt`: generate a helpful, short (typically 1 sentence) example starting prompt based on the skill. It must explicitly mention the skill as `$skill-name` (e.g., "Use $skill-name-here to draft a concise weekly status update.").
 

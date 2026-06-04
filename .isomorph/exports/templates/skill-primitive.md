@@ -8,6 +8,8 @@ kind: skill-primitive
 
 <命名这个 future skill 给 agent 的 behavior intervention。>
 
+This template describes a skill-primitive export draft. It is not a final Codex runtime artifact and does not make root `.isomorph` the canonical source for a concrete skill.
+
 Pressure Scenarios:
 
 - <描述一个没有此 skill 时 agent 会 drift 的具体用户请求或工作场景。>

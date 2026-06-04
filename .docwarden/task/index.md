@@ -23,6 +23,7 @@ owner: sayori
 当前 active task：
 
 - `.docwarden/task/28-docwarden-v1-skills-cli-dogfood/`：尽快实现 docwarden v1 repo-local skills + CLI dogfood 形态。
+- `.docwarden/task/29-isomorph-layer-theory-correction/`：慢速纠正 isomorph 层级理论与 semantic framework 机制。
 
 最近完成并归档：
 
@@ -71,3 +72,4 @@ owner: sayori
 当前 active task：
 
 - `.docwarden/task/28-docwarden-v1-skills-cli-dogfood/`
+- `.docwarden/task/29-isomorph-layer-theory-correction/`
